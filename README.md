@@ -3,9 +3,7 @@
 [![version](https://img.shields.io/pypi/v/werkit.svg?style=flat-square)][pypi]
 [![python versions](https://img.shields.io/pypi/pyversions/werkit.svg?style=flat-square)][pypi]
 [![license](https://img.shields.io/pypi/l/werkit.svg?style=flat-square)][pypi]
-[![coverage](https://img.shields.io/coveralls/lace/werkit.svg?style=flat-square)][coverage]
-[![build](https://img.shields.io/circleci/project/github/lace/werkit/master.svg?style=flat-square)][build]
-[![docs build](https://img.shields.io/readthedocs/werkit.svg?style=flat-square)][docs build]
+[![build](https://img.shields.io/circleci/project/github/metabolize/werkit/master.svg?style=flat-square)][build]
 [![code style](https://img.shields.io/badge/code%20style-black-black.svg?style=flat-square)][black]
 
 Toolkit for encapsulating Python-based computation into deployable and
