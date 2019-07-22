@@ -29,7 +29,7 @@ def test():
 
 @cli.command()
 def coverage():
-    execute("pytest --cov=polliwog")
+    execute("pytest --cov=werkit")
 
 
 @cli.command()
