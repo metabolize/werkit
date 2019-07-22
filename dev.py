@@ -8,7 +8,7 @@ from executor import execute
 def python_source_files():
     import glob
 
-    return glob.glob("*.py") + glob.glob("werkit/**/*.py") #+ ["doc/"]
+    return glob.glob("*.py") + glob.glob("werkit/**/*.py")  # + ["doc/"]
 
 
 @click.group()
