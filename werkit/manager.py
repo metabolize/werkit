@@ -1,6 +1,7 @@
 from __future__ import print_function
 from traceback import format_exception
 import datetime
+from .format_time import format_time
 
 
 class Manager:
@@ -21,6 +22,7 @@ class Manager:
                 self.precision,
             )
         )
+
         if value:
             formatted = format_exception(type, value, traceback)
             self.serialized_result = {
@@ -44,3 +46,6 @@ class Manager:
                 "error": None,
                 "duration_seconds": duration,
             }
+
+        if self.verbose:
+            print("Completed in {}".format(format_time(duration)))

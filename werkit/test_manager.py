@@ -1,4 +1,5 @@
 from __future__ import print_function
+import pytest
 from . import Manager
 
 
@@ -26,3 +27,17 @@ def test_manage_execution_serializes_error():
         "result": None,
         "duration_seconds": 0,
     }
+
+
+def test_manage_execution_passes_error():
+    with pytest.raises(ValueError):
+        with Manager(handle_exceptions=False) as manager:
+            raise ValueError()
+
+
+def test_verbose(capfd):
+    with Manager(verbose=True) as manager:
+        manager.result = 2
+
+    out, err = capfd.readouterr()
+    assert out == "Completed in 0 sec\n"
