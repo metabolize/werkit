@@ -8,7 +8,7 @@ from executor import execute
 def python_source_files():
     import glob
 
-    return glob.glob("*.py") + glob.glob("werkit/**/*.py") #+ ["doc/"]
+    return glob.glob("*.py") + glob.glob("werkit/**/*.py")  # + ["doc/"]
 
 
 @click.group()
@@ -29,7 +29,7 @@ def test():
 
 @cli.command()
 def coverage():
-    execute("pytest --cov=polliwog")
+    execute("pytest --cov=werkit")
 
 
 @cli.command()
