@@ -23,6 +23,9 @@ class Manager:
             )
         )
 
+        if type in [KeyboardInterrupt, SystemExit]:
+            raise value
+
         if value:
             formatted = format_exception(type, value, traceback)
             self.serialized_result = {

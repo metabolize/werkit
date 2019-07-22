@@ -35,6 +35,12 @@ def test_manage_execution_passes_error():
             raise ValueError()
 
 
+def test_manage_execution_passes_keyboard_interrupt():
+    with pytest.raises(KeyboardInterrupt):
+        with Manager() as manager:
+            raise KeyboardInterrupt()
+
+
 def test_verbose(capfd):
     with Manager(verbose=True) as manager:
         manager.result = 2
