@@ -3,6 +3,7 @@ jobs:
   python2:
     docker:
       - image: circleci/python:2
+      - image: redis
 
     steps:
       - checkout
@@ -32,6 +33,7 @@ jobs:
   python3:
     docker:
       - image: circleci/python:3
+      - image: redis
 
     steps:
       - checkout

@@ -1,3 +1,5 @@
+import os
+from env_flag import env_flag
 import pytest
 from redis import Redis
 from rq import Worker
@@ -17,8 +19,17 @@ def path_to_redis():
     return distutils.spawn.find_executable("redis-server")
 
 
-new_redis_proc = redis_proc(executable=path_to_redis(), logsdir="/tmp")
-redis_conn = redisdb("new_redis_proc")
+if env_flag("CI", False):
+
+    @pytest.fixture
+    def dummy_fixture():
+        pass
+
+    new_redis_proc = dummy_fixture
+    redis_conn = redisdb
+else:
+    new_redis_proc = redis_proc(executable=path_to_redis(), logsdir="/tmp")
+    redis_conn = redisdb("new_redis_proc")
 
 
 def test_invoke_for_each(new_redis_proc, redis_conn):
