@@ -25,7 +25,7 @@ if os.environ.get("CI"):
         pass
 
     new_redis_proc = dummy_fixture
-    redis_conn = redisdb()
+    redis_conn = redisdb(port=6379)
 else:
     new_redis_proc = redis_proc(executable=path_to_redis(), logsdir="/tmp")
     redis_conn = redisdb("new_redis_proc")
