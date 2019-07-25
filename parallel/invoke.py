@@ -54,9 +54,10 @@ def invoke_for_each(
         clean_registries(queue)
 
     if ensure_empty:
-        if len(get_all_jobs(connection=connection, queue_name=queue_name)) > 0:
+        jobs = get_all_jobs(connection=connection, queue_name=queue_name)
+        if len(jobs) > 0:
             raise ValueError(
-                "Queue is not empty! There are {} jobs waiting".format(len(queue))
+                "Registry has not been cleaned! {} jobs were found".format(len(jobs))
             )
 
     for k, item in items.items():
