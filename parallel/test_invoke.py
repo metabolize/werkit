@@ -1,5 +1,4 @@
 import os
-from env_flag import env_flag
 import pytest
 from redis import Redis
 from rq import Worker
@@ -19,7 +18,7 @@ def path_to_redis():
     return distutils.spawn.find_executable("redis-server")
 
 
-if env_flag("CI", False):
+if os.environ.get("CI"):
 
     @pytest.fixture
     def dummy_fixture():
