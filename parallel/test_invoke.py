@@ -2,7 +2,6 @@ import os
 import pytest
 from redis import Redis
 from rq import Worker
-from pytest_redis.factories import redis_proc, redisdb
 from .invoke import (
     DEFAULT_QUEUE_NAME,
     invoke_for_each,
@@ -31,6 +30,8 @@ if os.environ.get("CI"):
     new_redis_proc = dummy_fixture
     redis_conn = conn_fixture
 else:
+    from pytest_redis.factories import redis_proc, redisdb
+
     new_redis_proc = redis_proc(executable=path_to_redis(), logsdir="/tmp")
     redis_conn = redisdb("new_redis_proc")
 
