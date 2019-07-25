@@ -1,21 +1,9 @@
 import time
 
-try:
-    from redis import Redis
-    from rq import Queue
-    from rq.job import Job, JobStatus
-except ImportError:
-    Redis = None
-    Queue = None
-    Job = None
-    JobStatus = None
-
-
-def check_dependencies():
-    if Redis is None or Queue is None:
-        raise ImportError(
-            "Parallel functionality requires redis and rq modules to be installed"
-        )
+from redis import Redis
+from rq import Queue
+from rq.job import Job, JobStatus
+from rq.registry import FinishedJobRegistry, FailedJobRegistry, clean_registries
 
 
 class NotReady(Exception):
@@ -23,6 +11,7 @@ class NotReady(Exception):
 
 
 DEFAULT_QUEUE_NAME = "werkit-default"
+JOB_ID_SEPARATOR = "____"
 
 
 def _queue(queue_name, rq_kwargs):
@@ -58,47 +47,50 @@ def invoke_for_each(
     When `ensure_empty` is true, raises an exception if there are already
     jobs in the queue.
     """
-    check_dependencies()
-
-    queue = Queue(queue_name, connection=connection)
+    queue = Queue(queue_name, connection=connection or Redis())
 
     if force_empty:
         queue.empty()
+        clean_registries(queue)
 
     if ensure_empty:
-        if len(queue) > 0:
+        if len(get_all_jobs(connection=connection, queue_name=queue_name)) > 0:
             raise ValueError(
                 "Queue is not empty! There are {} jobs waiting".format(len(queue))
             )
 
-    job_ids = []
-    for item in items:
+    for k, item in items.items():
         enqueue_kwargs = {
             "job_timeout": job_timeout,
             "result_ttl": result_ttl_seconds,
             "failure_ttl": result_ttl_seconds,
             "description": "{} {}".format(getattr(fn, "__name__", str(fn)), str(item)),
+            "job_id": "{}{}{}".format(queue_name, JOB_ID_SEPARATOR, k),
         }
         if as_kwarg:
             out_fn_kwargs = kwargs.copy()
             out_fn_kwargs[as_kwarg] = item
-            job = queue.enqueue(fn, args=args, kwargs=out_fn_kwargs, **enqueue_kwargs)
+            queue.enqueue(fn, args=args, kwargs=out_fn_kwargs, **enqueue_kwargs)
         else:
-            job = queue.enqueue(
-                fn, args=(item,) + args, kwargs=kwargs, **enqueue_kwargs
-            )
-        job_ids.append(job.id)
-    return job_ids
+            queue.enqueue(fn, args=(item,) + args, kwargs=kwargs, **enqueue_kwargs)
 
 
-def get_aggregate_status(job_ids, connection=None, ret_jobs=False):
-    check_dependencies()
+def get_all_jobs(connection=None, queue_name=DEFAULT_QUEUE_NAME):
+    queue = Queue(queue_name, connection=connection or Redis())
+    queued_jobs = queue.job_ids
+    finished_jobs = FinishedJobRegistry(queue=queue).get_job_ids()
+    failed_jobs = FailedJobRegistry(queue=queue).get_job_ids()
+    return Job.fetch_many(
+        queued_jobs + finished_jobs + failed_jobs, connection=connection
+    )
 
-    if len(job_ids) == 0:
-        raise ValueError("At least one job ID is required")
 
-    connection = connection or Redis()
-    jobs = Job.fetch_many(job_ids, connection=connection)
+def get_aggregate_status(
+    connection=None, queue_name=DEFAULT_QUEUE_NAME, ret_jobs=False
+):
+    jobs = get_all_jobs(connection=connection, queue_name=queue_name)
+    if len(jobs) == 0:
+        raise ValueError("No jobs found for queue {}".format(queue_name))
     statuses = set([job.get_status() for job in jobs])
 
     if set([JobStatus.FINISHED, JobStatus.FAILED]).issuperset(statuses):
@@ -115,15 +107,11 @@ def get_aggregate_status(job_ids, connection=None, ret_jobs=False):
     return (aggregate_status, jobs) if ret_jobs else aggregate_status
 
 
-def get_results(job_ids, wait_until_done=False, connection=None):
-    check_dependencies()
-
+def get_results(wait_until_done=False, queue_name=DEFAULT_QUEUE_NAME, connection=None):
     while True:
-        status, jobs = get_aggregate_status(
-            job_ids=job_ids, connection=connection, ret_jobs=True
-        )
+        status, jobs = get_aggregate_status(connection=connection, ret_jobs=True)
         if status == JobStatus.FINISHED:
-            return [j.result for j in jobs]
+            return {j.id.split(JOB_ID_SEPARATOR)[-1]: j.result for j in jobs}
         elif wait_until_done:
             print("Status is {}; sleeping for {} seconds")
             time.sleep(30)

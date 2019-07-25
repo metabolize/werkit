@@ -37,20 +37,21 @@ else:
 
 
 def test_invoke_for_each(new_redis_proc, redis_conn):
-    job_ids = invoke_for_each(square, range(10), connection=redis_conn)
-    assert len(job_ids) == 10
-    assert get_aggregate_status(job_ids, connection=redis_conn) == "queued"
+    items = {"item_{}".format(i): i for i in range(10)}
+    invoke_for_each(square, items, connection=redis_conn)
+    assert get_aggregate_status(connection=redis_conn) == "queued"
 
     worker = Worker([DEFAULT_QUEUE_NAME], connection=redis_conn)
     worker.work(burst=True)
 
-    assert get_aggregate_status(job_ids, connection=redis_conn) == "finished"
+    assert get_aggregate_status(connection=redis_conn) == "finished"
 
-    results = get_results(job_ids, connection=redis_conn)
-    assert results == [x * x for x in range(10)]
+    results = get_results(connection=redis_conn)
+    assert results == {k: x * x for k, x in items.items()}
 
 
 def test_repeat_invoke_raises_error(new_redis_proc, redis_conn):
-    invoke_for_each(square, range(10), connection=redis_conn)
+    items = {"item_{}".format(i): i for i in range(10)}
+    invoke_for_each(square, items, connection=redis_conn)
     with pytest.raises(ValueError):
-        invoke_for_each(square, range(10), connection=redis_conn)
+        invoke_for_each(square, items, connection=redis_conn)
