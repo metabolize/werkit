@@ -4,6 +4,7 @@ from redis import Redis
 from rq import Worker
 from .invoke import (
     DEFAULT_QUEUE_NAME,
+    clean,
     invoke_for_each,
     get_results,
     get_aggregate_status,
@@ -52,6 +53,9 @@ def test_invoke_for_each(new_redis_proc, redis_conn):
 
 def test_repeat_invoke_raises_error(new_redis_proc, redis_conn):
     items = {"item_{}".format(i): i for i in range(10)}
+
+    clean(connection=redis_conn)
+
     invoke_for_each(square, items, connection=redis_conn)
     with pytest.raises(ValueError):
         invoke_for_each(square, items, connection=redis_conn)

@@ -23,13 +23,19 @@ def _queue(queue_name, rq_kwargs):
     return Queue(queue_name, **out_rq_kwargs)
 
 
+def clean(queue_name=DEFAULT_QUEUE_NAME, connection=None):
+    queue = Queue(queue_name, connection=connection or Redis())
+    queue.empty()
+    clean_registries(queue)
+
+
 def invoke_for_each(
     fn,
     items,
     connection=None,
     queue_name=DEFAULT_QUEUE_NAME,
-    ensure_empty=True,
-    force_empty=False,
+    clean=False,
+    ensure_clean=True,
     as_kwarg=None,
     job_timeout="20m",
     result_ttl_seconds=60 * 60 * 24 * 30,
@@ -47,19 +53,17 @@ def invoke_for_each(
     When `ensure_empty` is true, raises an exception if there are already
     jobs in the queue.
     """
-    queue = Queue(queue_name, connection=connection or Redis())
+    if clean:
+        clean(queue_name=queue_name, connection=connection)
 
-    if force_empty:
-        queue.empty()
-        clean_registries(queue)
-
-    if ensure_empty:
+    if ensure_clean:
         jobs = get_all_jobs(connection=connection, queue_name=queue_name)
         if len(jobs) > 0:
             raise ValueError(
                 "Registry has not been cleaned! {} jobs were found".format(len(jobs))
             )
 
+    queue = Queue(queue_name, connection=connection or Redis())
     for k, item in items.items():
         enqueue_kwargs = {
             "job_timeout": job_timeout,
