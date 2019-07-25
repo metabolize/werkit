@@ -19,7 +19,8 @@ Provides code that helps package things up:
 [rq]: https://python-rq.org/
 [fargate cli]: https://somanymachines.com/fargate/
 
-They're particularly useful for providing repsonse consistency 
+They're particularly useful for providing repsonse consistency across different
+revisions of a service or different services.
 
 [pypi]: https://pypi.org/project/werkit/
 [coverage]: https://coveralls.io/github/metabolize/werkit
@@ -38,6 +39,54 @@ pip install werkit
 ```py
 from werkit import ...
 ```
+
+## Parallel computation
+
+Werkit supports parallel computation using Redis and RQ.
+
+You must install the dependencies separately:
+
+```sh
+pip install redis rq
+```
+
+### Requesting work
+
+```py
+from mylib import myfunc
+from werkit.parallel import invoke_for_each
+
+
+values = [...]
+job_ids = invoke_for_each(myfunc, values, connection=Redis(url=...))
+```
+
+### Performing work
+
+```sh
+pip install redis rq
+rq worker --burst werkit-default --url rediss://...
+```
+
+Note: `mylib.myfunc` must be importable.
+
+### Getting results
+
+```py
+from redis import Redis
+from werkit.parallel import get_results
+
+
+get_results(job_ids=job_ids, wait_until_done=True, connection=Redis(url=...))
+```
+
+### Monitoring
+
+You can monitor your queues using [RQ Dashboard][] or one of the
+[other methods outlined here][monitoring].
+
+[rq dashboard]: https://github.com/eoranged/rq-dashboard
+[monitoring]: https://python-rq.org/docs/monitoring/
 
 
 ## Contribute
