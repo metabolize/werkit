@@ -26,7 +26,10 @@ def _queue(queue_name, rq_kwargs):
 def clean(queue_name=DEFAULT_QUEUE_NAME, connection=None):
     queue = Queue(queue_name, connection=connection or Redis())
     queue.empty()
-    clean_registries(queue)
+
+    for registry in [FinishedJobRegistry(queue=queue), FailedJobRegistry(queue=queue)]:
+        for job in Job.fetch_many(registry.get_job_ids(), connection=connection):
+            registry.remove(job)
 
 
 def invoke_for_each(
