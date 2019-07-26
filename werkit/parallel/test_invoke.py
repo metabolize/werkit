@@ -9,7 +9,7 @@ from .invoke import (
     get_results,
     get_aggregate_status,
 )
-from .testing import square
+from .testing import square, multiply
 
 
 def path_to_redis():
@@ -42,13 +42,11 @@ def test_invoke_for_each(new_redis_proc, redis_conn):
     invoke_for_each(square, items, connection=redis_conn)
     assert get_aggregate_status(connection=redis_conn) == "queued"
 
-    worker = Worker([DEFAULT_QUEUE_NAME], connection=redis_conn)
-    worker.work(burst=True)
+    Worker([DEFAULT_QUEUE_NAME], connection=redis_conn).work(burst=True)
 
     assert get_aggregate_status(connection=redis_conn) == "finished"
 
-    results = get_results(connection=redis_conn)
-    assert results == {k: x * x for k, x in items.items()}
+    assert get_results(connection=redis_conn) == {k: x * x for k, x in items.items()}
 
 
 def test_repeat_invoke_raises_error(new_redis_proc, redis_conn):
@@ -59,3 +57,14 @@ def test_repeat_invoke_raises_error(new_redis_proc, redis_conn):
     invoke_for_each(square, items, connection=redis_conn)
     with pytest.raises(ValueError):
         invoke_for_each(square, items, connection=redis_conn)
+
+
+def test_invoke_for_each_with_kwargs(new_redis_proc, redis_conn):
+    items = {"item_{}".format(i): i for i in range(10)}
+    invoke_for_each(
+        multiply, items, kwargs={"multiplier": 5}, clean=True, connection=redis_conn
+    )
+
+    Worker([DEFAULT_QUEUE_NAME], connection=redis_conn).work(burst=True)
+
+    assert get_results(connection=redis_conn) == {k: 5 * x for k, x in items.items()}
