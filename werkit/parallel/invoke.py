@@ -33,8 +33,8 @@ def invoke_for_each(
     as_kwarg=None,
     job_timeout="20m",
     result_ttl_seconds=60 * 60 * 24 * 30,
-    *args,
-    **kwargs
+    args=(),
+    kwargs={},
 ):
     """
     Invoke the given function on each of the given items.
