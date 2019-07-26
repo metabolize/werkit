@@ -37,7 +37,12 @@ pip install werkit
 ## Usage
 
 ```py
-from werkit import ...
+from werkit import Manager
+
+def myfunc(param, verbose=False, handle_exceptions=True):
+    with Manager(handle_exceptions=handle_exceptions, verbose=verbose) as manager:
+        manager.result = do_some_computation()
+    return manager.serialized_result
 ```
 
 ## Parallel computation
@@ -69,6 +74,105 @@ rq worker --burst werkit-default --url rediss://...
 ```
 
 Note: `mylib.myfunc` must be importable.
+
+### Using CloudManager
+
+In place of the low-level API you can make your calls using CloudManager:
+
+```py
+#!/usr/bin/env python
+
+
+import click
+from werkit.parallel import Config, CloudManager, invoke_for_each
+
+manager = CloudManager(
+    config=Config(
+        local_repository="my-project",
+        ecr_repository="123456789012.dkr.ecr.us-east-1.amazonaws.com/my-project",
+        ecs_task_name="my-project",
+        task_args=[
+            "--cpu",
+            "1024",
+            "--memory",
+            "2048",
+            "--task-role",
+            "arn:aws:iam::123456789012:role/...",
+            "--security-group-id",
+            "sg-...",
+            "--subnet-id",
+            "subnet-...",
+        ],
+        default_task_count=5,
+    )
+)
+
+
+@click.group()
+def cli():
+    pass
+
+
+@cli.command()
+def login():
+    manager.login()
+
+
+@cli.command()
+@click.argument("tag")
+def build_and_push(tag):
+    manager.build_and_push()
+
+
+@cli.command()
+def enqueue():
+    from myproject import myfunc
+
+    items = {"key1": "value1", "key2": "value2"}
+
+    invoke_for_each(
+        measure_body,
+        items,
+        clean=True,
+        connection=manager.redis_connection,
+    )
+
+
+@cli.command()
+@click.option(
+    "--count",
+    default=manager.config.default_task_count,
+    type=int,
+    help="Number of tasks to run",
+)
+@click.argument("tag")
+def run(count, tag):
+    manager.run(tag=tag, count=count)
+
+
+@cli.command()
+def dashboard():
+    manager.dashboard()
+
+
+@cli.command()
+def ps():
+    manager.ps()
+
+
+@cli.command()
+def get_results():
+    print(manager.get_results())
+
+
+@cli.command()
+def clean():
+    manager.clean()
+
+
+if __name__ == "__main__":
+    cli()
+```
 
 ### Getting results
 
