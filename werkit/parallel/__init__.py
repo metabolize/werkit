@@ -6,3 +6,4 @@ from .invoke import (
     get_aggregate_status,
     get_results,
 )
+from .cloud_manager import Config, CloudManager
