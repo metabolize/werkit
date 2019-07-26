@@ -61,7 +61,9 @@ def test_repeat_invoke_raises_error(new_redis_proc, redis_conn):
 
 def test_invoke_for_each_with_kwargs(new_redis_proc, redis_conn):
     items = {"item_{}".format(i): i for i in range(10)}
-    invoke_for_each(multiply, items, kwargs={"multiplier": 5}, connection=redis_conn)
+    invoke_for_each(
+        multiply, items, kwargs={"multiplier": 5}, clean=True, connection=redis_conn
+    )
 
     Worker([DEFAULT_QUEUE_NAME], connection=redis_conn).work(burst=True)
 

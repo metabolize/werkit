@@ -23,6 +23,9 @@ def clean(queue_name=DEFAULT_QUEUE_NAME, connection=None):
             registry.remove(job)
 
 
+_clean_queue = clean
+
+
 def invoke_for_each(
     fn,
     items,
@@ -48,7 +51,7 @@ def invoke_for_each(
     jobs in the queue.
     """
     if clean:
-        clean(queue_name=queue_name, connection=connection)
+        _clean_queue(queue_name=queue_name, connection=connection)
 
     if ensure_clean:
         jobs = get_all_jobs(connection=connection, queue_name=queue_name)
