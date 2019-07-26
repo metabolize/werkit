@@ -58,7 +58,7 @@ from werkit.parallel import invoke_for_each
 
 
 items = {'a': ..., 'b': ...}
-job_ids = invoke_for_each(myfunc, items, connection=Redis(url=...))
+job_ids = invoke_for_each(myfunc, items, connection=Redis.from_url(...))
 ```
 
 ### Performing work
@@ -77,7 +77,7 @@ from redis import Redis
 from werkit.parallel import get_results
 
 
-get_results(wait_until_done=True, connection=Redis(url=...))
+get_results(wait_until_done=True, connection=Redis.from_url(...))
 ```
 
 ### Monitoring
