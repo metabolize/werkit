@@ -3,7 +3,7 @@ import time
 from redis import Redis
 from rq import Queue
 from rq.job import Job, JobStatus
-from rq.registry import FinishedJobRegistry, FailedJobRegistry, clean_registries
+from rq.registry import FinishedJobRegistry, FailedJobRegistry
 
 
 class NotReady(Exception):
@@ -12,15 +12,6 @@ class NotReady(Exception):
 
 DEFAULT_QUEUE_NAME = "werkit-default"
 JOB_ID_SEPARATOR = "____"
-
-
-def _queue(queue_name, rq_kwargs):
-    check_dependencies()
-
-    out_rq_kwargs = rq_kwargs.copy()
-    if "connection" not in out_rq_kwargs:
-        out_rq_kwargs.update(connection=Redis())
-    return Queue(queue_name, **out_rq_kwargs)
 
 
 def clean(queue_name=DEFAULT_QUEUE_NAME, connection=None):
@@ -47,10 +38,10 @@ def invoke_for_each(
 ):
     """
     Invoke the given function on each of the given items.
-    
+
     If `as_kwarg` is specified, the value is passed in as a keyword arg,
     otherwise as a positional arg.
-    
+
     The additional `args` and `kwargs` are also provided to the function.
 
     When `ensure_empty` is true, raises an exception if there are already
