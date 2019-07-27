@@ -13,7 +13,7 @@ class Config(object):
         ecs_task_name="werkit-default",
         task_args=None,
         default_task_count=1,
-        redis_url=os.environ["WERKIT_REDIS_URL"],
+        redis_url=None,
         queue_name=DEFAULT_QUEUE_NAME,
     ):
         self.local_repository = local_repository
@@ -22,7 +22,7 @@ class Config(object):
         self.ecs_task_name = ecs_task_name
         self.task_args = task_args
         self.default_task_count = default_task_count
-        self.redis_url = redis_url
+        self.redis_url = redis_url or os.environ["WERKIT_REDIS_URL"]
         self.queue_name = queue_name
 
 
