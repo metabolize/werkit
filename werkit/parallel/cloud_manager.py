@@ -83,7 +83,7 @@ class CloudManager(object):
             "--num",
             str(count),
             "--env",
-            "REDIS_URL={}".format(self.config.redis_url()),
+            "REDIS_URL={}".format(self.config.redis_url),
             *self.config.task_args
         )
 
