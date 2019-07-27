@@ -1,4 +1,5 @@
 from __future__ import print_function
+import os
 from executor import execute
 from .invoke import DEFAULT_QUEUE_NAME
 
@@ -12,7 +13,7 @@ class Config(object):
         ecs_task_name="werkit-default",
         task_args=None,
         default_task_count=1,
-        redis_url=None,
+        redis_url=os.environ["WERKIT_REDIS_URL"],
         queue_name=DEFAULT_QUEUE_NAME,
     ):
         self.local_repository = local_repository
@@ -32,16 +33,10 @@ class CloudManager(object):
         self.config = config
 
     @property
-    def redis_url(self):
-        import os
-
-        return self.config.redis_url or os.environ["WERKIT_REDIS_URL"]
-
-    @property
     def redis_connection(self):
         from redis import Redis
 
-        return Redis.from_url(self.redis_url)
+        return Redis.from_url(self.config.redis_url)
 
     def login(self):
         login_cmd = execute(
