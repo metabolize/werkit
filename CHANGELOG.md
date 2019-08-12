@@ -1,6 +1,11 @@
 # Changelog
 
 
+## 0.3.1
+
+- Fix Redis URL configuration.
+
+
 ## 0.3.0
 
 - Add support for distributed jobs using Redis, RQ, and the Fargate CLI.
