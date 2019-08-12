@@ -1,4 +1,5 @@
 from __future__ import print_function
+import os
 from executor import execute
 from .invoke import DEFAULT_QUEUE_NAME
 
@@ -21,7 +22,7 @@ class Config(object):
         self.ecs_task_name = ecs_task_name
         self.task_args = task_args
         self.default_task_count = default_task_count
-        self.redis_url = redis_url
+        self.redis_url = redis_url or os.environ["WERKIT_REDIS_URL"]
         self.queue_name = queue_name
 
 
@@ -32,16 +33,10 @@ class CloudManager(object):
         self.config = config
 
     @property
-    def redis_url(self):
-        import os
-
-        return self.config.redis_url or os.environ["WERKIT_REDIS_URL"]
-
-    @property
     def redis_connection(self):
         from redis import Redis
 
-        return Redis.from_url(self.redis_url)
+        return Redis.from_url(self.config.redis_url)
 
     def login(self):
         login_cmd = execute(
