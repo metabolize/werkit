@@ -22,7 +22,7 @@ class Config(object):
         self.ecs_task_name = ecs_task_name
         self.task_args = task_args
         self.default_task_count = default_task_count
-        self.redis_url = redis_url or os.environ["WERKIT_REDIS_URL"]
+        self.redis_url = redis_url or os.environ.get("WERKIT_REDIS_URL", None)
         self.queue_name = queue_name
 
 
