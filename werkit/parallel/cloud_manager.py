@@ -36,6 +36,9 @@ class CloudManager(object):
     def redis_connection(self):
         from redis import Redis
 
+        if not self.config.redis_url:
+            raise ValueError("Redis URL must be configured")
+
         return Redis.from_url(self.config.redis_url)
 
     def login(self):
