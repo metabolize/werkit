@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.2
+
+- Make Redis URL optional when it is not needed.
+
 
 ## 0.3.1
 
