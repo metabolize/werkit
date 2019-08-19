@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.3
+
+- Make Redis and rq soft depenencies.
+
+
 ## 0.3.2
 
 - Make Redis URL optional when it is not needed.
