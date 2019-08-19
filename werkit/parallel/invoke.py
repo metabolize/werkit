@@ -1,9 +1,6 @@
 import time
 
-from redis import Redis
-from rq import Queue
-from rq.job import Job, JobStatus
-from rq.registry import FinishedJobRegistry, FailedJobRegistry
+# Import redis and rq lqzily to keep them soft dependencies.
 
 
 class NotReady(Exception):
@@ -15,6 +12,11 @@ JOB_ID_SEPARATOR = "____"
 
 
 def clean(queue_name=DEFAULT_QUEUE_NAME, connection=None):
+    from redis import Redis
+    from rq import Queue
+    from rq.job import Job
+    from rq.registry import FinishedJobRegistry, FailedJobRegistry
+
     queue = Queue(queue_name, connection=connection or Redis())
     queue.empty()
 
@@ -51,6 +53,9 @@ def invoke_for_each(
     When `ensure_empty` is true, raises an exception if there are already
     jobs in the queue.
     """
+    from redis import Redis
+    from rq import Queue
+
     if clean:
         _clean_queue(queue_name=queue_name, connection=connection)
 
@@ -79,6 +84,11 @@ def invoke_for_each(
 
 
 def get_all_jobs(connection=None, queue_name=DEFAULT_QUEUE_NAME):
+    from redis import Redis
+    from rq import Queue
+    from rq.job import Job
+    from rq.registry import FinishedJobRegistry, FailedJobRegistry
+
     queue = Queue(queue_name, connection=connection or Redis())
     queued_jobs = queue.job_ids
     finished_jobs = FinishedJobRegistry(queue=queue).get_job_ids()
@@ -91,6 +101,8 @@ def get_all_jobs(connection=None, queue_name=DEFAULT_QUEUE_NAME):
 def get_aggregate_status(
     connection=None, queue_name=DEFAULT_QUEUE_NAME, ret_jobs=False
 ):
+    from rq.job import JobStatus
+
     jobs = get_all_jobs(connection=connection, queue_name=queue_name)
     if len(jobs) == 0:
         raise ValueError("No jobs found for queue {}".format(queue_name))
@@ -111,6 +123,8 @@ def get_aggregate_status(
 
 
 def get_results(wait_until_done=False, queue_name=DEFAULT_QUEUE_NAME, connection=None):
+    from rq.job import JobStatus
+
     while True:
         status, jobs = get_aggregate_status(connection=connection, ret_jobs=True)
         if status == JobStatus.FINISHED:
