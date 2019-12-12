@@ -21,9 +21,8 @@ def clean(queue_name=DEFAULT_QUEUE_NAME, connection=None):
     queue.empty()
 
     for registry in [FinishedJobRegistry(queue=queue), FailedJobRegistry(queue=queue)]:
-        for job in Job.fetch_many(registry.get_job_ids(), connection=connection):
-            if job is not None:
-                registry.remove(job)
+        for job_id in registry.get_job_ids():
+            registry.remove(job_id)
 
 
 _clean_queue = clean
