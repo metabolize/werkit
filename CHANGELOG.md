@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.4.0
+
+### BREAKING CHANGES
+
+- Require Python 3.
+- Require RQ 1.2.0+ (not yet released).
+
+### New features
+
+- Remove failed jobs before expiration
+
+### Bug fixes
+
+- Fix stack trace printing.
+
+
 ## 0.3.3
 
 - Make Redis and rq soft depenencies.
