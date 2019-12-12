@@ -36,9 +36,9 @@ class Manager:
             }
             if self.handle_exceptions:
                 print(
-                    "Error handled by werkit (to disable, pass `handle_exceptions=False` to werkit.manage_execution)"
+                    "Error handled by werkit. (To disable, invoke `Manager()` with `handle_exceptions=False`.)"
                 )
-                print(traceback)
+                print("".join(formatted))
                 return True
             else:
                 return False
