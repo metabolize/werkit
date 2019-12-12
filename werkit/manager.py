@@ -1,4 +1,3 @@
-from __future__ import print_function
 from traceback import format_exception
 import datetime
 from .format_time import format_time

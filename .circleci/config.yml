@@ -1,36 +1,6 @@
 version: 2
 jobs:
-  python2:
-    docker:
-      - image: circleci/python:2
-      - image: redis
-
-    steps:
-      - checkout
-
-      - run:
-          name: Install python dependencies
-          # set -o pipefail; pip .. | cat is used to disable the progress bar.
-          command: |
-            mkdir -p venv
-            virtualenv venv
-            . venv/bin/activate
-            set -o pipefail; pip install --upgrade -r requirements_dev_py2.txt | cat
-
-      - run:
-          name: Show versions
-          command: |
-            . venv/bin/activate
-            pip freeze
-
-      - run:
-          name: Run tests
-          when: always
-          command: |
-            . venv/bin/activate
-            ./dev.py test
-
-  python3:
+  main:
     docker:
       - image: circleci/python:3
       - image: redis
@@ -44,7 +14,7 @@ jobs:
             mkdir -p venv
             virtualenv venv
             . venv/bin/activate
-            set -o pipefail; pip install --upgrade -r requirements_dev_py3.txt | cat
+            set -o pipefail; pip install --upgrade -r requirements_dev.txt | cat
 
       - run:
           name: Show versions
@@ -92,8 +62,7 @@ workflows:
 
   on-commit:
     jobs:
-      - python2
-      - python3
+      - main
 
   daily:
     triggers:
@@ -103,5 +72,4 @@ workflows:
             branches:
               only: master
     jobs:
-      - python2
-      - python3
+      - main

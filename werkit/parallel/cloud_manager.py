@@ -1,4 +1,3 @@
-from __future__ import print_function
 import os
 from executor import execute
 from .invoke import DEFAULT_QUEUE_NAME
