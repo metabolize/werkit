@@ -12,17 +12,15 @@ if LAMBDA_WORKER_FUNCTION_NAME not in os.environ:
 
 lambda_worker_function_name = os.environ[LAMBDA_WORKER_FUNCTION_NAME]
 
-#TODO: how to handle errors
-async def call_worker_service(y):
+async def call_worker_service(input, extra_args):
     response = client.invoke(
         FunctionName=lambda_worker_function_name,
-        Payload=json.dumps(y)
+        Payload=json.dumps({'input': input, 'extra_args': extra_args})
     )
     return json.load(response['Payload'])
 
-async def synchronous_map_on_lambda(x):
-    #TODO: deal with object arg
-    coroutines = [call_worker_service(y) for y in x] 
-    completed, pending  = await asyncio.wait(coroutines)
-    return [r.result() for r in completed]
+async def parallel_map_on_lambda(input, extra_args=[]):
+    coroutines = [call_worker_service(y, extra_args) for y in input] 
+    responses = await asyncio.gather(*coroutines)
+    return responses
 
