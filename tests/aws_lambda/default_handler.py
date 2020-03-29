@@ -4,6 +4,7 @@ import asyncio
 import json
 
 import werkit.aws_lambda.parallel 
+from werkit.aws_lambda.default_handler import handler
 import botocore.session
 from botocore.stub import Stubber
 from botocore.exceptions import ClientError
@@ -12,7 +13,7 @@ from unittest.mock import patch
 
 import io
 
-from tests.aws_lambda.worker.service import handler
+from tests.aws_lambda.worker.service import handler as worker_handler
 
 #TODO: figure out how to get patch to work
 
@@ -31,51 +32,13 @@ def init():
     return stubber
 
 
-# test that we expect to get a successful response out
-def test_call_worker_service_success():
-    stubber = init()
-    _input = input[0]
-    input_event = create_input_event(_input)
-    expected_output_payload = handler(input_event, None)
-    expected_output = {
-        'StatusCode': 200,
-        'Payload' : io.StringIO(json.dumps(expected_output_payload))
-    }
-
-    stubber.add_response('invoke', expected_output, { 
-        'FunctionName':lambda_worker_function_name,
-        'Payload':json.dumps(input_event)
-    })
-    stubber.activate()
-
-    event_loop = asyncio.get_event_loop()
-    result = event_loop.run_until_complete(werkit.aws_lambda.parallel.call_worker_service(lambda_worker_function_name, extra_args, _input))
-
-    assert result == expected_output_payload 
-
-# test that we expect to get a client error
-def test_call_worker_service_failure():
-    stubber = init()
-    _input = input[0]
-    input_event = create_input_event(_input)
-    stubber.add_client_error('invoke',expected_params={ 
-        'FunctionName':lambda_worker_function_name,
-        'Payload':json.dumps(input_event)
-    })
-    stubber.activate()
-
-    event_loop = asyncio.get_event_loop()
-    with pytest.raises(ClientError):
-        event_loop.run_until_complete(werkit.aws_lambda.parallel.call_worker_service(lambda_worker_function_name, extra_args, _input))
-
-
-def test_parallel_map_on_lambda_success():
+def test_default_handler_success():
     stubber = init()
 
     expected_result = []
     for _input in input:
         input_event = create_input_event(_input)
-        _expected_output = handler(input_event, None)
+        _expected_output = worker_handler(input_event, None)
         expected_result.append(_expected_output)
         expected_output_payload = _expected_output
         expected_output = {
@@ -89,13 +52,12 @@ def test_parallel_map_on_lambda_success():
         })
     stubber.activate()
 
-    event_loop = asyncio.get_event_loop()
-    result = event_loop.run_until_complete(werkit.aws_lambda.parallel.parallel_map_on_lambda(lambda_worker_function_name, input, extra_args))
+    result = handler({'input':input, 'extra_args':extra_args}, None, lambda_worker_function_name=lambda_worker_function_name)
 
     assert result == expected_result 
 
 
-def test_parallel_map_on_lambda_failure():
+def test_default_handler_failure():
     stubber = init()
 
     expected_result = []
@@ -109,7 +71,7 @@ def test_parallel_map_on_lambda_failure():
 
     for _input in input[1:]:
         input_event = create_input_event(_input)
-        _expected_output = handler(input_event, None)
+        _expected_output = worker_handler(input_event, None)
         expected_result.append(_expected_output)
         expected_output_payload = _expected_output
         expected_output = {
@@ -123,8 +85,8 @@ def test_parallel_map_on_lambda_failure():
         })
     stubber.activate()
 
-    event_loop = asyncio.get_event_loop()
-    result = event_loop.run_until_complete(werkit.aws_lambda.parallel.parallel_map_on_lambda(lambda_worker_function_name, input, extra_args))
+    result = handler({'input':input, 'extra_args':extra_args}, None, lambda_worker_function_name=lambda_worker_function_name)
 
-    assert isinstance(result[0], ClientError)
+
+    assert result[0]['exception'] == 'ClientError'
     assert result[1:] == expected_result
