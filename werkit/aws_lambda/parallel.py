@@ -3,25 +3,20 @@ import boto3
 import json
 import asyncio
 import os
+from functools import partial
 
 client = boto3.client('lambda')
 
-LAMBDA_WORKER_FUNCTION_NAME = 'LAMBDA_WORKER_FUNCTION_NAME'
-
-if LAMBDA_WORKER_FUNCTION_NAME not in os.environ:
-    raise Exception(f'Environment variable {LAMBDA_WORKER_FUNCTION_NAME} must be defined to use s3_upload_handler')
-
-lambda_worker_function_name = os.environ[LAMBDA_WORKER_FUNCTION_NAME]
-
-async def call_worker_service(input, extra_args):
+async def call_worker_service(lambda_worker_function_name, extra_args, _input):
     response = client.invoke(
         FunctionName=lambda_worker_function_name,
-        Payload=json.dumps({'input': input, 'extra_args': extra_args}, sort_keys=True)
+        Payload=json.dumps({'input': _input, 'extra_args': extra_args})
     )
     return json.load(response['Payload'])
 
-async def parallel_map_on_lambda(input, extra_args=[]):
-    coroutines = [call_worker_service(y, extra_args) for y in input] 
-    responses = await asyncio.gather(*coroutines)
+async def parallel_map_on_lambda(lambda_worker_function_name, input, extra_args=[]):
+    _call_worker_service = partial(call_worker_service, lambda_worker_function_name, extra_args)
+    coroutines = list(map(_call_worker_service, input))
+    responses = await asyncio.gather(*coroutines, return_exceptions=True)
     return responses
 
