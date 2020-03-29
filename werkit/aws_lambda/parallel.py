@@ -1,3 +1,4 @@
+import pdb
 import boto3
 import json
 import asyncio
@@ -8,14 +9,14 @@ client = boto3.client('lambda')
 LAMBDA_WORKER_FUNCTION_NAME = 'LAMBDA_WORKER_FUNCTION_NAME'
 
 if LAMBDA_WORKER_FUNCTION_NAME not in os.environ:
-    raise Error(f'Environment variable {LAMBDA_WORKER_FUNCTION_NAME} must be defined to use s3_upload_handler')
+    raise Exception(f'Environment variable {LAMBDA_WORKER_FUNCTION_NAME} must be defined to use s3_upload_handler')
 
 lambda_worker_function_name = os.environ[LAMBDA_WORKER_FUNCTION_NAME]
 
 async def call_worker_service(input, extra_args):
     response = client.invoke(
         FunctionName=lambda_worker_function_name,
-        Payload=json.dumps({'input': input, 'extra_args': extra_args})
+        Payload=json.dumps({'input': input, 'extra_args': extra_args}, sort_keys=True)
     )
     return json.load(response['Payload'])
 
