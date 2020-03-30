@@ -4,6 +4,7 @@ import json
 import asyncio
 import os
 from functools import partial
+from botocore.exceptions import ClientError
 
 client = boto3.client('lambda')
 
@@ -14,8 +15,18 @@ async def call_worker_service(lambda_worker_function_name, extra_args, _input):
     )
     return json.load(response['Payload'])
 
-async def parallel_map_on_lambda(lambda_worker_function_name, input, extra_args=[]):
-    _call_worker_service = partial(call_worker_service, lambda_worker_function_name, extra_args)
+async def wait_for(timeout, lambda_worker_function_name, extra_args, _input):
+    try: 
+        return await asyncio.wait_for(call_worker_service(lambda_worker_function_name, extra_args, _input), timeout=timeout)
+    except ClientError as ex:
+        return ex
+    except asyncio.TimeoutError as ex:
+        return ex
+    except Exception as ex:
+        return ex
+
+async def parallel_map_on_lambda(lambda_worker_function_name, timeout, input, extra_args=[]):
+    _call_worker_service = partial(wait_for, timeout, lambda_worker_function_name, extra_args)
     coroutines = list(map(_call_worker_service, input))
     responses = await asyncio.gather(*coroutines, return_exceptions=True)
     return responses

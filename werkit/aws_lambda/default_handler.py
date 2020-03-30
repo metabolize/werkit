@@ -14,6 +14,11 @@ def map_result(result):
             'args': result.args,
             'operation_name': result.operation_name,
         }
+    elif isinstance(result, asyncio.TimeoutError):
+        return {
+            'exception': 'TimeoutError',
+            'args': result.args,
+        }
     elif isinstance(result, Exception):
         return {
             'exception': 'Exception',
@@ -22,9 +27,9 @@ def map_result(result):
     else:
         return result
 
-def handler(event, context, lambda_worker_function_name=env_lambda_worker_function_name):
+def handler(event, context, lambda_worker_function_name=env_lambda_worker_function_name, timeout=120):
     if not lambda_worker_function_name:
         raise Exception(f'Environment variable {LAMBDA_WORKER_FUNCTION_NAME} must be defined, or default kwArg lambda_worker_function_name must be bound to the handler')
     event_loop = asyncio.get_event_loop()
-    results = event_loop.run_until_complete(parallel_map_on_lambda(lambda_worker_function_name, **event))
+    results = event_loop.run_until_complete(parallel_map_on_lambda(lambda_worker_function_name, timeout, **event))
     return list(map(map_result, results))
