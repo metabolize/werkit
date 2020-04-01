@@ -9,7 +9,7 @@ Sphinx
 recommonmark
 
 # Unit tests.
-pytest ==5.3.5
+pytest ==5.4.1
 pytest-cov == 2.8.1
 pytest-redis==2.0.0
 
