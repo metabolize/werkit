@@ -28,7 +28,7 @@ def create_worker_function(client, worker_filename, delay=None):
     zipf = zipfile.ZipFile(
         "python-worker.zip", "w", zipfile.ZIP_DEFLATED
     )  # TODO: make this a tempfile
-    os.chdir("tests/aws_lambda/worker/")
+    os.chdir("werkit/aws_lambda/test_worker/")
     zipf.write(worker_filename + ".py")
     zipf.close()
     os.chdir("../../../")

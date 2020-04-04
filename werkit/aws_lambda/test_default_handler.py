@@ -13,7 +13,7 @@ from functools import partial
 from unittest.mock import patch
 
 
-from tests.aws_lambda.util import (
+from werkit.aws_lambda.test_util import (
     input,
     extra_args,
     lambda_worker_function_name,

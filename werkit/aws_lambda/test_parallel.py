@@ -11,9 +11,9 @@ from functools import partial
 
 import io
 
-from tests.aws_lambda.worker.service import handler as worker_handler
+from werkit.aws_lambda.test_worker.service import handler as worker_handler
 
-from tests.aws_lambda.util import (
+from werkit.aws_lambda.test_util import (
     input,
     extra_args,
     lambda_worker_function_name,

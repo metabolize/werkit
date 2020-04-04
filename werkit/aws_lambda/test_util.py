@@ -3,7 +3,7 @@ import botocore.session
 from botocore.stub import Stubber
 from functools import partial
 import json
-from tests.aws_lambda.worker.service import handler as worker_handler
+from werkit.aws_lambda.test_worker.service import handler as worker_handler
 import io
 import asyncio
 
