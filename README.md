@@ -193,6 +193,18 @@ You can monitor your queues using [RQ Dashboard][] or one of the
 [monitoring]: https://python-rq.org/docs/monitoring/
 
 
+### Parallel computation on AWS lambda
+
+Werkit also implements a parallel map on AWS lambda.
+
+Werkit comes with a default lambda handler, that accepts an event of the form `{"input":[a, b, ...],"extra_args":[c, d, ...]}`. Werkit invokes a lambda function in parallel for every item in `input`, with an event of the form `{"input": a, "extra_args":[c, d, ...]}`.
+
+The werkit default handler is configurable via the following environmnent variables:
+
+* `LAMBDA_WORKER_FUNCTION_NAME`: Name of the lambda worker function to invoke 
+* `LAMBDA_WORKER_TIMEOUT`: How long to wait in seconds for the lambda worker function to return before returning a TimeoutError
+
+
 ## Contribute
 
 - Issue Tracker: https://github.com/metabolize/werkit/issues
