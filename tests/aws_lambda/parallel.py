@@ -70,14 +70,11 @@ def test_parallel_map_on_lambda_client_failure():
     assert isinstance(result[0], ClientError)
     assert result[1:] == expected_results
 
+@patch('werkit.aws_lambda.parallel.call_worker_service', parallel_map_on_lambda_timeout_failure_call_worker_service_mock)
 def test_parallel_map_on_lambda_timeout_failure():
-    call_worker_service_old = werkit.aws_lambda.parallel.call_worker_service
-    werkit.aws_lambda.parallel.call_worker_service = parallel_map_on_lambda_timeout_failure_call_worker_service_mock
-
     setup_success_mock_responses()
     event_loop = asyncio.get_event_loop()
     results = event_loop.run_until_complete(werkit.aws_lambda.parallel.parallel_map_on_lambda(lambda_worker_function_name, 1, input, extra_args))
 
     assert all([isinstance(r, asyncio.TimeoutError) for r in results])
 
-    werkit.aws_lambda.parallel.call_worker_service = call_worker_service_old 
