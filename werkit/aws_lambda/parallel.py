@@ -6,7 +6,10 @@ import os
 from functools import partial
 from botocore.exceptions import ClientError
 
-client = boto3.client("lambda")
+client = boto3.client(
+    "lambda",
+    region_name=os.environ["AWS_REGION"] if "AWS_REGION" in os.environ else None,
+)
 
 
 async def call_worker_service(lambda_worker_function_name, extra_args, _input):
