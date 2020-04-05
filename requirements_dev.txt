@@ -14,7 +14,7 @@ pytest-cov == 2.8.1
 pytest-redis==2.0.0
 
 # Optional dependencies.
-redis==3.3.11
+redis==3.4.1
 git+https://github.com/rq/rq.git@cf501518534429640a9a6d14e022f9329225e701#egg=rq
 
 black ==19.10b0
