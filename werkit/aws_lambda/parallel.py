@@ -1,25 +1,24 @@
 import pdb
-import boto3
+import aioboto3
 import json
 import asyncio
 import os
 from functools import partial
 from botocore.exceptions import ClientError
-
-client = boto3.client("lambda")
-
+import time
+from botocore.client import Config
 
 async def call_worker_service(lambda_worker_function_name, extra_args, _input):
-    loop = asyncio.get_running_loop()
-    response = await loop.run_in_executor(
-        None,
-        partial(
-            client.invoke,
+    async with aioboto3.client('lambda') as lambda_client:
+        #tic = time.time()
+        response = await lambda_client.invoke(
             FunctionName=lambda_worker_function_name,
-            Payload=json.dumps({"input": _input, "extra_args": extra_args}),
-        ),
-    )
-    return json.load(response["Payload"])
+            Payload=json.dumps({"input": _input, "extra_args": extra_args})
+        )
+        #toc = time.time()
+        #print(_input, toc - tic)
+        payload = await response["Payload"].read()
+        return json.loads(payload.decode())
 
 
 async def wait_for(timeout, lambda_worker_function_name, extra_args, _input):
