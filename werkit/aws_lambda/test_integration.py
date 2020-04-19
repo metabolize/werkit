@@ -10,6 +10,8 @@ from pprint import pprint
 role = "arn:aws:iam::139234625917:role/werkit-test-integration"
 # This role has the following policy: AWSLambdaRole
 
+path_to_orchestrator_zip = '/tmp/python-orchestrator.zip'
+path_to_worker_zip = '/tmp/python-worker.zip'
 
 # https://stackoverflow.com/a/1855118/366856
 def zipdir(path, ziph):
@@ -26,20 +28,20 @@ def create_worker_function(client, worker_filename, delay=None):
 
     # create the worker function
     zipf = zipfile.ZipFile(
-        "python-worker.zip", "w", zipfile.ZIP_DEFLATED
+        path_to_worker_zip, "w", zipfile.ZIP_DEFLATED
     )  # TODO: make this a tempfile
     os.chdir("werkit/aws_lambda/test_worker/")
     zipf.write(worker_filename + ".py")
     zipf.close()
     os.chdir("../../../")
 
-    with open("python-worker.zip", "rb") as f:
+    with open(path_to_worker_zip, "rb") as f:
         bytes = f.read()
 
     worker_function_name = uuid.uuid4().hex
     response = client.create_function(
         FunctionName=worker_function_name,
-        Runtime="python3.8",
+        Runtime="python3.7",
         Role=role,  # FIXME: new role name
         Handler=worker_filename + ".handler",
         Code={"ZipFile": bytes},
@@ -59,19 +61,21 @@ def create_orchestrator_function(client, worker_function_name, timeout=None):
 
     # create the orchestrator function
     zipf = zipfile.ZipFile(
-        "python-orchestrator.zip", "w", zipfile.ZIP_DEFLATED
+        path_to_orchestrator_zip, "w", zipfile.ZIP_DEFLATED
     )  # TODO: make this a tempfile
     zipdir("werkit/", zipf)  # TODO: reference from dirname
-    zipdir("venv/lib/python3.7/site-packages/", zipf)  # TODO: reference from dirname
+    os.chdir("venv/lib/python3.7/site-packages/") # TODO: reference from dirname
+    zipdir('.', zipf)  
+    os.chdir("../../../../")
     zipf.close()
 
-    with open("python-orchestrator.zip", "rb") as f:
+    with open(path_to_orchestrator_zip, "rb") as f:
         bytes = f.read()
 
     orchestrator_function_name = uuid.uuid4().hex
     response = client.create_function(
         FunctionName=orchestrator_function_name,
-        Runtime="python3.8",
+        Runtime="python3.7",
         Role=role,  # FIXME: new role name
         Handler="werkit.aws_lambda.default_handler.handler",
         Code={"ZipFile": bytes},
