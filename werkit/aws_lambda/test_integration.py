@@ -13,6 +13,7 @@ role = "arn:aws:iam::139234625917:role/werkit-test-integration"
 path_to_orchestrator_zip = "/tmp/python-orchestrator.zip"
 path_to_worker_zip = "/tmp/python-worker.zip"
 
+
 # https://stackoverflow.com/a/1855118/366856
 def zipdir(path, ziph):
     # ziph is zipfile handle

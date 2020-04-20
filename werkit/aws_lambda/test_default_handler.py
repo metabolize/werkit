@@ -9,9 +9,6 @@ import botocore.session
 from botocore.stub import Stubber
 from botocore.exceptions import ClientError
 from functools import partial
-
-from unittest.mock import patch
-
 from asynctest import Mock, patch
 
 from werkit.aws_lambda.test_util import (
