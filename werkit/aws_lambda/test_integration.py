@@ -10,8 +10,8 @@ from pprint import pprint
 role = "arn:aws:iam::139234625917:role/werkit-test-integration"
 # This role has the following policy: AWSLambdaRole
 
-path_to_orchestrator_zip = '/tmp/python-orchestrator.zip'
-path_to_worker_zip = '/tmp/python-worker.zip'
+path_to_orchestrator_zip = "/tmp/python-orchestrator.zip"
+path_to_worker_zip = "/tmp/python-worker.zip"
 
 # https://stackoverflow.com/a/1855118/366856
 def zipdir(path, ziph):
@@ -64,8 +64,8 @@ def create_orchestrator_function(client, worker_function_name, timeout=None):
         path_to_orchestrator_zip, "w", zipfile.ZIP_DEFLATED
     )  # TODO: make this a tempfile
     zipdir("werkit/", zipf)  # TODO: reference from dirname
-    os.chdir("venv/lib/python3.7/site-packages/") # TODO: reference from dirname
-    zipdir('.', zipf)  
+    os.chdir("venv/lib/python3.7/site-packages/")  # TODO: reference from dirname
+    zipdir(".", zipf)
     os.chdir("../../../../")
     zipf.close()
 

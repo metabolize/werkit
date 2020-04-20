@@ -31,7 +31,7 @@ call_handler = partial(
 )
 
 
-@patch('aioboto3.client', new_callable=Mock)
+@patch("aioboto3.client", new_callable=Mock)
 def test_default_handler_success(mock_invoke):
 
     expected_result = setup_success_mock_responses(mock_invoke, inputs)
@@ -40,7 +40,7 @@ def test_default_handler_success(mock_invoke):
     assert result == expected_result
 
 
-@patch('aioboto3.client', new_callable=Mock)
+@patch("aioboto3.client", new_callable=Mock)
 def test_default_handler_client_failure(mock_invoke):
     expected_results = setup_first_failure_mock_responses(mock_invoke, inputs)
     result = call_handler()
@@ -53,7 +53,7 @@ def test_default_handler_client_failure(mock_invoke):
     "werkit.aws_lambda.parallel.call_worker_service",
     parallel_map_on_lambda_timeout_failure_call_worker_service_mock,
 )
-@patch('aioboto3.client', new_callable=Mock)
+@patch("aioboto3.client", new_callable=Mock)
 def test_default_handler_timeout_failure(mock_invoke):
     setup_success_mock_responses(mock_invoke, inputs)
     results = call_handler(timeout=1)

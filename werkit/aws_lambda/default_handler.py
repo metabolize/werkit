@@ -55,4 +55,3 @@ def handler(
         parallel_map_on_lambda(lambda_worker_function_name, timeout, **event)
     )
     return list(map(map_result, results))
-

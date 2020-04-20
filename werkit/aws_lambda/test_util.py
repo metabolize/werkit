@@ -20,7 +20,7 @@ def setup_success_mock_responses(mock_invoke, _inputs):
         input_event = create_input_event(_input)
         _expected_output = worker_handler(input_event, None)
         expected_result.append(_expected_output)
-        
+
         payload_mock = CoroutineMock()
         invoke_return_value = {
             "Payload": payload_mock,
@@ -38,21 +38,22 @@ def setup_success_mock_responses(mock_invoke, _inputs):
 
     m.return_value.invoke = CoroutineMock()
 
-    #setup mock
+    # setup mock
     m.return_value.invoke.side_effect = invoke_return_values
 
     return expected_result
+
 
 def setup_mock_failure_response(mock_invoke, _input):
     m = CoroutineMock()
     m2 = CoroutineMock()
     mock_invoke.return_value.__aenter__ = m
-    mock_invoke.return_value.__aexit__ = m2 
+    mock_invoke.return_value.__aexit__ = m2
     m2.return_value = False
 
     m.return_value.invoke = CoroutineMock()
 
-    m.return_value.invoke.side_effect = ClientError({'Error': {}}, '')
+    m.return_value.invoke.side_effect = ClientError({"Error": {}}, "")
 
 
 def setup_first_failure_mock_responses(mock_invoke, _inputs):
@@ -60,16 +61,16 @@ def setup_first_failure_mock_responses(mock_invoke, _inputs):
     m = CoroutineMock()
     m2 = CoroutineMock()
     mock_invoke.return_value.__aenter__ = m
-    mock_invoke.return_value.__aexit__ = m2 
+    mock_invoke.return_value.__aexit__ = m2
     m2.return_value = False
 
     expected_result = []
-    invoke_return_values = [ClientError({'Error': {}}, '')] # make the first one fail
+    invoke_return_values = [ClientError({"Error": {}}, "")]  # make the first one fail
     for _input in _inputs[1:]:
         input_event = create_input_event(_input)
         _expected_output = worker_handler(input_event, None)
         expected_result.append(_expected_output)
-        
+
         payload_mock = CoroutineMock()
         invoke_return_value = {
             "Payload": payload_mock,
@@ -81,11 +82,10 @@ def setup_first_failure_mock_responses(mock_invoke, _inputs):
 
     m.return_value.invoke = CoroutineMock()
 
-    #setup mock
+    # setup mock
     m.return_value.invoke.side_effect = invoke_return_values
 
     return expected_result
-
 
 
 def create_input_event(_input):

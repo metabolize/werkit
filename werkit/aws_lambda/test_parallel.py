@@ -20,15 +20,16 @@ from werkit.aws_lambda.test_util import (
     setup_first_failure_mock_responses,
     setup_success_mock_responses,
     setup_mock_failure_response,
-    default_timeout
+    default_timeout,
 )
 
 from asynctest import Mock, patch
 
-@patch('aioboto3.client', new_callable=Mock)
+
+@patch("aioboto3.client", new_callable=Mock)
 def test_call_worker_service_success(mock_invoke):
     # test that we expect to get a successful response out
-    #stubber = init()
+    # stubber = init()
     _input = inputs[0]
 
     expected_result = setup_success_mock_responses(mock_invoke, [_input])
@@ -41,10 +42,11 @@ def test_call_worker_service_success(mock_invoke):
         )
     )
 
-    assert result == expected_output_payload 
+    assert result == expected_output_payload
+
 
 # test that we expect to get a client error
-@patch('aioboto3.client', new_callable=Mock)
+@patch("aioboto3.client", new_callable=Mock)
 def test_call_worker_service_failure(mock_invoke):
     _input = inputs[0]
     setup_mock_failure_response(mock_invoke, _input)
@@ -59,7 +61,7 @@ def test_call_worker_service_failure(mock_invoke):
         print(result)
 
 
-@patch('aioboto3.client', new_callable=Mock)
+@patch("aioboto3.client", new_callable=Mock)
 def test_parallel_map_on_lambda_success(mock_invoke):
     expected_result = setup_success_mock_responses(mock_invoke, inputs)
 
@@ -73,7 +75,7 @@ def test_parallel_map_on_lambda_success(mock_invoke):
     assert result == expected_result
 
 
-@patch('aioboto3.client', new_callable=Mock)
+@patch("aioboto3.client", new_callable=Mock)
 def test_parallel_map_on_lambda_client_failure(mock_invoke):
     expected_results = setup_first_failure_mock_responses(mock_invoke, inputs)
 
@@ -92,7 +94,7 @@ def test_parallel_map_on_lambda_client_failure(mock_invoke):
     "werkit.aws_lambda.parallel.call_worker_service",
     parallel_map_on_lambda_timeout_failure_call_worker_service_mock,
 )
-@patch('aioboto3.client', new_callable=Mock)
+@patch("aioboto3.client", new_callable=Mock)
 def test_parallel_map_on_lambda_timeout_failure(mock_invoke):
     setup_success_mock_responses(mock_invoke, inputs)
     event_loop = asyncio.get_event_loop()
