@@ -6,7 +6,6 @@ import json
 import werkit.aws_lambda.parallel
 from botocore.exceptions import ClientError
 
-from unittest.mock import patch
 from functools import partial
 
 import io
@@ -14,28 +13,26 @@ import io
 from werkit.aws_lambda.test_worker.service import handler as worker_handler
 
 from werkit.aws_lambda.test_util import (
-    input,
+    inputs,
     extra_args,
     lambda_worker_function_name,
     parallel_map_on_lambda_timeout_failure_call_worker_service_mock,
     setup_first_failure_mock_responses,
     setup_success_mock_responses,
-    setup_mock_success_response,
     setup_mock_failure_response,
-    init,
-    default_timeout,
+    default_timeout
 )
 
+from asynctest import Mock, patch
 
-def test_call_worker_service_success():
+@patch('aioboto3.client', new_callable=Mock)
+def test_call_worker_service_success(mock_invoke):
     # test that we expect to get a successful response out
-    stubber = init()
+    #stubber = init()
+    _input = inputs[0]
 
-    expected_result = []
-    _input = input[0]
-    setup_mock_success_response(stubber, expected_result, _input)
+    expected_result = setup_success_mock_responses(mock_invoke, [_input])
     expected_output_payload = expected_result[0]
-    stubber.activate()
 
     event_loop = asyncio.get_event_loop()
     result = event_loop.run_until_complete(
@@ -44,45 +41,46 @@ def test_call_worker_service_success():
         )
     )
 
-    assert result == expected_output_payload
-
+    assert result == expected_output_payload 
 
 # test that we expect to get a client error
-def test_call_worker_service_failure():
-    stubber = init()
-    _input = input[0]
-    setup_mock_failure_response(stubber, _input)
-    stubber.activate()
+@patch('aioboto3.client', new_callable=Mock)
+def test_call_worker_service_failure(mock_invoke):
+    _input = inputs[0]
+    setup_mock_failure_response(mock_invoke, _input)
 
     event_loop = asyncio.get_event_loop()
     with pytest.raises(ClientError):
-        event_loop.run_until_complete(
+        result = event_loop.run_until_complete(
             werkit.aws_lambda.parallel.call_worker_service(
                 lambda_worker_function_name, extra_args, _input
             )
         )
+        print(result)
 
 
-def test_parallel_map_on_lambda_success():
-    expected_result = setup_success_mock_responses()
+@patch('aioboto3.client', new_callable=Mock)
+def test_parallel_map_on_lambda_success(mock_invoke):
+    expected_result = setup_success_mock_responses(mock_invoke, inputs)
 
     event_loop = asyncio.get_event_loop()
     result = event_loop.run_until_complete(
         werkit.aws_lambda.parallel.parallel_map_on_lambda(
-            lambda_worker_function_name, default_timeout, input, extra_args
+            lambda_worker_function_name, default_timeout, inputs, extra_args
         )
     )
 
     assert result == expected_result
 
 
-def test_parallel_map_on_lambda_client_failure():
-    expected_results = setup_first_failure_mock_responses()
+@patch('aioboto3.client', new_callable=Mock)
+def test_parallel_map_on_lambda_client_failure(mock_invoke):
+    expected_results = setup_first_failure_mock_responses(mock_invoke, inputs)
 
     event_loop = asyncio.get_event_loop()
     result = event_loop.run_until_complete(
         werkit.aws_lambda.parallel.parallel_map_on_lambda(
-            lambda_worker_function_name, default_timeout, input, extra_args
+            lambda_worker_function_name, default_timeout, inputs, extra_args
         )
     )
 
@@ -94,12 +92,13 @@ def test_parallel_map_on_lambda_client_failure():
     "werkit.aws_lambda.parallel.call_worker_service",
     parallel_map_on_lambda_timeout_failure_call_worker_service_mock,
 )
-def test_parallel_map_on_lambda_timeout_failure():
-    setup_success_mock_responses()
+@patch('aioboto3.client', new_callable=Mock)
+def test_parallel_map_on_lambda_timeout_failure(mock_invoke):
+    setup_success_mock_responses(mock_invoke, inputs)
     event_loop = asyncio.get_event_loop()
     results = event_loop.run_until_complete(
         werkit.aws_lambda.parallel.parallel_map_on_lambda(
-            lambda_worker_function_name, 1, input, extra_args
+            lambda_worker_function_name, 1, inputs, extra_args
         )
     )
 

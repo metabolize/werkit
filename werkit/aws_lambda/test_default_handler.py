@@ -12,9 +12,10 @@ from functools import partial
 
 from unittest.mock import patch
 
+from asynctest import Mock, patch
 
 from werkit.aws_lambda.test_util import (
-    input,
+    inputs,
     extra_args,
     lambda_worker_function_name,
     parallel_map_on_lambda_timeout_failure_call_worker_service_mock,
@@ -24,22 +25,24 @@ from werkit.aws_lambda.test_util import (
 
 call_handler = partial(
     handler,
-    {"input": input, "extra_args": extra_args},
+    {"input": inputs, "extra_args": extra_args},
     None,
     lambda_worker_function_name=lambda_worker_function_name,
 )
 
 
-def test_default_handler_success():
+@patch('aioboto3.client', new_callable=Mock)
+def test_default_handler_success(mock_invoke):
 
-    expected_result = setup_success_mock_responses()
+    expected_result = setup_success_mock_responses(mock_invoke, inputs)
     result = call_handler()
 
     assert result == expected_result
 
 
-def test_default_handler_client_failure():
-    expected_results = setup_first_failure_mock_responses()
+@patch('aioboto3.client', new_callable=Mock)
+def test_default_handler_client_failure(mock_invoke):
+    expected_results = setup_first_failure_mock_responses(mock_invoke, inputs)
     result = call_handler()
 
     assert result[0]["exception"] == "ClientError"
@@ -50,7 +53,8 @@ def test_default_handler_client_failure():
     "werkit.aws_lambda.parallel.call_worker_service",
     parallel_map_on_lambda_timeout_failure_call_worker_service_mock,
 )
-def test_default_handler_timeout_failure():
-    setup_success_mock_responses()
+@patch('aioboto3.client', new_callable=Mock)
+def test_default_handler_timeout_failure(mock_invoke):
+    setup_success_mock_responses(mock_invoke, inputs)
     results = call_handler(timeout=1)
     assert all([r["exception"] == "TimeoutError" for r in results])

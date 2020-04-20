@@ -1,92 +1,95 @@
 import werkit.aws_lambda.parallel
-import botocore.session
-from botocore.stub import Stubber
 from functools import partial
 import json
 from werkit.aws_lambda.test_worker.service import handler as worker_handler
 import io
 import asyncio
+from asynctest import CoroutineMock, Mock, patch
+from botocore.exceptions import ClientError
 
-input = [1, 2, 3, 4]
+inputs = [1, 2, 3, 4]
 extra_args = [2, 3]
 lambda_worker_function_name = "test_worker"
 default_timeout = 120
 
 
-def setup_mock_success_response(stubber, expected_result, _input):
-    input_event = create_input_event(_input)
-    _expected_output = worker_handler(input_event, None)
-    expected_result.append(_expected_output)
-    expected_output_payload = _expected_output
-    expected_output = {
-        "StatusCode": 200,
-        "Payload": io.StringIO(json.dumps(expected_output_payload)),
-    }
-
-    stubber.add_response(
-        "invoke",
-        expected_output,
-        {
-            "FunctionName": lambda_worker_function_name,
-            "Payload": json.dumps(input_event),
-        },
-    )
-
-
-def setup_mock_failure_response(stubber, _input):
-    input_event = create_input_event(_input)
-    stubber.add_client_error(
-        "invoke",
-        expected_params={
-            "FunctionName": lambda_worker_function_name,
-            "Payload": json.dumps(input_event),
-        },
-    )
-
-
-def setup_first_failure_mock_responses():
-    stubber = init()
-
-    # make the first one fail
-    _setup_mock_failure_response = partial(setup_mock_failure_response, stubber)
-    for _input in input[:1]:
-        _setup_mock_failure_response(_input)
-
+def setup_success_mock_responses(mock_invoke, _inputs):
     expected_result = []
-    _setup_mock_success_response = partial(
-        setup_mock_success_response, stubber, expected_result
-    )
-    for _input in input[1:]:
-        _setup_mock_success_response(_input)
+    invoke_return_values = []
+    for _input in _inputs:
+        input_event = create_input_event(_input)
+        _expected_output = worker_handler(input_event, None)
+        expected_result.append(_expected_output)
+        
+        payload_mock = CoroutineMock()
+        invoke_return_value = {
+            "Payload": payload_mock,
+        }
+        payload_mock.read = CoroutineMock()
+        payload_mock.read.return_value = json.dumps(_expected_output).encode()
 
-    stubber.activate()
+        invoke_return_values.append(invoke_return_value)
+
+    m = CoroutineMock()
+    m2 = CoroutineMock()
+    m2.return_value = False
+    mock_invoke.return_value.__aenter__ = m
+    mock_invoke.return_value.__aexit__ = m2
+
+    m.return_value.invoke = CoroutineMock()
+
+    #setup mock
+    m.return_value.invoke.side_effect = invoke_return_values
 
     return expected_result
 
+def setup_mock_failure_response(mock_invoke, _input):
+    m = CoroutineMock()
+    m2 = CoroutineMock()
+    mock_invoke.return_value.__aenter__ = m
+    mock_invoke.return_value.__aexit__ = m2 
+    m2.return_value = False
 
-def setup_success_mock_responses():
-    stubber = init()
+    m.return_value.invoke = CoroutineMock()
+
+    m.return_value.invoke.side_effect = ClientError({'Error': {}}, '')
+
+
+def setup_first_failure_mock_responses(mock_invoke, _inputs):
+
+    m = CoroutineMock()
+    m2 = CoroutineMock()
+    mock_invoke.return_value.__aenter__ = m
+    mock_invoke.return_value.__aexit__ = m2 
+    m2.return_value = False
 
     expected_result = []
-    _setup_mock_success_response = partial(
-        setup_mock_success_response, stubber, expected_result
-    )
-    for _input in input:
-        _setup_mock_success_response(_input)
-    stubber.activate()
+    invoke_return_values = [ClientError({'Error': {}}, '')] # make the first one fail
+    for _input in _inputs[1:]:
+        input_event = create_input_event(_input)
+        _expected_output = worker_handler(input_event, None)
+        expected_result.append(_expected_output)
+        
+        payload_mock = CoroutineMock()
+        invoke_return_value = {
+            "Payload": payload_mock,
+        }
+        payload_mock.read = CoroutineMock()
+        payload_mock.read.return_value = json.dumps(_expected_output).encode()
+
+        invoke_return_values.append(invoke_return_value)
+
+    m.return_value.invoke = CoroutineMock()
+
+    #setup mock
+    m.return_value.invoke.side_effect = invoke_return_values
 
     return expected_result
+
 
 
 def create_input_event(_input):
     return {"input": _input, "extra_args": extra_args}
-
-
-def init():
-    client = botocore.session.get_session().create_client("lambda")
-    werkit.aws_lambda.parallel.client = client
-    stubber = Stubber(client)
-    return stubber
 
 
 async def parallel_map_on_lambda_timeout_failure_call_worker_service_mock(
