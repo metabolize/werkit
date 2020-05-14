@@ -55,11 +55,22 @@ class CloudManager(object):
     def remote_tag(self, tag):
         return "{}:{}".format(self.config.ecr_repository, tag)
 
-    def build_and_push(self, tag):
+    def build(self, tag, extra_build_args=[]):
         local_tag = "{}:{}".format(self.config.local_repository, tag)
-
-        execute("docker", "build", "-f", "Dockerfile-rq.dev", ".", "--tag", local_tag)
+        execute(
+            "docker",
+            "build",
+            "-f",
+            "Dockerfile-rq.dev",
+            ".",
+            "--tag",
+            local_tag,
+            *extra_build_args
+        )
         execute("docker", "tag", local_tag, self.remote_tag(tag))
+
+    def build_and_push(self, tag, extra_build_args=[]):
+        self.build(tag=tag, extra_build_args=extra_build_args)
         execute("docker", "push", self.remote_tag(tag))
 
     def clean(self):
