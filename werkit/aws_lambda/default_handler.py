@@ -5,11 +5,7 @@ from .parallel import parallel_map_on_lambda
 from botocore.exceptions import ClientError
 
 LAMBDA_WORKER_FUNCTION_NAME = "LAMBDA_WORKER_FUNCTION_NAME"
-env_lambda_worker_function_name = (
-    os.environ[LAMBDA_WORKER_FUNCTION_NAME]
-    if LAMBDA_WORKER_FUNCTION_NAME in os.environ
-    else None
-)
+env_lambda_worker_function_name = os.environ.get(LAMBDA_WORKER_FUNCTION_NAME)
 
 LAMBDA_WORKER_TIMEOUT = "LAMBDA_WORKER_TIMEOUT"
 env_lambda_worker_timeout = (
