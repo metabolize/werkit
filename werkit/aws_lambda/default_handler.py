@@ -15,7 +15,7 @@ env_lambda_worker_timeout = (
 )
 
 
-def map_result(result):
+def transform_result(result):
     if isinstance(result, ClientError):
         return {
             "exception": "ClientError",
@@ -50,4 +50,4 @@ def handler(
     results = event_loop.run_until_complete(
         parallel_map_on_lambda(lambda_worker_function_name, timeout, **event)
     )
-    return list(map(map_result, results))
+    return list(map(transform_result, results))
