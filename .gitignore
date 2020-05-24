@@ -169,8 +169,3 @@ python-worker.zip
 test-out.json
 test.json
 test13.json
-tests/aws_lambda/worker/commands.sh
-tests/aws_lambda/worker/function.zip
-tests/aws_lambda/worker/python-worker.zip
-tests/aws_lambda/worker/test.json
-tmp.py
