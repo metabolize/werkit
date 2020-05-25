@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0
+
+### New features
+
+- CloudManager: Allow passing extra args to `docker build`.
+- CloudManager: Add `build()` method.
+
+
 ## 0.4.0
 
 ### BREAKING CHANGES

@@ -51,7 +51,6 @@ def create_orchestrator_function(client, worker_function_name, worker_timeout=No
     response = _create_orchestrator_function(role, path_to_orchestrator_zip, client, worker_function_name, orchestrator_function_name, worker_timeout=worker_timeout)
     return orchestrator_function_name, response 
 
-
 def invoke_orchestrator(client, orchestrator_function_name):
     response = client.invoke(
         FunctionName=orchestrator_function_name,

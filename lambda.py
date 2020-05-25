@@ -1,5 +1,5 @@
 import click
-from werkit.aws_lambda.deploy import create_orchestrator_function as _create_orchestrator_function, build_orchestrator_zip
+from werkit.aws_lambda.deploy import create_orchestrator_function as _create_orchestrator_function, build_orchestrator_zip, _clean
 
 def build_dir_option(function):
     function = click.option(
@@ -51,13 +51,7 @@ def cli():
 @cli.command()
 @build_dir_option
 def clean(build_dir):
-    if os.path.isdir(build_dir):
-        for f in os.listdir(build_dir):
-            p = os.path.join(build_dir, f)
-            if os.path.isfile(p):
-                os.remove(p)
-            else:
-                rmtree(p)
+    _clean(build_dir)
 
 
 
