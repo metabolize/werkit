@@ -15,7 +15,7 @@ path_to_worker_zip = "/tmp/python-worker.zip"
 
 
 # https://stackoverflow.com/a/1855118/366856
-def zipdir(path, ziph, start_path='.'):
+def zipdir(path, ziph, start_path="."):
     # ziph is zipfile handle
     for root, dirs, files in os.walk(path):
         for file in files:
@@ -65,7 +65,7 @@ def create_orchestrator_function(client, worker_function_name, timeout=None):
     zipf = zipfile.ZipFile(
         path_to_orchestrator_zip, "w", zipfile.ZIP_DEFLATED
     )  # TODO: make this a tempfile
-    zipdir("werkit/", zipf, './')  # TODO: reference from dirname
+    zipdir("werkit/", zipf, "./")  # TODO: reference from dirname
     site_packages = "venv/lib/python3.7/site-packages/"
     zipdir(site_packages, zipf, site_packages)
     zipf.close()
@@ -127,6 +127,7 @@ def test_integration_success():
     )
     assert worker_response["ResponseMetadata"]["HTTPStatusCode"] == 204
     assert orchestrator_response["ResponseMetadata"]["HTTPStatusCode"] == 204
+
 
 def test_integration_timeout_failure():
     client = boto3.client("lambda")
