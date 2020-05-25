@@ -28,8 +28,6 @@ from asynctest import Mock, patch
 
 @patch("aioboto3.client", new_callable=Mock)
 def test_call_worker_service_success(mock_invoke):
-    # test that we expect to get a successful response out
-    # stubber = init()
     _input = inputs[0]
 
     expected_result = setup_success_mock_responses(mock_invoke, [_input])

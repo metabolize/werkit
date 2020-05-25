@@ -15,26 +15,28 @@ path_to_worker_zip = "/tmp/python-worker.zip"
 
 
 # https://stackoverflow.com/a/1855118/366856
-def zipdir(path, ziph):
+def zipdir(path, ziph, start_path='.'):
     # ziph is zipfile handle
     for root, dirs, files in os.walk(path):
         for file in files:
-            ziph.write(os.path.join(root, file))
+            fullpath = os.path.join(root, file)
+            arcname = os.path.relpath(fullpath, start=start_path)
+            ziph.write(fullpath, arcname=arcname)
 
 
 def create_worker_function(client, worker_filename, delay=None):
     environment = {"Variables": {}}
     if delay:
-        environment["Variables"]["LAMBDA_WORKER_DELAY"] = str(delay)
+        environment["Variables"]["LAMBDA_WORKER_DELAY_SECONDS"] = str(delay)
 
     # create the worker function
     zipf = zipfile.ZipFile(
         path_to_worker_zip, "w", zipfile.ZIP_DEFLATED
     )  # TODO: make this a tempfile
-    os.chdir("werkit/aws_lambda/test_worker/")
-    zipf.write(worker_filename + ".py")
+    path = "werkit/aws_lambda/test_worker/"
+    filename = worker_filename + ".py"
+    zipf.write(os.path.join(path, filename), arcname=filename)
     zipf.close()
-    os.chdir("../../../")
 
     with open(path_to_worker_zip, "rb") as f:
         bytes = f.read()
@@ -54,7 +56,6 @@ def create_worker_function(client, worker_filename, delay=None):
 
 
 def create_orchestrator_function(client, worker_function_name, timeout=None):
-
     environment = {"Variables": {"LAMBDA_WORKER_FUNCTION_NAME": worker_function_name}}
 
     if timeout:
@@ -64,10 +65,9 @@ def create_orchestrator_function(client, worker_function_name, timeout=None):
     zipf = zipfile.ZipFile(
         path_to_orchestrator_zip, "w", zipfile.ZIP_DEFLATED
     )  # TODO: make this a tempfile
-    zipdir("werkit/", zipf)  # TODO: reference from dirname
-    os.chdir("venv/lib/python3.7/site-packages/")  # TODO: reference from dirname
-    zipdir(".", zipf)
-    os.chdir("../../../../")
+    zipdir("werkit/", zipf, './')  # TODO: reference from dirname
+    site_packages = "venv/lib/python3.7/site-packages/"
+    zipdir(site_packages, zipf, site_packages)
     zipf.close()
 
     with open(path_to_orchestrator_zip, "rb") as f:
@@ -105,7 +105,6 @@ def cleanup(client, worker_function_name, orchestrator_function_name):
     return worker_response, orchestrator_response
 
 
-# tomorrow:
 def test_integration_success():
     client = boto3.client("lambda")
 
@@ -120,6 +119,7 @@ def test_integration_success():
     response = invoke_orchestrator(client, orchestrator_function_name)
     assert response["ResponseMetadata"]["HTTPStatusCode"] == 200
     results = json.load(response["Payload"])
+    print(results)
     assert results == [6, 7, 8, 9]
 
     worker_response, orchestrator_response = cleanup(
@@ -127,7 +127,6 @@ def test_integration_success():
     )
     assert worker_response["ResponseMetadata"]["HTTPStatusCode"] == 204
     assert orchestrator_response["ResponseMetadata"]["HTTPStatusCode"] == 204
-
 
 def test_integration_timeout_failure():
     client = boto3.client("lambda")
