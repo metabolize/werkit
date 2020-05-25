@@ -13,6 +13,7 @@ def zipdir(path, ziph, start_path="."):
             arcname = os.path.relpath(fullpath, start=start_path)
             ziph.write(fullpath, arcname=arcname)
 
+
 def _clean(build_dir):
     if os.path.isdir(build_dir):
         for f in os.listdir(build_dir):
@@ -21,6 +22,7 @@ def _clean(build_dir):
                 os.remove(p)
             else:
                 rmtree(p)
+
 
 def build_orchestrator_zip(build_dir, path_to_zipfile):
     venv_dir = os.path.join(build_dir, "venv")
@@ -39,12 +41,7 @@ def build_orchestrator_zip(build_dir, path_to_zipfile):
     execute(path_to_venv_python, "-m", "pip", "install", "--upgrade", "pip")
     execute(path_to_venv_python, "-m", "pip", "install", "wheel")
     execute(
-        path_to_venv_python,
-        "-m",
-        "pip",
-        "install",
-        "-r",
-        "requirements.txt",
+        path_to_venv_python, "-m", "pip", "install", "-r", "requirements.txt",
     )
     site_packages_dir = os.path.join(venv_dir, "lib64", "python3.7", "site-packages")
 
@@ -64,7 +61,15 @@ def build_orchestrator_zip(build_dir, path_to_zipfile):
     zipf.close()
 
 
-def create_orchestrator_function(role, path_to_orchestrator_zip, client, worker_function_name, orchestrator_function_name, worker_timeout=None, orchestrator_timeout=600):
+def create_orchestrator_function(
+    role,
+    path_to_orchestrator_zip,
+    client,
+    worker_function_name,
+    orchestrator_function_name,
+    worker_timeout=None,
+    orchestrator_timeout=600,
+):
     environment = {"Variables": {"LAMBDA_WORKER_FUNCTION_NAME": worker_function_name}}
 
     if worker_timeout:

@@ -6,13 +6,17 @@ import zipfile
 import tempfile
 import json
 from pprint import pprint
-from werkit.aws_lambda.deploy import build_orchestrator_zip, create_orchestrator_function as _create_orchestrator_function
+from werkit.aws_lambda.deploy import (
+    build_orchestrator_zip,
+    create_orchestrator_function as _create_orchestrator_function,
+)
 
 role = "arn:aws:iam::139234625917:role/werkit-test-integration"
 # This role has the following policy: AWSLambdaRole
 
 path_to_orchestrator_zip = "/tmp/python-orchestrator.zip"
 path_to_worker_zip = "/tmp/python-worker.zip"
+
 
 def create_worker_function(client, worker_filename, delay=None):
     environment = {"Variables": {}}
@@ -46,10 +50,20 @@ def create_worker_function(client, worker_filename, delay=None):
 
 
 def create_orchestrator_function(client, worker_function_name, worker_timeout=None):
-    build_orchestrator_zip('build', path_to_orchestrator_zip)
-    orchestrator_function_name = uuid.uuid4().hex   #generate a name for the test function
-    response = _create_orchestrator_function(role, path_to_orchestrator_zip, client, worker_function_name, orchestrator_function_name, worker_timeout=worker_timeout)
-    return orchestrator_function_name, response 
+    build_orchestrator_zip("build", path_to_orchestrator_zip)
+    orchestrator_function_name = (
+        uuid.uuid4().hex
+    )  # generate a name for the test function
+    response = _create_orchestrator_function(
+        role,
+        path_to_orchestrator_zip,
+        client,
+        worker_function_name,
+        orchestrator_function_name,
+        worker_timeout=worker_timeout,
+    )
+    return orchestrator_function_name, response
+
 
 def invoke_orchestrator(client, orchestrator_function_name):
     response = client.invoke(
