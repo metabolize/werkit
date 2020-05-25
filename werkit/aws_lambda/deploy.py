@@ -4,6 +4,7 @@ from shutil import copyfile, copytree, rmtree
 import venv
 from executor import execute
 
+
 # https://stackoverflow.com/a/1855118/366856
 def zipdir(path, ziph, start_path="."):
     # ziph is zipfile handle
