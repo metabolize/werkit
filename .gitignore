@@ -160,3 +160,12 @@ pip-selfcheck.json
 # End of https://www.gitignore.io/api/osx,python
 
 doc/api/
+
+
+build-lambda.sh
+function.zip
+python-orchestrator.zip
+python-worker.zip
+test-out.json
+test.json
+test13.json
