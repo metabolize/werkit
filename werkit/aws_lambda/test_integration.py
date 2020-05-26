@@ -6,22 +6,16 @@ import zipfile
 import tempfile
 import json
 from pprint import pprint
+from werkit.aws_lambda.deploy import (
+    build_orchestrator_zip,
+    create_orchestrator_function as _create_orchestrator_function,
+)
 
 role = "arn:aws:iam::139234625917:role/werkit-test-integration"
 # This role has the following policy: AWSLambdaRole
 
 path_to_orchestrator_zip = "/tmp/python-orchestrator.zip"
 path_to_worker_zip = "/tmp/python-worker.zip"
-
-
-# https://stackoverflow.com/a/1855118/366856
-def zipdir(path, ziph, start_path="."):
-    # ziph is zipfile handle
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            fullpath = os.path.join(root, file)
-            arcname = os.path.relpath(fullpath, start=start_path)
-            ziph.write(fullpath, arcname=arcname)
 
 
 def create_worker_function(client, worker_filename, delay=None):
@@ -55,33 +49,18 @@ def create_worker_function(client, worker_filename, delay=None):
     return worker_function_name, response
 
 
-def create_orchestrator_function(client, worker_function_name, timeout=None):
-    environment = {"Variables": {"LAMBDA_WORKER_FUNCTION_NAME": worker_function_name}}
-
-    if timeout:
-        environment["Variables"]["LAMBDA_WORKER_TIMEOUT"] = str(timeout)
-
-    # create the orchestrator function
-    zipf = zipfile.ZipFile(
-        path_to_orchestrator_zip, "w", zipfile.ZIP_DEFLATED
-    )  # TODO: make this a tempfile
-    zipdir("werkit/", zipf, "./")  # TODO: reference from dirname
-    site_packages = "venv/lib/python3.7/site-packages/"
-    zipdir(site_packages, zipf, site_packages)
-    zipf.close()
-
-    with open(path_to_orchestrator_zip, "rb") as f:
-        bytes = f.read()
-
-    orchestrator_function_name = uuid.uuid4().hex
-    response = client.create_function(
-        FunctionName=orchestrator_function_name,
-        Runtime="python3.7",
-        Role=role,  # FIXME: new role name
-        Handler="werkit.aws_lambda.default_handler.handler",
-        Code={"ZipFile": bytes},
-        Environment=environment,
-        Timeout=10,
+def create_orchestrator_function(client, worker_function_name, worker_timeout=None):
+    build_orchestrator_zip("build", path_to_orchestrator_zip)
+    orchestrator_function_name = (
+        uuid.uuid4().hex
+    )  # generate a name for the test function
+    response = _create_orchestrator_function(
+        role,
+        path_to_orchestrator_zip,
+        client,
+        worker_function_name,
+        orchestrator_function_name,
+        worker_timeout=worker_timeout,
     )
     return orchestrator_function_name, response
 
@@ -137,7 +116,7 @@ def test_integration_timeout_failure():
     print("worker_function_name", worker_function_name)
 
     orchestrator_function_name, response = create_orchestrator_function(
-        client, worker_function_name, timeout=1
+        client, worker_function_name, worker_timeout=1
     )
     assert response["ResponseMetadata"]["HTTPStatusCode"] == 201
     print("orchestrator_function_name", orchestrator_function_name)
