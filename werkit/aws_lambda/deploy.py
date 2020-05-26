@@ -16,13 +16,7 @@ def zipdir(path, ziph, start_path="."):
 
 
 def _clean(build_dir):
-    if os.path.isdir(build_dir):
-        for f in os.listdir(build_dir):
-            p = os.path.join(build_dir, f)
-            if os.path.isfile(p):
-                os.remove(p)
-            else:
-                rmtree(p)
+    rmtree(build_dir, ignore_errors=True)
 
 
 def build_orchestrator_zip(build_dir, path_to_zipfile):
