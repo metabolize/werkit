@@ -1,9 +1,14 @@
+#!/usr/bin/env python3
+
 import click
+from dotenv import load_dotenv
 from werkit.aws_lambda.deploy import (
     create_orchestrator_function as _create_orchestrator_function,
     build_orchestrator_zip,
     _clean,
 )
+
+load_dotenv()
 
 
 def build_dir_option(function):
@@ -26,6 +31,8 @@ def common_options(function):
         "--worker-function-name",
         required=True,
         help="Name of the lambda worker function invoked by orchestrator",
+        envvar="WORKER_FUNCTION_NAME",
+        show_envvar=True,
     )(function)
     function = click.option(
         "--orchestrator-function-name",
@@ -36,6 +43,8 @@ def common_options(function):
         "--aws-role",
         required=True,
         help="AWS Role for the orchestrator lambda function",
+        envvar="LAMBDA_ROLE",
+        show_envvar=True,
     )(function)
     function = click.option(
         "--worker-timeout", default=600, help="Timeout for each worker function",
