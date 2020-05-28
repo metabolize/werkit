@@ -39,6 +39,8 @@ def build_orchestrator_zip(build_dir, path_to_zipfile):
         path_to_venv_python, "-m", "pip", "install", "-r", "requirements.txt",
     )
     site_packages_dir = os.path.join(venv_dir, "lib64", "python3.7", "site-packages")
+    if not os.path.exists(site_packages_dir):
+        site_packages_dir = os.path.join(venv_dir, "lib", "python3.7", "site-packages")
 
     for f in os.listdir(site_packages_dir):
         src = os.path.join(site_packages_dir, f)
@@ -71,15 +73,14 @@ def create_orchestrator_function(
         environment["Variables"]["LAMBDA_WORKER_TIMEOUT"] = str(worker_timeout)
 
     with open(path_to_orchestrator_zip, "rb") as f:
-        bytes = f.read()
+        zipfile_contents = f.read()
 
-    response = client.create_function(
+    return client.create_function(
         FunctionName=orchestrator_function_name,
         Runtime="python3.7",
-        Role=role,  # FIXME: new role name
+        Role=role,
         Handler="werkit.aws_lambda.default_handler.handler",
-        Code={"ZipFile": bytes},
+        Code={"ZipFile": zipfile_contents},
         Environment=environment,
         Timeout=orchestrator_timeout,
     )
-    return response
