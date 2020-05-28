@@ -83,4 +83,5 @@ def create_orchestrator_function(
         Code={"ZipFile": zipfile_contents},
         Environment=environment,
         Timeout=orchestrator_timeout,
+        MemorySize=1792,
     )
