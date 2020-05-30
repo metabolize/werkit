@@ -3,7 +3,7 @@
 import click
 from dotenv import load_dotenv
 from werkit.aws_lambda.deploy import (
-    create_orchestrator_function as _create_orchestrator_function,
+    perform_create,
     build_orchestrator_zip,
     _clean,
 )
@@ -79,18 +79,19 @@ def create_orchestrator_function(
     worker_timeout,
     orchestrator_timeout,
 ):
-    import boto3
-
-    client = boto3.client("lambda")
     build_orchestrator_zip(build_dir, path_to_orchestrator_zip)
-    _create_orchestrator_function(
-        aws_role,
-        path_to_orchestrator_zip,
-        client,
-        worker_function_name,
-        orchestrator_function_name,
-        worker_timeout=worker_timeout,
-        orchestrator_timeout=orchestrator_timeout,
+
+    env_vars = {"LAMBDA_WORKER_FUNCTION_NAME": worker_function_name}
+    if worker_timeout:
+        env_vars["LAMBDA_WORKER_TIMEOUT"] = str(worker_timeout)
+
+    perform_create(
+        path_to_zipfile=path_to_orchestrator_zip,
+        function_name=orchestrator_function_name,
+        role=aws_role,
+        timeout=orchestrator_timeout,
+        memory_size=1792,
+        env_vars=env_vars,
     )
 
 
