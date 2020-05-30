@@ -108,6 +108,7 @@ def deploy(
 
     perform_create(
         path_to_zipfile=path_to_orchestrator_zip,
+        handler="werkit.aws_lambda.default_handler.handler",
         function_name=orchestrator_function_name,
         role=aws_role,
         timeout=orchestrator_timeout,

@@ -41,6 +41,7 @@ def temp_file_on_s3(local_path, bucket, key, verbose=True):
 
 def perform_create(
     path_to_zipfile,
+    handler,
     function_name,
     role,
     timeout=None,
@@ -63,7 +64,7 @@ def perform_create(
         "FunctionName": function_name,
         "Runtime": runtime,
         "Role": role,
-        "Handler": "handler.handler",
+        "Handler": handler,
         "Environment": {"Variables": env_vars},
         "Timeout": timeout,
         "MemorySize": memory_size,
