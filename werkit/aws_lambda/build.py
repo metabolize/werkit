@@ -1,13 +1,10 @@
 import os
 import zipfile
-from shutil import copyfile, copytree, rmtree
+import sys
+import shutil
 import venv
 from executor import execute
 from .deploy import perform_create
-
-
-def _clean(build_dir):
-    rmtree(build_dir, ignore_errors=True)
 
 
 def create_venv_with_dependencies(
@@ -27,14 +24,14 @@ def create_venv_with_dependencies(
         )
 
     if install_wheel:
-        execute(python, "-m", "pip", "install" "wheel", environment=environment)
+        execute(python, "-m", "pip", "install", "wheel", environment=environment)
 
     if install_werkit:
         execute(
             python,
             "-m",
             "pip",
-            "install"
+            "install",
             "werkit@git+https://github.com/metabolize/werkit.git@deploy-utils",
             environment=environment,
         )
@@ -51,38 +48,50 @@ def create_venv_with_dependencies(
         )
 
 
-def build_orchestrator_zip(build_dir, path_to_zipfile):
-    venv_dir = os.path.join(build_dir, "venv")
-    zip_dir = os.path.join(build_dir, "zip")
-    source_dir = os.path.dirname(os.path.dirname(__file__))
+def find_site_packages_dir(venv_dir):
+    result = os.path.join(venv_dir, "lib64", "python3.7", "site-packages")
+    if not os.path.exists(result):
+        result = os.path.join(venv_dir, "lib", "python3.7", "site-packages")
+    return result
 
-    if os.path.isdir(build_dir):
-        _clean(build_dir)
 
-    os.makedirs(zip_dir, exist_ok=True)
+def collect_zipfile_contents(
+    target_dir,
+    venv_dir,
+    src_files=["handler.py"],
+    src_dirs=[],
+    lib_files=[],
+    verbose=False,
+):
+    pif = lambda x: print(x, file=sys.stderr) if verbose else lambda x: x
 
-    copytree(source_dir, os.path.join(zip_dir, "werkit"))
+    if os.path.isdir(target_dir):
+        raise ValueError(f"target_dir should not exist: {target_dir}")
+    if not os.path.isdir(venv_dir):
+        raise ValueError(f"venv_dir should already be populated: {venv_dir}")
 
-    venv.create(venv_dir, with_pip=True)
-    path_to_venv_python = os.path.join(venv_dir, "bin", "python")
-    execute(path_to_venv_python, "-m", "pip", "install", "--upgrade", "pip")
-    execute(path_to_venv_python, "-m", "pip", "install", "wheel")
-    execute(
-        path_to_venv_python, "-m", "pip", "install", "-r", "requirements.txt",
-    )
-    site_packages_dir = os.path.join(venv_dir, "lib64", "python3.7", "site-packages")
-    if not os.path.exists(site_packages_dir):
-        site_packages_dir = os.path.join(venv_dir, "lib", "python3.7", "site-packages")
+    # Copy dependencies from venv.
+    site_packages_dir = find_site_packages_dir(venv_dir)
+    pif(f"Copying dependencies from {site_packages_dir} to {target_dir}")
+    shutil.copytree(site_packages_dir, target_dir)
 
-    for f in os.listdir(site_packages_dir):
-        src = os.path.join(site_packages_dir, f)
-        dest = os.path.join(zip_dir, f)
-        if os.path.isfile(src):
-            copyfile(src, dest)
-        else:
-            copytree(src, dest)
+    if lib_files:
+        lib_dir = os.path.join(target_dir, "lib")
+        os.makedirs(lib_dir, exist_ok=True)
+        for lib_file in lib_files:
+            target = os.path.join(lib_dir, os.path.basename(lib_file))
+            pif(f"Copying {lib_file} to {target}/")
+            shutil.copyfile(lib_file, target)
 
-    create_zipfile_from_dir(dir_path=zip_dir, path_to_zipfile=path_to_zipfile)
+    for src_dir in src_dirs:
+        target = os.path.join(target_dir, src_dir)
+        pif(f"Copying {src_dir} to {target}")
+        shutil.copytree(src_dir, target)
+
+    for src_file in src_files:
+        target = os.path.join(target_dir, src_file)
+        pif(f"Copying {src_file} to {target}")
+        shutil.copyfile(src_file, target)
 
 
 def create_zipfile_from_dir(dir_path, path_to_zipfile):

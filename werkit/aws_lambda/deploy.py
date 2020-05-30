@@ -7,7 +7,8 @@ DEFAULT_RUNTIME = "python3.7"
 
 
 def needs_s3_upload(path_to_zipfile):
-    return os.path.getsize(path_to_zipfile) > 50 * 2 ** 10
+    return os.path.getsize(path_to_zipfile) > 50 * 2 ** 20
+
 
 
 def random_string(length):
@@ -87,7 +88,7 @@ def perform_create(
     else:
         with open(path_to_zipfile, "rb") as f:
             zipfile_contents = f.read()
-        pif(f"Uploading {path_to_zipfile} to AWS Lambda")
+        pif(f"Uploading {path_to_zipfile} to Lambda")
         boto3.client("lambda").create_function(
             Code={"ZipFile": zipfile_contents}, **common_args
         )
@@ -110,8 +111,6 @@ def perform_update(
                 "When zipfile is larger than 50 MB, s3_code_bucket is required"
             )
         temp_key = f"{function_name}_{random_string(10)}.zip"
-        pif(f"Uploading {path_to_zipfile} to s3://{s3_code_bucket}/{temp_key}")
-
         with temp_file_on_s3(
             local_path=path_to_zipfile,
             bucket=s3_code_bucket,
@@ -125,7 +124,7 @@ def perform_update(
     else:
         with open(path_to_zipfile, "rb") as f:
             zipfile_contents = f.read()
-        pif(f"Uploading {path_to_zipfile} to AWS Lambda")
+        pif(f"Uploading {path_to_zipfile} to Lambda")
         boto3.client("lambda").update_function_code(
             Code={"ZipFile": zipfile_contents}, **common_args
         )

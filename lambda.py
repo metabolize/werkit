@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
+import os
 import click
 from dotenv import load_dotenv
-from werkit.aws_lambda.deploy import (
-    perform_create,
-    build_orchestrator_zip,
-    _clean,
+from werkit.aws_lambda.build import (
+    create_venv_with_dependencies,
+    collect_zipfile_contents,
+    create_zipfile_from_dir,
 )
+from werkit.aws_lambda.deploy import perform_create
 
 load_dotenv()
 
@@ -62,6 +64,12 @@ def cli():
     pass
 
 
+def _clean(build_dir):
+    import shutil
+
+    shutil.rmtree(build_dir, ignore_errors=True)
+
+
 @cli.command()
 @build_dir_option
 def clean(build_dir):
@@ -70,7 +78,7 @@ def clean(build_dir):
 
 @cli.command()
 @common_options
-def create_orchestrator_function(
+def deploy(
     build_dir,
     aws_role,
     path_to_orchestrator_zip,
@@ -79,7 +87,18 @@ def create_orchestrator_function(
     worker_timeout,
     orchestrator_timeout,
 ):
-    build_orchestrator_zip(build_dir, path_to_orchestrator_zip)
+    _clean(build_dir)
+
+    venv_dir = os.path.join(build_dir, "venv")
+    zip_dir = os.path.join(build_dir, "zip")
+
+    create_venv_with_dependencies(venv_dir)
+    collect_zipfile_contents(
+        target_dir=zip_dir, venv_dir=venv_dir, src_files=[], src_dirs=["werkit"],
+    )
+    create_zipfile_from_dir(
+        dir_path=zip_dir, path_to_zipfile=path_to_orchestrator_zip,
+    )
 
     env_vars = {"LAMBDA_WORKER_FUNCTION_NAME": worker_function_name}
     if worker_timeout:
