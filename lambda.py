@@ -36,7 +36,9 @@ def common_options(function):
     )(function)
     function = click.option(
         "--orchestrator-function-name",
-        default="orchestrator",
+        required=True,
+        envvar="ORCHESTRATOR_FUNCTION_NAME",
+        show_envvar=True,
         help="Name of the orchestrator lambda function",
     )(function)
     function = click.option(
