@@ -3,16 +3,7 @@ import zipfile
 from shutil import copyfile, copytree, rmtree
 import venv
 from executor import execute
-
-
-# https://stackoverflow.com/a/1855118/366856
-def zipdir(path, ziph, start_path="."):
-    # ziph is zipfile handle
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            fullpath = os.path.join(root, file)
-            arcname = os.path.relpath(fullpath, start=start_path)
-            ziph.write(fullpath, arcname=arcname)
+from .ziplib import create_zipfile_from_dir
 
 
 def _clean(build_dir):
@@ -50,12 +41,7 @@ def build_orchestrator_zip(build_dir, path_to_zipfile):
         else:
             copytree(src, dest)
 
-    # create the orchestrator function
-    zipf = zipfile.ZipFile(
-        path_to_zipfile, "w", zipfile.ZIP_DEFLATED
-    )  # TODO: make this a tempfile
-    zipdir(zip_dir, zipf, zip_dir)
-    zipf.close()
+    create_zip_from_dir(dir_path=zip_dir, path_to_zipfile=path_to_zipfile)
 
 
 def create_orchestrator_function(
