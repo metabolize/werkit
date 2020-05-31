@@ -135,6 +135,6 @@ def perform_update(
             zipfile_contents = f.read()
         pif(f"Uploading {path_to_zipfile} to Lambda")
         boto3.client("lambda").update_function_code(
-            Code={"ZipFile": zipfile_contents}, **common_args
+            ZipFile=zipfile_contents, **common_args
         )
         pif("Lambda function code updated")
