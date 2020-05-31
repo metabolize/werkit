@@ -1,22 +1,19 @@
 from setuptools import find_packages, setup
 
-# Set version_info[__version__], while avoiding importing numpy, in case numpy
-# and vg are being installed concurrently.
-# https://packaging.python.org/guides/single-sourcing-package-version/
+
+def load(filename):
+    return open(filename, "rb").read().decode("utf-8")
+
+
 version_info = {}
 exec(open("werkit/package_version.py").read(), version_info)
 
-with open("README.md") as f:
-    readme = f.read()
-
-with open("requirements.txt") as f:
-    install_requires = f.read()
 
 setup(
     name="werkit",
     version=version_info["__version__"],
     description="Toolkit for encapsulating Python-based computation into deployable and distributable tasks",
-    long_description=readme,
+    long_description=load("README.md"),
     long_description_content_type="text/markdown",
     author="Metabolize",
     author_email="github@paulmelnikow.com",
@@ -26,7 +23,8 @@ setup(
         "Documentation": "https://werkit.readthedocs.io/en/stable/",
     },
     packages=find_packages(),
-    install_requires=install_requires,
+    install_requires=load("requirements.txt"),
+    extras_require={"client": load("requirements_client.txt")},
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
