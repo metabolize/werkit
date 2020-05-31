@@ -58,7 +58,9 @@ def find_site_packages_dir(venv_dir):
 def collect_zipfile_contents(
     target_dir, venv_dir, src_files=[], src_dirs=[], lib_files=[], verbose=False,
 ):
-    pif = lambda x: print(x, file=sys.stderr) if verbose else lambda x: x
+    def pif(x):
+        if verbose:
+            print(x, file=sys.stderr)
 
     if os.path.isdir(target_dir):
         raise ValueError(f"target_dir should not exist: {target_dir}")

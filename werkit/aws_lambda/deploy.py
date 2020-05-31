@@ -23,7 +23,9 @@ def temp_file_on_s3(local_path, bucket, key, verbose=True):
     Copy the given path to S3. Delete the file from S3 when the block is
     closed.
     """
-    pif = lambda x: print(x, file=sys.stderr) if verbose else lambda x: x
+    def pif(x):
+        if verbose:
+            print(x, file=sys.stderr)
 
     s3_client = boto3.client("s3")
 
@@ -56,7 +58,7 @@ def perform_create(
     """
     def pif(x):
         if verbose:
-            print(x)
+            print(x, file=sys.stderr)
 
     if not os.path.isfile(path_to_zipfile):
         raise ValueError(f"Zip file does not exist: {path_to_zipfile}")
