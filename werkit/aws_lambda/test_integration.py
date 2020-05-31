@@ -22,8 +22,8 @@ def role():
 
 def create_test_functions(tmpdir, worker_timeout=None, worker_delay=None):
     unique = uuid.uuid4().hex
-    worker_function_name = f"werkit_integration_test_worker_{unique}"
-    orchestrator_function_name = f"werkit_integration_test_orchestrator_{unique}"
+    worker_function_name = f"werkit_integ_test_worker_{unique}"
+    orchestrator_function_name = f"werkit_integ_test_orchestrator_{unique}"
 
     path_to_worker_zip = str(tmpdir / "worker.zip")
     create_zipfile_from_dir(
