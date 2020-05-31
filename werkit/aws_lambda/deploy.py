@@ -10,7 +10,6 @@ def needs_s3_upload(path_to_zipfile):
     return os.path.getsize(path_to_zipfile) > 50 * 2 ** 20
 
 
-
 def random_string(length):
     import random
     import string
@@ -66,9 +65,11 @@ def perform_create(
         "Role": role,
         "Handler": handler,
         "Environment": {"Variables": env_vars},
-        "Timeout": timeout,
-        "MemorySize": memory_size,
     }
+    if timeout is not None:
+        common_args["Timeout"] = timeout
+    if memory_size is not None:
+        common_args["MemorySize"] = memory_size
 
     if needs_s3_upload(path_to_zipfile):
         if not s3_code_bucket:
