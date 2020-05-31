@@ -41,7 +41,6 @@ def create_venv_with_dependencies(
             "-m",
             "pip",
             "install",
-            "-r",
         ]
         for requirements_file in install_requirements_from:
             args += ["-r", requirements_file]
