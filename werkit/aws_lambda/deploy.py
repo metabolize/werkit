@@ -54,7 +54,9 @@ def perform_create(
     Create a lambda function with the given zipfile. If the zipfile is larger
     than 50 MB, you must specify an `s3_code_bucket`.
     """
-    pif = print if verbose else lambda x: x
+    def pif(x):
+        if verbose:
+            print(x)
 
     if not os.path.isfile(path_to_zipfile):
         raise ValueError(f"Zip file does not exist: {path_to_zipfile}")
@@ -100,7 +102,9 @@ def perform_create(
 def perform_update(
     path_to_zipfile, function_name, s3_code_bucket=None, verbose=True,
 ):
-    pif = print if verbose else lambda x: x
+    def pif(x):
+        if verbose:
+            print(x)
 
     if not os.path.isfile(path_to_zipfile):
         raise ValueError(f"Zip file does not exist: {path_to_zipfile}")
