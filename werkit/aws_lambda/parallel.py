@@ -1,12 +1,8 @@
-import pdb
-import aioboto3
-import json
 import asyncio
-import os
+import json
 from functools import partial
+import aioboto3
 from botocore.exceptions import ClientError
-import time
-from botocore.client import Config
 
 
 async def call_worker_service(lambda_worker_function_name, extra_args, _input):

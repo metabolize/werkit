@@ -14,7 +14,6 @@ JOB_ID_SEPARATOR = "____"
 def clean(queue_name=DEFAULT_QUEUE_NAME, connection=None):
     from redis import Redis
     from rq import Queue
-    from rq.job import Job
     from rq.registry import FinishedJobRegistry, FailedJobRegistry
 
     queue = Queue(queue_name, connection=connection or Redis())

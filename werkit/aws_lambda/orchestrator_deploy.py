@@ -1,8 +1,7 @@
 import os
-import shutil
 from .build import (
-    create_venv_with_dependencies,
     collect_zipfile_contents,
+    create_venv_with_dependencies,
     create_zipfile_from_dir,
 )
 from .deploy import perform_create

@@ -1,9 +1,9 @@
-from .invoke import (
+from .cloud_manager import CloudManager, Config  # noqa: F401
+from .invoke import (  # noqa: F401
     DEFAULT_QUEUE_NAME,
     clean,
-    invoke_for_each,
-    get_all_jobs,
     get_aggregate_status,
+    get_all_jobs,
     get_results,
+    invoke_for_each,
 )
-from .cloud_manager import Config, CloudManager
