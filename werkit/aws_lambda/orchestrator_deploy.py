@@ -24,7 +24,10 @@ def deploy_orchestrator(
     venv_dir = os.path.join(build_dir, "venv")
     zip_dir = os.path.join(build_dir, "zip")
 
-    create_venv_with_dependencies(venv_dir)
+    create_venv_with_dependencies(
+        venv_dir,
+        install_requirements_from=["requirements.txt", "requirements_client.txt"],
+    )
     collect_zipfile_contents(
         target_dir=zip_dir, venv_dir=venv_dir, src_files=[], src_dirs=["werkit"],
     )
