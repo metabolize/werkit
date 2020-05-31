@@ -1,27 +1,31 @@
 #!/usr/bin/env python3
 
+import os
+import shutil
 import click
 from dotenv import load_dotenv
-from werkit.aws_lambda.deploy import (
-    create_orchestrator_function as _create_orchestrator_function,
-    build_orchestrator_zip,
-    _clean,
-)
+from werkit.aws_lambda.orchestrator_deploy import deploy_orchestrator
 
 load_dotenv()
 
+BUILD_DIR = "build"
 
-def build_dir_option(function):
-    function = click.option(
-        "--build-dir",
-        default="build",
-        help="Directory where orchestrator lambda function zip is built",
-    )(function)
-    return function
+
+@click.group()
+def cli():
+    pass
+
+
+def _clean():
+    shutil.rmtree(BUILD_DIR, ignore_errors=True)
+
+
+@cli.command()
+def clean():
+    _clean()
 
 
 def common_options(function):
-    function = build_dir_option(function)
     function = click.option(
         "--path-to-orchestrator-zip",
         default="build/orchestrator-function.zip",
@@ -42,7 +46,7 @@ def common_options(function):
         help="Name of the orchestrator lambda function",
     )(function)
     function = click.option(
-        "--aws-role",
+        "--role",
         required=True,
         help="AWS Role for the orchestrator lambda function",
         envvar="LAMBDA_ROLE",
@@ -59,40 +63,25 @@ def common_options(function):
     return function
 
 
-@click.group()
-def cli():
-    pass
-
-
-@cli.command()
-@build_dir_option
-def clean(build_dir):
-    _clean(build_dir)
-
-
 @cli.command()
 @common_options
-def create_orchestrator_function(
-    build_dir,
-    aws_role,
+def deploy(
+    role,
     path_to_orchestrator_zip,
     worker_function_name,
     orchestrator_function_name,
     worker_timeout,
     orchestrator_timeout,
 ):
-    import boto3
-
-    client = boto3.client("lambda")
-    build_orchestrator_zip(build_dir, path_to_orchestrator_zip)
-    _create_orchestrator_function(
-        aws_role,
-        path_to_orchestrator_zip,
-        client,
-        worker_function_name,
-        orchestrator_function_name,
-        worker_timeout=worker_timeout,
+    _clean()
+    deploy_orchestrator(
+        build_dir=BUILD_DIR,
+        path_to_orchestrator_zip=path_to_orchestrator_zip,
+        orchestrator_function_name=orchestrator_function_name,
+        role=role,
         orchestrator_timeout=orchestrator_timeout,
+        worker_function_name=worker_function_name,
+        worker_timeout=worker_timeout,
     )
 
 

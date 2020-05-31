@@ -24,35 +24,60 @@ jobs:
 
       - run:
           name: Run tests
-          when: always
           command: |
             . venv/bin/activate
             ./dev.py coverage
 
-      # - run:
-      #     name: Send results to coveralls.io
-      #     when: always
-      #     command: |
-      #       . venv/bin/activate
-      #       coveralls
+  lint:
+    docker:
+      - image: circleci/python:3.7
 
-      # - run:
-      #     name: Run the doc build
-      #     when: always
-      #     command: |
-      #       . venv/bin/activate
-      #       ./dev.py doc
+    steps:
+      - checkout
+
+      - run:
+          name: Install python dependencies
+          command: |
+            mkdir -p venv
+            virtualenv venv
+            . venv/bin/activate
+            set -o pipefail; pip install --upgrade -r requirements_dev.txt | cat
+
+      - run:
+          name: Show versions
+          command: |
+            . venv/bin/activate
+            pip freeze
 
       - run:
           name: Check lint
-          when: always
           command: |
             . venv/bin/activate
             ./dev.py lint
 
+  format:
+    docker:
+      - image: circleci/python:3.7
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install python dependencies
+          command: |
+            mkdir -p venv
+            virtualenv venv
+            . venv/bin/activate
+            set -o pipefail; pip install --upgrade -r requirements_dev.txt | cat
+
+      - run:
+          name: Show versions
+          command: |
+            . venv/bin/activate
+            pip freeze
+
       - run:
           name: Check code format
-          when: always
           command: |
             . venv/bin/activate
             ./dev.py black-check
@@ -63,6 +88,8 @@ workflows:
   on-commit:
     jobs:
       - main
+      - lint
+      - format
 
   daily:
     triggers:
@@ -73,3 +100,5 @@ workflows:
               only: master
     jobs:
       - main
+      - lint
+      - format
