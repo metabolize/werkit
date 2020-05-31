@@ -6,7 +6,7 @@ from harrison import Timer
 
 
 async def call_worker_service(
-    lambda_worker_function_name, extra_args, _input, with_timing=True
+    lambda_worker_function_name, extra_args, _input, with_timing=False
 ):
     async with aioboto3.client("lambda") as lambda_client:
         with Timer(verbose=False) as response_timer:
@@ -22,7 +22,7 @@ async def call_worker_service(
 
 
 async def wait_for(
-    timeout, lambda_worker_function_name, extra_args, _input, with_timing=True
+    timeout, lambda_worker_function_name, extra_args, _input, with_timing=False
 ):
     try:
         return await asyncio.wait_for(
@@ -40,7 +40,7 @@ async def wait_for(
 
 
 async def parallel_map_on_lambda(
-    lambda_worker_function_name, timeout, input, extra_args=[], with_timing=True
+    lambda_worker_function_name, timeout, input, extra_args=[], with_timing=False
 ):
     coroutines = [
         wait_for(

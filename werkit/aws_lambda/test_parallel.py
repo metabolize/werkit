@@ -24,9 +24,7 @@ def test_call_worker_service_success(mock_invoke):
 
     event_loop = asyncio.get_event_loop()
     result = event_loop.run_until_complete(
-        parallel.call_worker_service(
-            lambda_worker_function_name, extra_args, _input, with_timing=False
-        )
+        parallel.call_worker_service(lambda_worker_function_name, extra_args, _input)
     )
 
     assert result == expected_output_payload
@@ -42,7 +40,7 @@ def test_call_worker_service_failure(mock_invoke):
     with pytest.raises(ClientError):
         result = event_loop.run_until_complete(
             parallel.call_worker_service(
-                lambda_worker_function_name, extra_args, _input, with_timing=False
+                lambda_worker_function_name, extra_args, _input
             )
         )
         print(result)
@@ -55,11 +53,7 @@ def test_parallel_map_on_lambda_success(mock_invoke):
     event_loop = asyncio.get_event_loop()
     result = event_loop.run_until_complete(
         parallel.parallel_map_on_lambda(
-            lambda_worker_function_name,
-            default_timeout,
-            inputs,
-            extra_args,
-            with_timing=False,
+            lambda_worker_function_name, default_timeout, inputs, extra_args,
         )
     )
 
@@ -73,11 +67,7 @@ def test_parallel_map_on_lambda_client_failure(mock_invoke):
     event_loop = asyncio.get_event_loop()
     result = event_loop.run_until_complete(
         parallel.parallel_map_on_lambda(
-            lambda_worker_function_name,
-            default_timeout,
-            inputs,
-            extra_args,
-            with_timing=False,
+            lambda_worker_function_name, default_timeout, inputs, extra_args,
         )
     )
 
@@ -95,7 +85,7 @@ def test_parallel_map_on_lambda_timeout_failure(mock_invoke):
     event_loop = asyncio.get_event_loop()
     results = event_loop.run_until_complete(
         parallel.parallel_map_on_lambda(
-            lambda_worker_function_name, 1, inputs, extra_args, with_timing=False
+            lambda_worker_function_name, 1, inputs, extra_args
         )
     )
 
