@@ -89,4 +89,6 @@ def test_parallel_map_on_lambda_timeout_failure(mock_invoke):
         )
     )
 
+    for result in results:
+        print(result)
     assert all([isinstance(r, asyncio.TimeoutError) for r in results])
