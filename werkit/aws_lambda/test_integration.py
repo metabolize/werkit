@@ -1,14 +1,7 @@
 import os
-import boto3
 import uuid
-import tempfile
-from pprint import pprint
-import pytest
-from .build import (
-    create_venv_with_dependencies,
-    collect_zipfile_contents,
-    create_zipfile_from_dir,
-)
+import boto3
+from .build import create_zipfile_from_dir
 from .deploy import perform_create
 from .orchestrator_deploy import deploy_orchestrator
 

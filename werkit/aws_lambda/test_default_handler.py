@@ -1,19 +1,9 @@
-import pytest
-import pdb
-import asyncio
-import json
-
-import werkit.aws_lambda.parallel
-from werkit.aws_lambda.default_handler import handler
-import botocore.session
-from botocore.stub import Stubber
-from botocore.exceptions import ClientError
 from functools import partial
 from asynctest import Mock, patch
-
-from werkit.aws_lambda.test_util import (
-    inputs,
+from .default_handler import handler
+from .test_util import (
     extra_args,
+    inputs,
     lambda_worker_function_name,
     parallel_map_on_lambda_timeout_failure_call_worker_service_mock,
     setup_first_failure_mock_responses,

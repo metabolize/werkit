@@ -1,10 +1,9 @@
 import os
-import zipfile
-import sys
 import shutil
+import sys
 import venv
+import zipfile
 from executor import execute
-from .deploy import perform_create
 
 
 def create_venv_with_dependencies(
