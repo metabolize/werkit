@@ -1,6 +1,6 @@
-from contextlib import contextmanager
 import os
 import sys
+from contextlib import contextmanager
 import boto3
 
 DEFAULT_RUNTIME = "python3.7"

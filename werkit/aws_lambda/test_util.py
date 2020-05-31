@@ -1,11 +1,8 @@
-import werkit.aws_lambda.parallel
-from functools import partial
-import json
-from werkit.aws_lambda.test_worker.service import handler as worker_handler
-import io
 import asyncio
-from asynctest import CoroutineMock, Mock, patch
+import json
+from asynctest import CoroutineMock
 from botocore.exceptions import ClientError
+from .test_worker.service import handler as worker_handler
 
 inputs = [1, 2, 3, 4]
 extra_args = [2, 3]
