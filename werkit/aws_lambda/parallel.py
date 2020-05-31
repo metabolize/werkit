@@ -7,25 +7,33 @@ from functools import partial
 from botocore.exceptions import ClientError
 import time
 from botocore.client import Config
+from harrison import Timer
 
 
-async def call_worker_service(lambda_worker_function_name, extra_args, _input):
+async def call_worker_service(
+    lambda_worker_function_name, extra_args, _input, with_timing=True
+):
     async with aioboto3.client("lambda") as lambda_client:
-        # tic = time.time()
-        response = await lambda_client.invoke(
-            FunctionName=lambda_worker_function_name,
-            Payload=json.dumps({"input": _input, "extra_args": extra_args}),
-        )
-        # toc = time.time()
-        # print(_input, toc - tic)
+        with Timer(verbose=False) as response_timer:
+            response = await lambda_client.invoke(
+                FunctionName=lambda_worker_function_name,
+                Payload=json.dumps({"input": _input, "extra_args": extra_args}),
+            )
         payload = await response["Payload"].read()
-        return json.loads(payload.decode())
+        result = json.loads(payload.decode())
+        if with_timing:
+            result["lambda_roundtrip_seconds"] = response_timer.elapsed_time_s
+        return result
 
 
-async def wait_for(timeout, lambda_worker_function_name, extra_args, _input):
+async def wait_for(
+    timeout, lambda_worker_function_name, extra_args, _input, with_timing=True
+):
     try:
         return await asyncio.wait_for(
-            call_worker_service(lambda_worker_function_name, extra_args, _input),
+            call_worker_service(
+                lambda_worker_function_name, extra_args, _input, with_timing=with_timing
+            ),
             timeout=timeout,
         )
     except ClientError as ex:
@@ -37,10 +45,16 @@ async def wait_for(timeout, lambda_worker_function_name, extra_args, _input):
 
 
 async def parallel_map_on_lambda(
-    lambda_worker_function_name, timeout, input, extra_args=[]
+    lambda_worker_function_name, timeout, input, extra_args=[], with_timing=True
 ):
-    _call_worker_service = partial(
-        wait_for, timeout, lambda_worker_function_name, extra_args
-    )
-    coroutines = list(map(_call_worker_service, input))
+    coroutines = [
+        wait_for(
+            timeout=timeout,
+            lambda_worker_function_name=lambda_worker_function_name,
+            input=item,
+            extra_args=extra_args,
+            with_timing=with_timing,
+        )
+        for item in input
+    ]
     return await asyncio.gather(*coroutines, return_exceptions=True)
