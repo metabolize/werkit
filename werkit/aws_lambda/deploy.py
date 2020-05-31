@@ -23,6 +23,7 @@ def temp_file_on_s3(local_path, bucket, key, verbose=True):
     Copy the given path to S3. Delete the file from S3 when the block is
     closed.
     """
+
     def pif(x):
         if verbose:
             print(x, file=sys.stderr)
@@ -56,6 +57,7 @@ def perform_create(
     Create a lambda function with the given zipfile. If the zipfile is larger
     than 50 MB, you must specify an `s3_code_bucket`.
     """
+
     def pif(x):
         if verbose:
             print(x, file=sys.stderr)
