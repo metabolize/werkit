@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0
+
+### New features
+
+- Support fanout on AWS Lambda, using a werkit orchestrator with a
+  user-provided worker lambda.
+- Add utilities for deploying Python-based functions to AWS Lambda.
+
+
 ## 0.5.0
 
 ### New features
