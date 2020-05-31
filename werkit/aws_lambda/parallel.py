@@ -46,7 +46,7 @@ async def parallel_map_on_lambda(
         wait_for(
             timeout=timeout,
             lambda_worker_function_name=lambda_worker_function_name,
-            input=item,
+            _input=item,
             extra_args=extra_args,
             with_timing=with_timing,
         )
