@@ -20,8 +20,7 @@ def random_string(length):
 @contextmanager
 def temp_file_on_s3(local_path, bucket, key, verbose=True):
     """
-    Copy the given path to S3. Delete the file from S3 when the block is
-    closed.
+    Copy the given path to S3. Delete the file from S3 when the block exits.
     """
 
     def pif(x):
