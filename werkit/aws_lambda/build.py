@@ -11,7 +11,7 @@ def create_venv_with_dependencies(
     upgrade_pip=True,
     install_wheel=True,
     install_werkit=False,
-    install_requirements=True,
+    install_requirements_from=["requirements.txt"],
     environment={},
 ):
     venv.create(venv_dir, with_pip=True)
@@ -35,16 +35,16 @@ def create_venv_with_dependencies(
             environment=environment,
         )
 
-    if install_requirements:
-        execute(
+    if len(install_requirements_from) > 0:
+        args = [
             python,
             "-m",
             "pip",
             "install",
-            "-r",
-            "requirements.txt",
-            environment=environment,
-        )
+        ]
+        for requirements_file in install_requirements_from:
+            args += ["-r", requirements_file]
+        execute(*args, environment=environment)
 
 
 def find_site_packages_dir(venv_dir):

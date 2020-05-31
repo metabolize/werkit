@@ -1,4 +1,5 @@
 -r requirements.txt
+-r requirements_client.txt
 
 # Used in dev.py.
 executor >= 21.0
