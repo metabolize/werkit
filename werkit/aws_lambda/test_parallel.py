@@ -53,7 +53,7 @@ def test_parallel_map_on_lambda_success(mock_invoke):
     event_loop = asyncio.get_event_loop()
     result = event_loop.run_until_complete(
         parallel.parallel_map_on_lambda(
-            lambda_worker_function_name, default_timeout, inputs, extra_args
+            lambda_worker_function_name, default_timeout, inputs, extra_args,
         )
     )
 
@@ -67,7 +67,7 @@ def test_parallel_map_on_lambda_client_failure(mock_invoke):
     event_loop = asyncio.get_event_loop()
     result = event_loop.run_until_complete(
         parallel.parallel_map_on_lambda(
-            lambda_worker_function_name, default_timeout, inputs, extra_args
+            lambda_worker_function_name, default_timeout, inputs, extra_args,
         )
     )
 
@@ -89,4 +89,6 @@ def test_parallel_map_on_lambda_timeout_failure(mock_invoke):
         )
     )
 
+    for result in results:
+        print(result)
     assert all([isinstance(r, asyncio.TimeoutError) for r in results])
