@@ -36,15 +36,16 @@ def create_venv_with_dependencies(
         )
 
     if len(install_requirements_from) > 0:
-        execute(
+        args = [
             python,
             "-m",
             "pip",
             "install",
             "-r",
-            *install_requirements_from,
-            environment=environment,
-        )
+        ]
+        for requirements_file in install_requirements_from:
+            args += ["-r", requirements_file]
+        execute(*args, environment=environment)
 
 
 def find_site_packages_dir(venv_dir):
