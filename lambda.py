@@ -21,7 +21,6 @@ def _clean():
 
 
 @cli.command()
-@build_dir_option
 def clean():
     _clean()
 
