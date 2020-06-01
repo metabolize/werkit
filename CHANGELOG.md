@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.7.0
+
+### BREAKING CHANGES
+
+- By default, do not install dependencies for the Lambda client. When these
+  dependencies are desired, use `pip install werkit[client]`.
+
+### New features
+
+- `werkit.parallel`: Optionally augment result with Lambda roundtrip time.
+- By default, provide compute times rounded to the nearest 1/100 of a second.
+
+### Bug fixes
+
+- Fix Lambda update when code is under 50 MB.
+
+### Other changes
+
+- Update aioboto3 dependency.
+
+
 ## 0.6.0
 
 ### New features
