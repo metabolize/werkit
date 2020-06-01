@@ -58,11 +58,9 @@ class Manager:
         return self
 
     def __exit__(self, type, value, traceback):
-        duration = int(
-            round(
-                (datetime.datetime.now() - self.start_time).total_seconds(),
-                self.time_precision,
-            )
+        duration = round(
+            (datetime.datetime.now() - self.start_time).total_seconds(),
+            self.time_precision,
         )
 
         if type in [KeyboardInterrupt, SystemExit]:
