@@ -22,6 +22,19 @@ def transform_result(result):
         return wrap_exception(exception=result, error_origin="orchestration")
     elif isinstance(result, Exception):
         return wrap_exception(exception=result, error_origin="orchestration")
+    elif isinstance(result, dict) and "errorMessage" in result:
+        # https://docs.aws.amazon.com/lambda/latest/dg/python-exceptions.html
+        # Unhandled exception in Lambda, with `errorMessage`, `errorType`, and
+        # `stackTrace`.
+        #
+        return {
+            "success": False,
+            "result": None,
+            "error": result["stackTrace"]
+            + [f"{result['errorType']}: {result['errorMessage']}"],
+            "error_origin": "system",
+            "duration_seconds": -1,
+        }
     else:
         validate_result(result)
         return result

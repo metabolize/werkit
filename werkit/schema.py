@@ -3,11 +3,15 @@ def validate_result(result):
     Validate that the result matches the schema for `werkit.Manager`.
     """
     expected_keys = ["success", "result", "error", "error_origin", "duration_seconds"]
+    if not isinstance(result, dict):
+        raise ValueError(
+            f"Expected Lambda result to be a dict with {','.join(expected_keys)}; got {result}"
+        )
     result_keys = result.keys()
     missing_keys = [k for k in expected_keys if k not in result_keys]
     if len(missing_keys) > 0:
         raise ValueError(
-            f"Lambda result contained keys {result_keys.join(',')}, missing {missing_keys.join(',')}"
+            f"Lambda result contained keys {','.join(result_keys)}, missing {','.join(missing_keys)}"
         )
     if not isinstance(result["success"], bool):
         raise ValueError(
@@ -16,7 +20,7 @@ def validate_result(result):
     allowed_error_origins = ["compute", "system", "orchestration"]
     if result["error_origin"] not in [None] + allowed_error_origins:
         raise ValueError(
-            f"Expected result[\"error_origin\"] to be {allowed_error_origins.join(',')}, or `None`"
+            f"Expected result[\"error_origin\"] to be {','.join(allowed_error_origins)}, or `None`"
         )
 
 
