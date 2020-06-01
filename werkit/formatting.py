@@ -4,4 +4,3 @@ def format_time(seconds):
         return "{} min, {} sec".format(minutes, seconds)
     else:
         return "{} sec".format(seconds)
-

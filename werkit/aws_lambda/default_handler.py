@@ -2,6 +2,7 @@ import asyncio
 import os
 from botocore.exceptions import ClientError
 from .parallel import parallel_map_on_lambda
+from ..schema import validate_result, wrap_exception
 
 LAMBDA_WORKER_FUNCTION_NAME = "LAMBDA_WORKER_FUNCTION_NAME"
 env_lambda_worker_function_name = os.environ.get(LAMBDA_WORKER_FUNCTION_NAME)
@@ -14,23 +15,35 @@ env_lambda_worker_timeout = (
 )
 
 
+def validate_result(result):
+    """
+    Validate that the result matches the schema for `werkit.Manager`.
+    """
+    expected_keys = ["success", "result", "error", "error_origin", "duration_seconds"]
+    result_keys = result.keys()
+    missing_keys = [k for k in expected_keys if k not in result_keys]
+    if len(missing_keys) > 0:
+        raise ValueError(
+            f"Lambda result contained keys {result_keys.join(',')}, missing {missing_keys.join(',')}"
+        )
+    if not isinstance(result["success"], bool):
+        raise ValueError(
+            f"Expected result[\"success\"] to be a bool, got {result['success']}"
+        )
+    allowed_error_origins = ["compute", "system", "orchestration"]
+    if result["error_origin"] not in [None] + allowed_error_origins:
+        raise ValueError(
+            f"Expected result[\"error_origin\"] to be {allowed_error_origins.join(',')}, or `None`"
+        )
+
+
 def transform_result(result):
     if isinstance(result, ClientError):
-        return {
-            "exception": "ClientError",
-            "args": result.args,
-            "operation_name": result.operation_name,
-        }
+        return wrap_exception(exception=result, error_origin="orchestration")
     elif isinstance(result, asyncio.TimeoutError):
-        return {
-            "exception": "TimeoutError",
-            "args": result.args,
-        }
+        return wrap_exception(exception=result, error_origin="orchestration")
     elif isinstance(result, Exception):
-        return {
-            "exception": "Exception",
-            "args": result.args,
-        }
+        return wrap_exception(exception=result, error_origin="orchestration")
     else:
         return result
 
@@ -50,4 +63,4 @@ def handler(
     results = event_loop.run_until_complete(
         parallel_map_on_lambda(lambda_worker_function_name, timeout, **event)
     )
-    return list(map(transform_result, results))
+    return [transform_result(result) for result in results]
