@@ -23,6 +23,7 @@ def transform_result(result):
     elif isinstance(result, Exception):
         return wrap_exception(exception=result, error_origin="orchestration")
     else:
+        validate_result(result)
         return result
 
 
