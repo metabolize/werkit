@@ -56,4 +56,4 @@ def test_verbose(capfd):
         manager.result = 2
 
     out, err = capfd.readouterr()
-    assert err == "Completed in 0 sec\n"
+    assert err == "Completed in 0.0 sec\n"
