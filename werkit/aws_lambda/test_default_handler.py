@@ -56,4 +56,6 @@ def test_default_handler_client_failure(mock_invoke):
 def test_default_handler_timeout_failure(mock_invoke):
     setup_success_mock_responses(mock_invoke, inputs)
     results = call_handler(timeout=1)
-    assert all([r["error"][-1] == "concurrent.futures._base.TimeoutError\n" for r in results])
+    assert all(
+        [r["error"][-1] == "concurrent.futures._base.TimeoutError\n" for r in results]
+    )
