@@ -81,7 +81,7 @@ def test_integration_timeout_failure(tmpdir):
     try:
         results = invoke_orchestrator(orchestrator_function_name)
         print(results)
-        assert all([r["exception"] == "TimeoutError" for r in results])
+        assert all([r["error"][-1] == "concurrent.futures._base.TimeoutError\n" for r in results])
     finally:
         client = boto3.client("lambda")
         client.delete_function(FunctionName=worker_function_name)
