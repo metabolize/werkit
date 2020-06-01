@@ -14,6 +14,15 @@ def test_manage_execution_serializes_result():
         "duration_seconds": 0,
     }
 
+def test_time_precision():
+    import time
+
+    with Manager() as manager:
+        time.sleep(0.35)
+        manager.result = 2
+
+    assert manager.serialized_result["duration_seconds"] >= 0.35
+    assert manager.serialized_result["duration_seconds"] < 0.4
 
 def test_manage_execution_serializes_error():
     with Manager() as manager:
