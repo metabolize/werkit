@@ -2,6 +2,7 @@ import asyncio
 import os
 from botocore.exceptions import ClientError
 from .parallel import parallel_map_on_lambda
+from ..schema import validate_result, wrap_exception
 
 LAMBDA_WORKER_FUNCTION_NAME = "LAMBDA_WORKER_FUNCTION_NAME"
 env_lambda_worker_function_name = os.environ.get(LAMBDA_WORKER_FUNCTION_NAME)
@@ -16,22 +17,26 @@ env_lambda_worker_timeout = (
 
 def transform_result(result):
     if isinstance(result, ClientError):
-        return {
-            "exception": "ClientError",
-            "args": result.args,
-            "operation_name": result.operation_name,
-        }
+        return wrap_exception(exception=result, error_origin="orchestration")
     elif isinstance(result, asyncio.TimeoutError):
-        return {
-            "exception": "TimeoutError",
-            "args": result.args,
-        }
+        return wrap_exception(exception=result, error_origin="orchestration")
     elif isinstance(result, Exception):
+        return wrap_exception(exception=result, error_origin="orchestration")
+    elif isinstance(result, dict) and "errorMessage" in result:
+        # https://docs.aws.amazon.com/lambda/latest/dg/python-exceptions.html
+        # Unhandled exception in Lambda, with `errorMessage`, `errorType`, and
+        # `stackTrace`.
+        #
         return {
-            "exception": "Exception",
-            "args": result.args,
+            "success": False,
+            "result": None,
+            "error": result["stackTrace"]
+            + [f"{result['errorType']}: {result['errorMessage']}"],
+            "error_origin": "system",
+            "duration_seconds": -1,
         }
     else:
+        validate_result(result)
         return result
 
 
@@ -50,4 +55,4 @@ def handler(
     results = event_loop.run_until_complete(
         parallel_map_on_lambda(lambda_worker_function_name, timeout, **event)
     )
-    return list(map(transform_result, results))
+    return [transform_result(result) for result in results]

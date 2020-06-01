@@ -1,9 +1,14 @@
 import os
 import uuid
 import boto3
+from dotenv import load_dotenv
+import pytest
 from .build import create_zipfile_from_dir
 from .deploy import perform_create
 from .orchestrator_deploy import deploy_orchestrator
+
+
+load_dotenv()
 
 
 def role():
@@ -13,7 +18,10 @@ def role():
     return os.environ["INTEGRATION_TEST_LAMBDA_ROLE"]
 
 
-def create_test_functions(tmpdir, worker_timeout=None, worker_delay=None):
+# TODO: Reuse the zip files across tests.
+def create_test_functions(
+    tmpdir, worker_timeout=None, worker_delay=None, worker_should_throw=False
+):
     unique = uuid.uuid4().hex
     worker_function_name = f"werkit_integ_test_worker_{unique}"
     orchestrator_function_name = f"werkit_integ_test_orchestrator_{unique}"
@@ -22,15 +30,18 @@ def create_test_functions(tmpdir, worker_timeout=None, worker_delay=None):
     create_zipfile_from_dir(
         dir_path="werkit/aws_lambda/test_worker/", path_to_zipfile=path_to_worker_zip,
     )
+    env_vars = {}
+    if worker_delay:
+        env_vars["DELAY_SECONDS"] = str(worker_delay)
+    if worker_should_throw:
+        env_vars["SHOULD_THROW"] = "TRUE"
     perform_create(
         path_to_zipfile=path_to_worker_zip,
         handler="service.handler",
         function_name=worker_function_name,
         role=role(),
         timeout=10,
-        env_vars={"LAMBDA_WORKER_DELAY_SECONDS": str(worker_delay)}
-        if worker_delay
-        else {},
+        env_vars=env_vars,
     )
 
     deploy_orchestrator(
@@ -55,6 +66,7 @@ def invoke_orchestrator(orchestrator_function_name):
     return json.load(response["Payload"])
 
 
+@pytest.mark.slow
 def test_integration_success(tmpdir):
     worker_function_name, orchestrator_function_name = create_test_functions(
         tmpdir=tmpdir
@@ -63,13 +75,43 @@ def test_integration_success(tmpdir):
     try:
         results = invoke_orchestrator(orchestrator_function_name)
         print(results)
-        assert results == [6, 7, 8, 9]
+        assert all([r["success"] is True for r in results])
+        assert [r["result"] for r in results] == [6, 7, 8, 9]
     finally:
         client = boto3.client("lambda")
         client.delete_function(FunctionName=worker_function_name)
         client.delete_function(FunctionName=orchestrator_function_name)
 
 
+@pytest.mark.slow
+def test_integration_unhandled_exception(tmpdir):
+    worker_function_name, orchestrator_function_name = create_test_functions(
+        tmpdir=tmpdir, worker_should_throw=True
+    )
+
+    try:
+        results = invoke_orchestrator(orchestrator_function_name)
+        print(results)
+
+        assert all([r["success"] is False for r in results])
+        assert all([r["error_origin"] == "system" for r in results])
+        assert all(
+            [
+                r["error"]
+                == [
+                    '  File "/var/task/service.py", line 35, in handler\n    raise Exception("Whoops!")\n',
+                    "Exception: Whoops!",
+                ]
+                for r in results
+            ]
+        )
+    finally:
+        client = boto3.client("lambda")
+        client.delete_function(FunctionName=worker_function_name)
+        client.delete_function(FunctionName=orchestrator_function_name)
+
+
+@pytest.mark.slow
 def test_integration_timeout_failure(tmpdir):
     worker_function_name, orchestrator_function_name = create_test_functions(
         tmpdir=tmpdir, worker_timeout=1, worker_delay=3,
@@ -78,7 +120,14 @@ def test_integration_timeout_failure(tmpdir):
     try:
         results = invoke_orchestrator(orchestrator_function_name)
         print(results)
-        assert all([r["exception"] == "TimeoutError" for r in results])
+        assert all([r["success"] is False for r in results])
+        assert all([r["error_origin"] == "orchestration" for r in results])
+        assert all(
+            [
+                r["error"][-1] == "concurrent.futures._base.TimeoutError\n"
+                for r in results
+            ]
+        )
     finally:
         client = boto3.client("lambda")
         client.delete_function(FunctionName=worker_function_name)
