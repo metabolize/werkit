@@ -10,6 +10,7 @@ def test_manage_execution_serializes_result():
         "success": True,
         "result": 2,
         "error": None,
+        "error_origin": None,
         "duration_seconds": 0,
     }
 
@@ -24,6 +25,7 @@ def test_manage_execution_serializes_error():
     assert manager.serialized_result == {
         "success": False,
         "result": None,
+        "error_origin": "compute",
         "duration_seconds": 0,
     }
 
@@ -45,4 +47,4 @@ def test_verbose(capfd):
         manager.result = 2
 
     out, err = capfd.readouterr()
-    assert out == "Completed in 0 sec\n"
+    assert err == "Completed in 0 sec\n"

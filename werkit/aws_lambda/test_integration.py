@@ -1,6 +1,7 @@
 import os
 import uuid
 import boto3
+import pytest
 from .build import create_zipfile_from_dir
 from .deploy import perform_create
 from .orchestrator_deploy import deploy_orchestrator
@@ -55,6 +56,7 @@ def invoke_orchestrator(orchestrator_function_name):
     return json.load(response["Payload"])
 
 
+@pytest.mark.slow
 def test_integration_success(tmpdir):
     worker_function_name, orchestrator_function_name = create_test_functions(
         tmpdir=tmpdir
@@ -70,6 +72,7 @@ def test_integration_success(tmpdir):
         client.delete_function(FunctionName=orchestrator_function_name)
 
 
+@pytest.mark.slow
 def test_integration_timeout_failure(tmpdir):
     worker_function_name, orchestrator_function_name = create_test_functions(
         tmpdir=tmpdir, worker_timeout=1, worker_delay=3,
