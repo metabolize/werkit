@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.7.0
+
+### BREAKING CHANGES
+
+- Adopt consistent schema for compute and orchestration errors.
+- Validate that cloud results match the schema.
+- By default, do not install dependencies for the Lambda client. When these
+  dependencies are desired, use `pip install werkit[client]`.
+
+### New features
+
+- Add `error_source` key to cloud results, which can be `"compute"`,
+  `"system"` or `"orchestration"`.
+- `werkit.parallel`: Optionally augment result with Lambda roundtrip time.
+- By default, provide compute times rounded to the nearest 1/100 of a second.
+
+### Bug fixes
+
+- Fix Lambda update when code is under 50 MB.
+- `Manager`: In verbose mode, print timing to stderr instead of stdout.
+
+### Other changes
+
+- Document the cloud result schema.
+- Update aioboto3 dependency.
+
+
 ## 0.6.0
 
 ### New features
