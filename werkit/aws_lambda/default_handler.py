@@ -1,6 +1,7 @@
 import asyncio
 import os
 from botocore.exceptions import ClientError
+import concurrent
 from .parallel import parallel_map_on_lambda
 from ..schema import validate_result, wrap_exception
 
@@ -52,8 +53,9 @@ def handler(
             + "or default kwArg lambda_worker_function_name must be bound to the handler"
         )
     event_loop = asyncio.get_event_loop()
-    results = event_loop.run_until_complete(
-        parallel_map_on_lambda(lambda_worker_function_name, timeout, **event)
-    )
-    return [transform_result(result) for result in results]
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1023) as executor:
+        results = event_loop.run_until_complete(
+            parallel_map_on_lambda(lambda_worker_function_name, timeout, event_loop=event_loop, executor=executor, **event)
+        )
+        return [transform_result(result) for result in results]
 

@@ -5,14 +5,12 @@ from botocore.exceptions import ClientError
 from harrison import Timer
 
 from functools import partial
-import concurrent
 
 lambda_client = boto3.client("lambda")
-executor = concurrent.futures.ThreadPoolExecutor(max_workers=1024)  #max threads allowed on lambda
 event_loop = asyncio.get_event_loop()
 
 async def call_worker_service(
-    lambda_worker_function_name, extra_args, _input, with_timing=True
+    lambda_worker_function_name, extra_args, _input, with_timing=True, event_loop=event_loop, executor=None,
 ):
     invoke = partial(lambda_client.invoke, FunctionName=lambda_worker_function_name, Payload=json.dumps({"input": _input, "extra_args": extra_args}))
     with Timer(verbose=False) as response_timer:
@@ -25,12 +23,12 @@ async def call_worker_service(
 
 
 async def wait_for(
-    timeout, lambda_worker_function_name, extra_args, _input, with_timing=True
+    timeout, lambda_worker_function_name, extra_args, _input, with_timing=True, event_loop=event_loop, executor=None,
 ):
     try:
         return await asyncio.wait_for(
             call_worker_service(
-                lambda_worker_function_name, extra_args, _input, with_timing=with_timing
+                lambda_worker_function_name, extra_args, _input, event_loop=event_loop, executor=executor, with_timing=with_timing
             ),
             timeout=timeout,
         )
@@ -43,7 +41,7 @@ async def wait_for(
 
 
 async def parallel_map_on_lambda(
-    lambda_worker_function_name, timeout, input, extra_args=[], with_timing=True
+    lambda_worker_function_name, timeout, input, extra_args=[], with_timing=True, event_loop=event_loop, executor=None,
 ):
     coroutines = [
         wait_for(
@@ -52,6 +50,8 @@ async def parallel_map_on_lambda(
             _input=item,
             extra_args=extra_args,
             with_timing=with_timing,
+            event_loop=event_loop, 
+            executor=executor,
         )
         for item in input
     ]
