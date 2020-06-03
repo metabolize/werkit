@@ -14,6 +14,7 @@ def deploy_orchestrator(
     role,
     worker_function_name,
     worker_timeout,
+    s3_code_bucket=None,
     orchestrator_timeout=None,
 ):
     if os.path.isdir(build_dir):
@@ -47,4 +48,5 @@ def deploy_orchestrator(
         timeout=orchestrator_timeout,
         memory_size=1792,
         env_vars=env_vars,
+        s3_code_bucket=s3_code_bucket,
     )
