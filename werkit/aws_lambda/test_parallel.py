@@ -1,29 +1,18 @@
-import pytest
-import pdb
 import asyncio
-import json
-
-import werkit.aws_lambda.parallel
+from asynctest import Mock, patch
 from botocore.exceptions import ClientError
-
-from functools import partial
-
-import io
-
-from werkit.aws_lambda.test_worker.service import handler as worker_handler
-
-from werkit.aws_lambda.test_util import (
-    inputs,
+import pytest
+from . import parallel
+from .test_util import (
+    default_timeout,
     extra_args,
+    inputs,
     lambda_worker_function_name,
     parallel_map_on_lambda_timeout_failure_call_worker_service_mock,
     setup_first_failure_mock_responses,
-    setup_success_mock_responses,
     setup_mock_failure_response,
-    default_timeout,
+    setup_success_mock_responses,
 )
-
-from asynctest import Mock, patch
 
 
 @patch("aioboto3.client", new_callable=Mock)
@@ -35,9 +24,7 @@ def test_call_worker_service_success(mock_invoke):
 
     event_loop = asyncio.get_event_loop()
     result = event_loop.run_until_complete(
-        werkit.aws_lambda.parallel.call_worker_service(
-            lambda_worker_function_name, extra_args, _input
-        )
+        parallel.call_worker_service(lambda_worker_function_name, extra_args, _input)
     )
 
     assert result == expected_output_payload
@@ -52,7 +39,7 @@ def test_call_worker_service_failure(mock_invoke):
     event_loop = asyncio.get_event_loop()
     with pytest.raises(ClientError):
         result = event_loop.run_until_complete(
-            werkit.aws_lambda.parallel.call_worker_service(
+            parallel.call_worker_service(
                 lambda_worker_function_name, extra_args, _input
             )
         )
@@ -65,8 +52,8 @@ def test_parallel_map_on_lambda_success(mock_invoke):
 
     event_loop = asyncio.get_event_loop()
     result = event_loop.run_until_complete(
-        werkit.aws_lambda.parallel.parallel_map_on_lambda(
-            lambda_worker_function_name, default_timeout, inputs, extra_args
+        parallel.parallel_map_on_lambda(
+            lambda_worker_function_name, default_timeout, inputs, extra_args,
         )
     )
 
@@ -79,8 +66,8 @@ def test_parallel_map_on_lambda_client_failure(mock_invoke):
 
     event_loop = asyncio.get_event_loop()
     result = event_loop.run_until_complete(
-        werkit.aws_lambda.parallel.parallel_map_on_lambda(
-            lambda_worker_function_name, default_timeout, inputs, extra_args
+        parallel.parallel_map_on_lambda(
+            lambda_worker_function_name, default_timeout, inputs, extra_args,
         )
     )
 
@@ -97,9 +84,11 @@ def test_parallel_map_on_lambda_timeout_failure(mock_invoke):
     setup_success_mock_responses(mock_invoke, inputs)
     event_loop = asyncio.get_event_loop()
     results = event_loop.run_until_complete(
-        werkit.aws_lambda.parallel.parallel_map_on_lambda(
+        parallel.parallel_map_on_lambda(
             lambda_worker_function_name, 1, inputs, extra_args
         )
     )
 
+    for result in results:
+        print(result)
     assert all([isinstance(r, asyncio.TimeoutError) for r in results])

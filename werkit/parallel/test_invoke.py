@@ -5,11 +5,11 @@ from rq import Worker
 from .invoke import (
     DEFAULT_QUEUE_NAME,
     clean,
-    invoke_for_each,
-    get_results,
     get_aggregate_status,
+    get_results,
+    invoke_for_each,
 )
-from .testing import square, multiply
+from .testing import multiply, square
 
 
 def path_to_redis():

@@ -24,8 +24,12 @@ def init():
 
 
 @cli.command()
-def test():
-    execute("python3 -m pytest")
+@click.option("--slow/--not-slow", default=True)
+def test(slow):
+    args = ["python3", "-m", "pytest"]
+    if not slow:
+        args += ["-m", "not slow"]
+    execute(*args)
 
 
 @cli.command()

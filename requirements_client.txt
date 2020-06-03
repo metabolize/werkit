@@ -1,0 +1,2 @@
+aioboto3==8.0.3 
+harrison>=2.0,<3.0

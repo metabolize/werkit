@@ -1,10 +1,37 @@
 import time
 import os
 
-LAMBDA_WORKER_DELAY_SECONDS = 'LAMBDA_WORKER_DELAY_SECONDS'
-env_lambda_worker_delay = int(os.environ[LAMBDA_WORKER_DELAY_SECONDS]) if LAMBDA_WORKER_DELAY_SECONDS in os.environ else 0
+
+def env_flag(env_var, default):
+    import os
+
+    environ_string = os.environ.get(env_var, "").strip().lower()
+    if not environ_string:
+        return default
+    return environ_string in ["1", "true", "yes", "on"]
+
+
+DELAY_SECONDS = int(os.environ.get("DELAY_SECONDS", "0"))
+SHOULD_THROW = env_flag("SHOULD_THROW", False)
+
+
+def wrap_result(serializable_result):
+    """
+    Simulate the effect of `werkit.Manager()`, which is not used here so this
+    test service be kept to one file.
+    """
+    return {
+        "success": True,
+        "result": serializable_result,
+        "error": None,
+        "error_origin": None,
+        "duration_seconds": 1.0,
+    }
+
 
 def handler(event, context):
-    time.sleep(env_lambda_worker_delay)   #wait 3 seconds
-    return event['input'] + sum(event['extra_args'])
+    time.sleep(DELAY_SECONDS)
+    if SHOULD_THROW:
+        raise Exception("Whoops!")
 
+    return wrap_result(event["input"] + sum(event["extra_args"]))

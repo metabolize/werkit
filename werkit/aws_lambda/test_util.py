@@ -1,11 +1,8 @@
-import werkit.aws_lambda.parallel
-from functools import partial
-import json
-from werkit.aws_lambda.test_worker.service import handler as worker_handler
-import io
 import asyncio
-from asynctest import CoroutineMock, Mock, patch
+import json
+from asynctest import CoroutineMock
 from botocore.exceptions import ClientError
+from .test_worker.service import handler as worker_handler
 
 inputs = [1, 2, 3, 4]
 extra_args = [2, 3]
@@ -22,9 +19,7 @@ def setup_success_mock_responses(mock_invoke, _inputs):
         expected_result.append(_expected_output)
 
         payload_mock = CoroutineMock()
-        invoke_return_value = {
-            "Payload": payload_mock,
-        }
+        invoke_return_value = {"Payload": payload_mock}
         payload_mock.read = CoroutineMock()
         payload_mock.read.return_value = json.dumps(_expected_output).encode()
 
@@ -57,7 +52,6 @@ def setup_mock_failure_response(mock_invoke, _input):
 
 
 def setup_first_failure_mock_responses(mock_invoke, _inputs):
-
     m = CoroutineMock()
     m2 = CoroutineMock()
     mock_invoke.return_value.__aenter__ = m
@@ -72,9 +66,7 @@ def setup_first_failure_mock_responses(mock_invoke, _inputs):
         expected_result.append(_expected_output)
 
         payload_mock = CoroutineMock()
-        invoke_return_value = {
-            "Payload": payload_mock,
-        }
+        invoke_return_value = {"Payload": payload_mock}
         payload_mock.read = CoroutineMock()
         payload_mock.read.return_value = json.dumps(_expected_output).encode()
 
@@ -93,7 +85,7 @@ def create_input_event(_input):
 
 
 async def parallel_map_on_lambda_timeout_failure_call_worker_service_mock(
-    lambda_worker_function_name, extra_args, _input
+    lambda_worker_function_name, extra_args, _input, with_timing=False
 ):
     # introduce a timeout that will trigger a timeout error
     await asyncio.sleep(2)

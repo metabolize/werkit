@@ -10,9 +10,19 @@ def test_manage_execution_serializes_result():
         "success": True,
         "result": 2,
         "error": None,
+        "error_origin": None,
         "duration_seconds": 0,
     }
 
+def test_time_precision():
+    import time
+
+    with Manager() as manager:
+        time.sleep(0.35)
+        manager.result = 2
+
+    assert manager.serialized_result["duration_seconds"] >= 0.35
+    assert manager.serialized_result["duration_seconds"] < 0.4
 
 def test_manage_execution_serializes_error():
     with Manager() as manager:
@@ -24,6 +34,7 @@ def test_manage_execution_serializes_error():
     assert manager.serialized_result == {
         "success": False,
         "result": None,
+        "error_origin": "compute",
         "duration_seconds": 0,
     }
 
@@ -45,4 +56,4 @@ def test_verbose(capfd):
         manager.result = 2
 
     out, err = capfd.readouterr()
-    assert out == "Completed in 0 sec\n"
+    assert err == "Completed in 0.0 sec\n"
