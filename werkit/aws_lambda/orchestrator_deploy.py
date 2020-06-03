@@ -46,7 +46,7 @@ def deploy_orchestrator(
         function_name=orchestrator_function_name,
         role=role,
         timeout=orchestrator_timeout,
-        memory_size=1792,
+        memory_size=3008,   #maximum lambda memory
         env_vars=env_vars,
         s3_code_bucket=s3_code_bucket,
     )
