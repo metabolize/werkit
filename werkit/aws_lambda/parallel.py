@@ -1,18 +1,30 @@
 import asyncio
 import json
+from functools import partial
+
 import boto3
+
 from botocore.exceptions import ClientError
 from harrison import Timer
 
-from functools import partial
 
 lambda_client = boto3.client("lambda")
 event_loop = asyncio.get_event_loop()
 
+
 async def call_worker_service(
-    lambda_worker_function_name, extra_args, _input, with_timing=True, event_loop=event_loop, executor=None,
+    lambda_worker_function_name,
+    extra_args,
+    _input,
+    with_timing=True,
+    event_loop=event_loop,
+    executor=None,
 ):
-    invoke = partial(lambda_client.invoke, FunctionName=lambda_worker_function_name, Payload=json.dumps({"input": _input, "extra_args": extra_args}))
+    invoke = partial(
+        lambda_client.invoke,
+        FunctionName=lambda_worker_function_name,
+        Payload=json.dumps({"input": _input, "extra_args": extra_args}),
+    )
     with Timer(verbose=False) as response_timer:
         response = await event_loop.run_in_executor(executor, invoke)
         payload = await event_loop.run_in_executor(executor, response["Payload"].read)
@@ -23,12 +35,23 @@ async def call_worker_service(
 
 
 async def wait_for(
-    timeout, lambda_worker_function_name, extra_args, _input, with_timing=True, event_loop=event_loop, executor=None,
+    timeout,
+    lambda_worker_function_name,
+    extra_args,
+    _input,
+    with_timing=True,
+    event_loop=event_loop,
+    executor=None,
 ):
     try:
         return await asyncio.wait_for(
             call_worker_service(
-                lambda_worker_function_name, extra_args, _input, event_loop=event_loop, executor=executor, with_timing=with_timing
+                lambda_worker_function_name,
+                extra_args,
+                _input,
+                event_loop=event_loop,
+                executor=executor,
+                with_timing=with_timing,
             ),
             timeout=timeout,
         )
@@ -41,7 +64,13 @@ async def wait_for(
 
 
 async def parallel_map_on_lambda(
-    lambda_worker_function_name, timeout, input, extra_args=[], with_timing=True, event_loop=event_loop, executor=None,
+    lambda_worker_function_name,
+    timeout,
+    input,
+    extra_args=[],
+    with_timing=True,
+    event_loop=event_loop,
+    executor=None,
 ):
     coroutines = [
         wait_for(
@@ -50,7 +79,7 @@ async def parallel_map_on_lambda(
             _input=item,
             extra_args=extra_args,
             with_timing=with_timing,
-            event_loop=event_loop, 
+            event_loop=event_loop,
             executor=executor,
         )
         for item in input

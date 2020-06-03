@@ -60,9 +60,7 @@ def common_options(function):
         help="Timeout of the orchestrator lambda function",
     )(function)
     function = click.option(
-        "--s3-code-bucket",
-        default=None,
-        help="S3 bucket where code is uploaded",
+        "--s3-code-bucket", default=None, help="S3 bucket where code is uploaded",
     )(function)
     return function
 
