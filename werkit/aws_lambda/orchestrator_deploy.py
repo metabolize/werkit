@@ -14,7 +14,8 @@ def deploy_orchestrator(
     role,
     worker_function_name,
     worker_timeout,
-    orchestrator_timeout=None,
+    s3_code_bucket=None,
+    orchestrator_timeout=600,
 ):
     if os.path.isdir(build_dir):
         raise ValueError(f"build_dir should not exist: {build_dir}")
@@ -45,6 +46,7 @@ def deploy_orchestrator(
         function_name=orchestrator_function_name,
         role=role,
         timeout=orchestrator_timeout,
-        memory_size=1792,
+        memory_size=3008,  # maximum lambda memory
         env_vars=env_vars,
+        s3_code_bucket=s3_code_bucket,
     )
