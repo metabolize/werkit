@@ -4,6 +4,7 @@ import sys
 import venv
 import zipfile
 from executor import execute
+from ..package_version import __version__
 
 
 def create_venv_with_dependencies(
@@ -31,7 +32,7 @@ def create_venv_with_dependencies(
             "-m",
             "pip",
             "install",
-            "werkit@git+https://github.com/metabolize/werkit.git@deploy-utils",
+            f"werkit@git+https://github.com/metabolize/werkit.git@{__version__}",
             environment=environment,
         )
 
