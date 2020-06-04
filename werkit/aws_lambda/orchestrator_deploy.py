@@ -15,7 +15,7 @@ def deploy_orchestrator(
     worker_function_name,
     worker_timeout,
     s3_code_bucket=None,
-    orchestrator_timeout=None,
+    orchestrator_timeout=600,
 ):
     if os.path.isdir(build_dir):
         raise ValueError(f"build_dir should not exist: {build_dir}")
