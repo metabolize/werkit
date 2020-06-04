@@ -65,6 +65,7 @@ def invoke_orchestrator(orchestrator_function_name):
     )
     return json.load(response["Payload"])
 
+
 @pytest.mark.slow
 def test_integration_success(tmpdir):
     worker_function_name, orchestrator_function_name = create_test_functions(
@@ -131,5 +132,3 @@ def test_integration_timeout_failure(tmpdir):
         client = boto3.client("lambda")
         client.delete_function(FunctionName=worker_function_name)
         client.delete_function(FunctionName=orchestrator_function_name)
-
-#test_integration_timeout_failure('/tmp')
