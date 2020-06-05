@@ -13,7 +13,6 @@ recommonmark
 pytest ==5.4.2
 pytest-cov == 2.9.0
 pytest-redis==2.0.0
-asynctest==0.13.0
 
 # Optional dependencies.
 redis==3.5.2

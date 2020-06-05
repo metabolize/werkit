@@ -59,6 +59,9 @@ def common_options(function):
         default=600,
         help="Timeout of the orchestrator lambda function",
     )(function)
+    function = click.option(
+        "--s3-code-bucket", default=None, help="S3 bucket where code is uploaded",
+    )(function)
     return function
 
 
@@ -71,6 +74,7 @@ def deploy(
     orchestrator_function_name,
     worker_timeout,
     orchestrator_timeout,
+    s3_code_bucket,
 ):
     _clean()
     deploy_orchestrator(
@@ -81,6 +85,7 @@ def deploy(
         orchestrator_timeout=orchestrator_timeout,
         worker_function_name=worker_function_name,
         worker_timeout=worker_timeout,
+        s3_code_bucket=s3_code_bucket,
     )
 
 

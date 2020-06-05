@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.8.0
+
+### New features
+
+- Optimize the orchestrator using ThreadPoolExecutor.
+- Use the same version of werkit in the builder (and don't refer to a
+  nonexistent branch).
+
+
 ## 0.7.0
 
 ### BREAKING CHANGES
