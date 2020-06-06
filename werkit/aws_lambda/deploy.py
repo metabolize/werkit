@@ -67,7 +67,14 @@ def perform_create(
     def handler(code_arguments):
         boto3.client("lambda").create_function(Code=code_arguments, **common_args)
 
-    create_or_update_lambda(path_to_zipfile, function_name, "Lambda function created", handler, verbose, s3_code_bucket)
+    create_or_update_lambda(
+        path_to_zipfile,
+        function_name,
+        "Lambda function created",
+        handler,
+        verbose,
+        s3_code_bucket,
+    )
 
 
 def perform_update_code(
@@ -77,11 +84,25 @@ def perform_update_code(
 
     def handler(code_arguments):
         boto3.client("lambda").update_function_code(**code_arguments, **common_args)
-        
-    create_or_update_lambda(path_to_zipfile, function_name, "Lambda function code updated", handler, verbose, s3_code_bucket)
+
+    create_or_update_lambda(
+        path_to_zipfile,
+        function_name,
+        "Lambda function code updated",
+        handler,
+        verbose,
+        s3_code_bucket,
+    )
 
 
-def create_or_update_lambda(path_to_zipfile, function_name, message, boto3_function, verbose=False, s3_code_bucket=None):
+def create_or_update_lambda(
+    path_to_zipfile,
+    function_name,
+    message,
+    boto3_function,
+    verbose=False,
+    s3_code_bucket=None,
+):
     """
     Create or update a lambda function with the given zipfile. If the zipfile is larger
     than 50 MB, you must specify an `s3_code_bucket`.
@@ -106,11 +127,11 @@ def create_or_update_lambda(path_to_zipfile, function_name, message, boto3_funct
             key=temp_key,
             verbose=verbose,
         ):
-            boto3_function({'S3Bucket':s3_code_bucket, 'S3Key':temp_key})
+            boto3_function({"S3Bucket": s3_code_bucket, "S3Key": temp_key})
             pif(message)
     else:
         with open(path_to_zipfile, "rb") as f:
             zipfile_contents = f.read()
         pif(f"Uploading {path_to_zipfile} to Lambda")
-        boto3_function({'ZipFile':zipfile_contents})
+        boto3_function({"ZipFile": zipfile_contents})
         pif(message)

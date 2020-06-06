@@ -6,6 +6,7 @@ from .build import (
 )
 from .deploy import perform_create, perform_update_code
 
+
 def prepare_zip_file(build_dir, path_to_orchestrator_zip):
     if os.path.isdir(build_dir):
         raise ValueError(f"build_dir should not exist: {build_dir}")
@@ -25,6 +26,7 @@ def prepare_zip_file(build_dir, path_to_orchestrator_zip):
     create_zipfile_from_dir(
         dir_path=zip_dir, path_to_zipfile=path_to_orchestrator_zip,
     )
+
 
 def deploy_orchestrator(
     build_dir,
@@ -53,6 +55,7 @@ def deploy_orchestrator(
         s3_code_bucket=s3_code_bucket,
         verbose=verbose,
     )
+
 
 def update_orchestrator_code(
     build_dir,

@@ -3,7 +3,10 @@
 import shutil
 import click
 from dotenv import load_dotenv
-from werkit.aws_lambda.orchestrator_deploy import deploy_orchestrator, update_orchestrator_code
+from werkit.aws_lambda.orchestrator_deploy import (
+    deploy_orchestrator,
+    update_orchestrator_code,
+)
 
 load_dotenv()
 
@@ -40,10 +43,11 @@ def common_options(function):
     function = click.option(
         "--s3-code-bucket", default=None, help="S3 bucket where code is uploaded",
     )(function)
-    function = click.option(
-            "--verbose", default=False, help="Enable verbose output",
-    )(function)
+    function = click.option("--verbose", default=False, help="Enable verbose output",)(
+        function
+    )
     return function
+
 
 def deploy_options(function):
     function = click.option(
@@ -96,13 +100,11 @@ def deploy(
         s3_code_bucket=s3_code_bucket,
     )
 
+
 @cli.command()
 @common_options
 def update_code(
-    path_to_orchestrator_zip,
-    orchestrator_function_name,
-    s3_code_bucket,
-    verbose,
+    path_to_orchestrator_zip, orchestrator_function_name, s3_code_bucket, verbose,
 ):
     _clean()
     update_orchestrator_code(
