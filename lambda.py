@@ -3,7 +3,7 @@
 import shutil
 import click
 from dotenv import load_dotenv
-from werkit.aws_lambda.orchestrator_deploy import deploy_orchestrator
+from werkit.aws_lambda.orchestrator_deploy import deploy_orchestrator, update_orchestrator_code
 
 load_dotenv()
 
@@ -31,18 +31,27 @@ def common_options(function):
         help="Orchestrator lambda zip function target location",
     )(function)
     function = click.option(
-        "--worker-function-name",
-        required=True,
-        help="Name of the lambda worker function invoked by orchestrator",
-        envvar="WORKER_FUNCTION_NAME",
-        show_envvar=True,
-    )(function)
-    function = click.option(
         "--orchestrator-function-name",
         required=True,
         envvar="ORCHESTRATOR_FUNCTION_NAME",
         show_envvar=True,
         help="Name of the orchestrator lambda function",
+    )(function)
+    function = click.option(
+        "--s3-code-bucket", default=None, help="S3 bucket where code is uploaded",
+    )(function)
+    function = click.option(
+            "--verbose", default=False, help="Enable verbose output",
+    )(function)
+    return function
+
+def deploy_options(function):
+    function = click.option(
+        "--worker-function-name",
+        required=True,
+        help="Name of the lambda worker function invoked by orchestrator",
+        envvar="WORKER_FUNCTION_NAME",
+        show_envvar=True,
     )(function)
     function = click.option(
         "--role",
@@ -59,22 +68,21 @@ def common_options(function):
         default=600,
         help="Timeout of the orchestrator lambda function",
     )(function)
-    function = click.option(
-        "--s3-code-bucket", default=None, help="S3 bucket where code is uploaded",
-    )(function)
     return function
 
 
 @cli.command()
 @common_options
+@deploy_options
 def deploy(
-    role,
     path_to_orchestrator_zip,
-    worker_function_name,
     orchestrator_function_name,
+    s3_code_bucket,
+    verbose,
+    role,
+    worker_function_name,
     worker_timeout,
     orchestrator_timeout,
-    s3_code_bucket,
 ):
     _clean()
     deploy_orchestrator(
@@ -85,6 +93,22 @@ def deploy(
         orchestrator_timeout=orchestrator_timeout,
         worker_function_name=worker_function_name,
         worker_timeout=worker_timeout,
+        s3_code_bucket=s3_code_bucket,
+    )
+
+@cli.command()
+@common_options
+def update_code(
+    path_to_orchestrator_zip,
+    orchestrator_function_name,
+    s3_code_bucket,
+    verbose,
+):
+    _clean()
+    update_orchestrator_code(
+        build_dir=BUILD_DIR,
+        path_to_orchestrator_zip=path_to_orchestrator_zip,
+        orchestrator_function_name=orchestrator_function_name,
         s3_code_bucket=s3_code_bucket,
     )
 
