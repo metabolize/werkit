@@ -1,6 +1,7 @@
 import asyncio
 import concurrent
 import os
+import time
 from botocore.exceptions import ClientError
 from harrison import Timer
 from .parallel import parallel_map_on_lambda
@@ -48,6 +49,7 @@ def handler(
     lambda_worker_function_name=env_lambda_worker_function_name,
     timeout=env_lambda_worker_timeout or 120,
 ):
+    start_time = time.time()
     with Timer(verbose=False) as response_timer:
         if not lambda_worker_function_name:
             raise Exception(
@@ -69,4 +71,7 @@ def handler(
     return {
         "results": results,
         "orchestrator_duration_seconds": response_timer.elapsed_time_s,
+        "start_time": start_time,
     }
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes

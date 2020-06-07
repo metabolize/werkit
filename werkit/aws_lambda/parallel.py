@@ -1,6 +1,7 @@
 import asyncio
 import json
 from functools import partial
+import time
 
 import boto3
 
@@ -20,6 +21,7 @@ async def call_worker_service(
     event_loop=event_loop,
     executor=None,
 ):
+    invocation_start_time = time.time()
     invoke = partial(
         lambda_client.invoke,
         FunctionName=lambda_worker_function_name,
@@ -30,6 +32,7 @@ async def call_worker_service(
         payload = await event_loop.run_in_executor(executor, response["Payload"].read)
     result = json.loads(payload.decode())
     if with_timing:
+        result["invocation_start_time"] = invocation_start_time 
         result["lambda_roundtrip_seconds"] = response_timer.elapsed_time_s
     return result
 
