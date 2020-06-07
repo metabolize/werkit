@@ -64,16 +64,16 @@ def perform_create(
     if memory_size is not None:
         common_args["MemorySize"] = memory_size
 
-    def handler(code_arguments):
+    def create(code_arguments):
         boto3.client("lambda").create_function(Code=code_arguments, **common_args)
 
     create_or_update_lambda(
-        path_to_zipfile,
-        function_name,
-        "Lambda function created",
-        handler,
-        verbose,
-        s3_code_bucket,
+        path_to_zipfile=path_to_zipfile,
+        function_name=function_name,
+        message="Lambda function created",
+        boto3_function=create,
+        verbose=verbose,
+        s3_code_bucket=s3_code_bucket,
     )
 
 
@@ -82,16 +82,16 @@ def perform_update_code(
 ):
     common_args = {"FunctionName": function_name}
 
-    def handler(code_arguments):
+    def update(code_arguments):
         boto3.client("lambda").update_function_code(**code_arguments, **common_args)
 
     create_or_update_lambda(
-        path_to_zipfile,
-        function_name,
-        "Lambda function code updated",
-        handler,
-        verbose,
-        s3_code_bucket,
+        path_to_zipfile=path_to_zipfile,
+        function_name=function_name,
+        message="Lambda function code updated",
+        boto3_function=update,
+        verbose=verbose,
+        s3_code_bucket=s3_code_bucket,
     )
 
 
