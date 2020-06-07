@@ -73,5 +73,3 @@ def handler(
         "orchestrator_duration_seconds": response_timer.elapsed_time_s,
         "start_time": start_time,
     }
->>>>>>> Stashed changes
->>>>>>> Stashed changes
