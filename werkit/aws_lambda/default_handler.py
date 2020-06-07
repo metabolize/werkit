@@ -2,6 +2,7 @@ import asyncio
 import concurrent
 import os
 from botocore.exceptions import ClientError
+from harrison import Timer
 from .parallel import parallel_map_on_lambda
 from ..schema import validate_result, wrap_exception
 
@@ -47,20 +48,25 @@ def handler(
     lambda_worker_function_name=env_lambda_worker_function_name,
     timeout=env_lambda_worker_timeout or 120,
 ):
-    if not lambda_worker_function_name:
-        raise Exception(
-            f"Environment variable {LAMBDA_WORKER_FUNCTION_NAME} must be defined, "
-            + "or default kwArg lambda_worker_function_name must be bound to the handler"
-        )
-    event_loop = asyncio.get_event_loop()
-    with concurrent.futures.ThreadPoolExecutor(max_workers=1023) as executor:
-        results = event_loop.run_until_complete(
-            parallel_map_on_lambda(
-                lambda_worker_function_name,
-                timeout,
-                event_loop=event_loop,
-                executor=executor,
-                **event,
+    with Timer(verbose=False) as response_timer:
+        if not lambda_worker_function_name:
+            raise Exception(
+                f"Environment variable {LAMBDA_WORKER_FUNCTION_NAME} must be defined, "
+                + "or default kwArg lambda_worker_function_name must be bound to the handler"
             )
-        )
-        return [transform_result(result) for result in results]
+        event_loop = asyncio.get_event_loop()
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1023) as executor:
+            results = event_loop.run_until_complete(
+                parallel_map_on_lambda(
+                    lambda_worker_function_name,
+                    timeout,
+                    event_loop=event_loop,
+                    executor=executor,
+                    **event,
+                )
+            )
+            results = [transform_result(result) for result in results]
+    return {
+        "results": results,
+        "orchestrator_duration_seconds": response_timer.elapsed_time_s,
+    }
