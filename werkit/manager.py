@@ -54,12 +54,12 @@ class Manager:
         self.result = None
 
     def __enter__(self):
-        self.start_time = datetime.datetime.now()
+        self.start_timestamp = datetime.datetime.utcnow()
         return self
 
     def __exit__(self, type, value, traceback):
         duration = round(
-            (datetime.datetime.now() - self.start_time).total_seconds(),
+            (datetime.datetime.utcnow() - self.start_timestamp).total_seconds(),
             self.time_precision,
         )
 
