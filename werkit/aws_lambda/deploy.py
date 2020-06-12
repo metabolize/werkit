@@ -1,37 +1,13 @@
 import os
 import sys
-import uuid
-from contextlib import contextmanager
 import boto3
+from ..s3 import temp_file_on_s3
 
 DEFAULT_RUNTIME = "python3.7"
 
 
 def needs_s3_upload(path_to_zipfile):
     return os.path.getsize(path_to_zipfile) > 50 * 2 ** 20
-
-
-@contextmanager
-def temp_file_on_s3(local_path, bucket, key, verbose=True):
-    """
-    Copy the given path to S3. Delete the file from S3 when the block exits.
-    """
-
-    def pif(x):
-        if verbose:
-            print(x, file=sys.stderr)
-
-    s3_client = boto3.client("s3")
-
-    file_on_s3 = f"s3://{bucket}/{key}"
-    pif(f"Uploading {local_path} to {file_on_s3}")
-    s3_client.upload_file(Filename=local_path, Bucket=bucket, Key=key)
-
-    try:
-        yield
-    finally:
-        pif(f"Removing {file_on_s3}")
-        s3_client.delete_object(Bucket=bucket, Key=key)
 
 
 def perform_create(
@@ -114,13 +90,9 @@ def create_or_update_lambda(
             raise ValueError(
                 "When zipfile is larger than 50 MB, s3_code_bucket is required"
             )
-        temp_key = f"{function_name}_{uuid.uuid4().hex}.zip"
         with temp_file_on_s3(
-            local_path=path_to_zipfile,
-            bucket=s3_code_bucket,
-            key=temp_key,
-            verbose=verbose,
-        ):
+            local_path=path_to_zipfile, bucket=s3_code_bucket, verbose=verbose,
+        ) as temp_key:
             boto3_function({"S3Bucket": s3_code_bucket, "S3Key": temp_key})
             pif(message)
     else:
