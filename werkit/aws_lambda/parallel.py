@@ -1,6 +1,6 @@
 import asyncio
+import datetime
 import json
-import time
 from functools import partial
 import boto3
 from botocore.exceptions import ClientError
@@ -19,7 +19,7 @@ async def call_worker_service(
     event_loop=event_loop,
     executor=None,
 ):
-    invocation_start_timestamp = time.time()
+    invocation_start_timestamp = datetime.datetime.utcnow().timestamp()
     invoke = partial(
         lambda_client.invoke,
         FunctionName=lambda_worker_function_name,
