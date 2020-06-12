@@ -103,7 +103,7 @@ def test_integration_unhandled_exception(tmpdir):
         print(data)
 
         assert set(data.keys()) == set(
-            ["results", "orchestrator_duration_seconds", "start_time"]
+            ["results", "orchestrator_duration_seconds", "start_timestamp"]
         )
         assert isinstance(data["orchestrator_duration_seconds"], float)
         assert isinstance(data["start_timestamp"], float)
@@ -138,7 +138,7 @@ def test_integration_timeout_failure(tmpdir):
         print(data)
 
         assert set(data.keys()) == set(
-            ["results", "orchestrator_duration_seconds", "start_time"]
+            ["results", "orchestrator_duration_seconds", "start_timestamp"]
         )
         assert isinstance(data["orchestrator_duration_seconds"], float)
         assert isinstance(data["start_timestamp"], float)
