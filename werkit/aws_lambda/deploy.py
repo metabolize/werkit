@@ -1,7 +1,5 @@
 import os
 import sys
-import uuid
-from contextlib import contextmanager
 import boto3
 from ..s3 import temp_file_on_s3
 
