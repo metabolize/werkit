@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.9.0
+
+### Breaking changes
+
+- Generalize `temp_file_on_s3` and move it to `werkit.s3`.
+- Provide additional timing metrics.
+
+### New features
+
+- Add CLI command to update-code.
+
+### Other changes
+
+- Replace custom random string code with `uuid.uuid4()`.
+- Consolidate duplicate code.
+
+
 ## 0.8.0
 
 ### New features
