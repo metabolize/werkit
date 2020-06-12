@@ -50,20 +50,8 @@ def perform_create(
     runtime=DEFAULT_RUNTIME,
     env_vars={},
     s3_code_bucket=None,
-    verbose=True,
+    verbose=False,
 ):
-    """
-    Create a lambda function with the given zipfile. If the zipfile is larger
-    than 50 MB, you must specify an `s3_code_bucket`.
-    """
-
-    def pif(x):
-        if verbose:
-            print(x, file=sys.stderr)
-
-    if not os.path.isfile(path_to_zipfile):
-        raise ValueError(f"Zip file does not exist: {path_to_zipfile}")
-
     common_args = {
         "FunctionName": function_name,
         "Runtime": runtime,
@@ -76,44 +64,57 @@ def perform_create(
     if memory_size is not None:
         common_args["MemorySize"] = memory_size
 
-    if needs_s3_upload(path_to_zipfile):
-        if not s3_code_bucket:
-            raise ValueError(
-                "When zipfile is larger than 50 MB, s3_code_bucket is required"
-            )
-        temp_key = f"{function_name}_{random_string(10)}.zip"
-        with temp_file_on_s3(
-            local_path=path_to_zipfile,
-            bucket=s3_code_bucket,
-            key=temp_key,
-            verbose=verbose,
-        ):
-            boto3.client("lambda").create_function(
-                Code={"S3Bucket": s3_code_bucket, "S3Key": temp_key}, **common_args
-            )
-            pif("Lambda function created")
-    else:
-        with open(path_to_zipfile, "rb") as f:
-            zipfile_contents = f.read()
-        pif(f"Uploading {path_to_zipfile} to Lambda")
-        boto3.client("lambda").create_function(
-            Code={"ZipFile": zipfile_contents}, **common_args
-        )
-        pif("Lambda function created")
+    def create(code_arguments):
+        boto3.client("lambda").create_function(Code=code_arguments, **common_args)
+
+    create_or_update_lambda(
+        path_to_zipfile=path_to_zipfile,
+        function_name=function_name,
+        message="Lambda function created",
+        boto3_function=create,
+        verbose=verbose,
+        s3_code_bucket=s3_code_bucket,
+    )
 
 
-def perform_update(
-    path_to_zipfile, function_name, s3_code_bucket=None, verbose=True,
+def perform_update_code(
+    path_to_zipfile, function_name, s3_code_bucket=None, verbose=False,
 ):
+    common_args = {"FunctionName": function_name}
+
+    def update(code_arguments):
+        boto3.client("lambda").update_function_code(**code_arguments, **common_args)
+
+    create_or_update_lambda(
+        path_to_zipfile=path_to_zipfile,
+        function_name=function_name,
+        message="Lambda function code updated",
+        boto3_function=update,
+        verbose=verbose,
+        s3_code_bucket=s3_code_bucket,
+    )
+
+
+def create_or_update_lambda(
+    path_to_zipfile,
+    function_name,
+    message,
+    boto3_function,
+    verbose=False,
+    s3_code_bucket=None,
+):
+    """
+    Create or update a lambda function with the given zipfile. If the zipfile is larger
+    than 50 MB, you must specify an `s3_code_bucket`.
+    """
+
     def pif(x):
         if verbose:
-            print(x)
+            print(x, file=sys.stderr)
 
     if not os.path.isfile(path_to_zipfile):
         raise ValueError(f"Zip file does not exist: {path_to_zipfile}")
 
-    common_args = {"FunctionName": function_name}
-
     if needs_s3_upload(path_to_zipfile):
         if not s3_code_bucket:
             raise ValueError(
@@ -126,15 +127,11 @@ def perform_update(
             key=temp_key,
             verbose=verbose,
         ):
-            boto3.client("lambda").update_function_code(
-                S3Bucket=s3_code_bucket, S3Key=temp_key, **common_args
-            )
-            pif("Lambda function code updated")
+            boto3_function({"S3Bucket": s3_code_bucket, "S3Key": temp_key})
+            pif(message)
     else:
         with open(path_to_zipfile, "rb") as f:
             zipfile_contents = f.read()
         pif(f"Uploading {path_to_zipfile} to Lambda")
-        boto3.client("lambda").update_function_code(
-            ZipFile=zipfile_contents, **common_args
-        )
-        pif("Lambda function code updated")
+        boto3_function({"ZipFile": zipfile_contents})
+        pif(message)
