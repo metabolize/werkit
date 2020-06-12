@@ -1,10 +1,8 @@
 import asyncio
 import json
-from functools import partial
 import time
-
+from functools import partial
 import boto3
-
 from botocore.exceptions import ClientError
 from harrison import Timer
 
@@ -32,7 +30,7 @@ async def call_worker_service(
         payload = await event_loop.run_in_executor(executor, response["Payload"].read)
     result = json.loads(payload.decode())
     if with_timing:
-        result["invocation_start_time"] = invocation_start_time 
+        result["invocation_start_time"] = invocation_start_time
         result["lambda_roundtrip_seconds"] = response_timer.elapsed_time_s
     return result
 
