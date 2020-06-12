@@ -1,5 +1,6 @@
 import os
 import sys
+import uuid
 from contextlib import contextmanager
 import boto3
 
@@ -8,13 +9,6 @@ DEFAULT_RUNTIME = "python3.7"
 
 def needs_s3_upload(path_to_zipfile):
     return os.path.getsize(path_to_zipfile) > 50 * 2 ** 20
-
-
-def random_string(length):
-    import random
-    import string
-
-    return "".join(random.choice(string.ascii_lowercase) for i in range(length))
 
 
 @contextmanager
@@ -120,7 +114,7 @@ def create_or_update_lambda(
             raise ValueError(
                 "When zipfile is larger than 50 MB, s3_code_bucket is required"
             )
-        temp_key = f"{function_name}_{random_string(10)}.zip"
+        temp_key = f"{function_name}_{uuid.uuid4().hex}.zip"
         with temp_file_on_s3(
             local_path=path_to_zipfile,
             bucket=s3_code_bucket,
