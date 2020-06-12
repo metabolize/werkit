@@ -29,7 +29,6 @@ def transform_result(result):
         # https://docs.aws.amazon.com/lambda/latest/dg/python-exceptions.html
         # Unhandled exception in Lambda, with `errorMessage`, `errorType`, and
         # `stackTrace`.
-        #
         return {
             "success": False,
             "result": None,
@@ -71,5 +70,5 @@ def handler(
     return {
         "results": results,
         "orchestrator_duration_seconds": response_timer.elapsed_time_s,
-        "start_time": start_time,
+        "start_timestamp": start_time,
     }

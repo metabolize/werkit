@@ -73,8 +73,17 @@ def test_integration_success(tmpdir):
     )
 
     try:
-        results = invoke_orchestrator(orchestrator_function_name)
-        print(results)
+        data = invoke_orchestrator(orchestrator_function_name)
+        print(data)
+
+        assert set(data.keys()) == set(
+            ["results", "orchestrator_duration_seconds", "start_timestamp"]
+        )
+        assert isinstance(data["orchestrator_duration_seconds"], float)
+        assert isinstance(data["start_timestamp"], float)
+
+        results = data["results"]
+        assert isinstance(results, list)
         assert all([r["success"] is True for r in results])
         assert [r["result"] for r in results] == [6, 7, 8, 9]
     finally:
@@ -90,9 +99,16 @@ def test_integration_unhandled_exception(tmpdir):
     )
 
     try:
-        results = invoke_orchestrator(orchestrator_function_name)
-        print(results)
+        data = invoke_orchestrator(orchestrator_function_name)
+        print(data)
 
+        assert set(data.keys()) == set(
+            ["results", "orchestrator_duration_seconds", "start_time"]
+        )
+        assert isinstance(data["orchestrator_duration_seconds"], float)
+        assert isinstance(data["start_timestamp"], float)
+
+        results = data["results"]
         assert all([r["success"] is False for r in results])
         assert all([r["error_origin"] == "system" for r in results])
         assert all(
@@ -118,8 +134,16 @@ def test_integration_timeout_failure(tmpdir):
     )
 
     try:
-        results = invoke_orchestrator(orchestrator_function_name)
-        print(results)
+        data = invoke_orchestrator(orchestrator_function_name)
+        print(data)
+
+        assert set(data.keys()) == set(
+            ["results", "orchestrator_duration_seconds", "start_time"]
+        )
+        assert isinstance(data["orchestrator_duration_seconds"], float)
+        assert isinstance(data["start_timestamp"], float)
+
+        results = data["results"]
         assert all([r["success"] is False for r in results])
         assert all([r["error_origin"] == "orchestration" for r in results])
         assert all(
