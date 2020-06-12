@@ -5,7 +5,7 @@ from contextlib import contextmanager
 
 
 @contextmanager
-def temp_file_on_s3(local_path, bucket, key=None, verbose=True):
+def temp_file_on_s3(local_path, bucket, key=None, verbose=False):
     """
     Copy the given path to S3. Delete the file from S3 when the block exits.
     """
