@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.9.1
+
+### Bug fixes
+
+- When building Lambda functions, install werkit from PyPI, not GitHub.
+
+
 ## 0.9.0
 
 ### Breaking changes
