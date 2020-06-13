@@ -32,7 +32,8 @@ def create_venv_with_dependencies(
             "-m",
             "pip",
             "install",
-            f"werkit@git+https://github.com/metabolize/werkit.git@{__version__}",
+            f"werkit=={__version__}",
+            # f"werkit@git+https://github.com/metabolize/werkit.git@...",
             environment=environment,
         )
 
