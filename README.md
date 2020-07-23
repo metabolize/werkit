@@ -24,7 +24,7 @@ revisions of a service or different services.
 
 [pypi]: https://pypi.org/project/werkit/
 [coverage]: https://coveralls.io/github/metabolize/werkit
-[build]: https://circleci.com/gh/lace/werkit/tree/main
+[build]: https://app.circleci.com/pipelines/github/metabolize/werkit?branch=main
 [docs build]: https://werkit.readthedocs.io/en/latest/
 [black]: https://black.readthedocs.io/en/stable/
 
