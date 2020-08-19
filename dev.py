@@ -9,7 +9,10 @@ def python_source_files():
     import glob
 
     return (
-        glob.glob("*.py") + glob.glob("werkit/**/*.py") + glob.glob("tests/**/*.py")
+        glob.glob("*.py")
+        + glob.glob("werkit/*.py")
+        + glob.glob("werkit/**/*.py")
+        + glob.glob("tests/**/*.py")
     )  # + ["doc/"]
 
 
@@ -33,8 +36,12 @@ def test(slow):
 
 
 @cli.command()
-def coverage():
-    execute("pytest --cov=werkit")
+@click.option("--slow/--not-slow", default=True)
+def coverage(slow):
+    args = ["python3", "-m", "pytest", "--cov=werkit"]
+    if not slow:
+        args += ["-m", "not slow"]
+    execute(*args)
 
 
 @cli.command()

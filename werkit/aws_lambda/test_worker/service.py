@@ -18,7 +18,7 @@ SHOULD_THROW = env_flag("SHOULD_THROW", False)
 def wrap_result(serializable_result):
     """
     Simulate the effect of `werkit.Manager()`, which is not used here so this
-    test service be kept to one file.
+    test service can be kept to one file.
     """
     return {
         "success": True,
@@ -26,6 +26,7 @@ def wrap_result(serializable_result):
         "error": None,
         "error_origin": None,
         "duration_seconds": 1.0,
+        "runtime_info": None,
     }
 
 
