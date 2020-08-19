@@ -59,12 +59,12 @@ class Manager:
         self.result = None
 
     def __enter__(self):
-        self.start_timestamp = datetime.datetime.now()
+        self.start_time = datetime.datetime.now()
         return self
 
     def __exit__(self, type, value, traceback):
         duration_seconds = round(
-            (datetime.datetime.now() - self.start_timestamp).total_seconds(),
+            (datetime.datetime.now() - self.start_time).total_seconds(),
             self.time_precision,
         )
 
@@ -75,7 +75,7 @@ class Manager:
             self.serialized_result = wrap_exception(
                 exception=value,
                 error_origin="compute",
-                start_time=self.start_timestamp,
+                start_time=self.start_time,
                 duration_seconds=duration_seconds,
                 runtime_info=self.runtime_info,
             )
@@ -90,7 +90,7 @@ class Manager:
         else:
             self.serialized_result = wrap_result(
                 serializable_result=self.result,
-                start_time=self.start_timestamp,
+                start_time=self.start_time,
                 duration_seconds=duration_seconds,
                 runtime_info=self.runtime_info,
             )

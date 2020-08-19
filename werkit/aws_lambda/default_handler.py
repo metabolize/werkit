@@ -18,13 +18,16 @@ env_lambda_worker_timeout = (
 )
 
 
-def transform_result(result):
-    if isinstance(result, ClientError):
-        return wrap_exception(exception=result, error_origin="orchestration")
-    elif isinstance(result, asyncio.TimeoutError):
-        return wrap_exception(exception=result, error_origin="orchestration")
-    elif isinstance(result, Exception):
-        return wrap_exception(exception=result, error_origin="orchestration")
+def transform_result(result, start_time):
+    if (
+        isinstance(result, ClientError)
+        or isinstance(result, asyncio.TimeoutError)
+        # TODO: Could this be replaced with just the following clause?
+        or isinstance(result, Exception)
+    ):
+        return wrap_exception(
+            exception=result, error_origin="orchestration", start_time=start_time
+        )
     elif isinstance(result, dict) and "errorMessage" in result:
         # https://docs.aws.amazon.com/lambda/latest/dg/python-exceptions.html
         # Unhandled exception in Lambda, with `errorMessage`, `errorType`, and
@@ -35,6 +38,7 @@ def transform_result(result):
             "error": result["stackTrace"]
             + [f"{result['errorType']}: {result['errorMessage']}"],
             "error_origin": "system",
+            "start_time": start_time.astimezone().isoformat(),
             "duration_seconds": -1,
         }
     else:
@@ -48,7 +52,9 @@ def handler(
     lambda_worker_function_name=env_lambda_worker_function_name,
     timeout=env_lambda_worker_timeout or 120,
 ):
+    start_time = datetime.datetime.now()
     start_timestamp = datetime.datetime.utcnow().timestamp()
+
     with Timer(verbose=False) as response_timer:
         if not lambda_worker_function_name:
             raise Exception(
@@ -66,7 +72,10 @@ def handler(
                     **event,
                 )
             )
-            results = [transform_result(result) for result in results]
+            results = [
+                transform_result(result=result, start_time=start_time)
+                for result in results
+            ]
     return {
         "results": results,
         "orchestrator_duration_seconds": response_timer.elapsed_time_s,
