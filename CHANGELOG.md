@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.10.0
+
+### New features
+
+- Manager: Include compute start time and user-provided runtime info
+
+### Other changes
+
+- Update boto dependency.
+
+
 ## 0.9.1
 
 ### Bug fixes
