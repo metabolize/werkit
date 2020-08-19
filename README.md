@@ -1,10 +1,10 @@
 # werkit
 
-[![version](https://img.shields.io/pypi/v/werkit.svg?style=flat-square)][pypi]
-[![python versions](https://img.shields.io/pypi/pyversions/werkit.svg?style=flat-square)][pypi]
-[![license](https://img.shields.io/pypi/l/werkit.svg?style=flat-square)][pypi]
-[![build](https://img.shields.io/circleci/project/github/metabolize/werkit/master.svg?style=flat-square)][build]
-[![code style](https://img.shields.io/badge/code%20style-black-black.svg?style=flat-square)][black]
+[![version](https://img.shields.io/pypi/v/werkit?style=flat-square)][pypi]
+[![python versions](https://img.shields.io/pypi/pyversions/werkit?style=flat-square)][pypi]
+[![license](https://img.shields.io/pypi/l/werkit?style=flat-square)][pypi]
+[![build](https://img.shields.io/circleci/project/github/metabolize/werkit/main?style=flat-square)][build]
+[![code style](https://img.shields.io/badge/code%20style-black-black?style=flat-square)][black]
 
 Toolkit for encapsulating Python-based computation into deployable and
 distributable tasks.
@@ -24,7 +24,7 @@ revisions of a service or different services.
 
 [pypi]: https://pypi.org/project/werkit/
 [coverage]: https://coveralls.io/github/metabolize/werkit
-[build]: https://circleci.com/gh/lace/werkit/tree/master
+[build]: https://app.circleci.com/pipelines/github/metabolize/werkit?branch=main
 [docs build]: https://werkit.readthedocs.io/en/latest/
 [black]: https://black.readthedocs.io/en/stable/
 
