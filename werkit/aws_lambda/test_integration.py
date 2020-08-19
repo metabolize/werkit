@@ -76,6 +76,8 @@ def test_integration_success(tmpdir):
         data = invoke_orchestrator(orchestrator_function_name)
         print(data)
 
+        # If ths following assertion fails, it's because the service does not
+        # use the werkit manager to handle exceptions.
         assert set(data.keys()) == set(
             ["results", "orchestrator_duration_seconds", "start_timestamp"]
         )
@@ -115,7 +117,7 @@ def test_integration_unhandled_exception(tmpdir):
             [
                 r["error"]
                 == [
-                    '  File "/var/task/service.py", line 35, in handler\n    raise Exception("Whoops!")\n',
+                    '  File "/var/task/service.py", line 36, in handler\n    raise Exception("Whoops!")\n',
                     "Exception: Whoops!",
                 ]
                 for r in results

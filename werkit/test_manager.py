@@ -1,9 +1,13 @@
+import datetime
+from freezegun import freeze_time
 import pytest
 from . import Manager
 
 
-def test_manage_execution_serializes_result():
-    with Manager() as manager:
+@freeze_time("2019-12-31")
+def test_manager_serializes_result():
+    runtime_info = {"foo": "bar"}
+    with Manager(runtime_info=runtime_info) as manager:
         manager.result = 2
 
     assert manager.serialized_result == {
@@ -11,8 +15,11 @@ def test_manage_execution_serializes_result():
         "result": 2,
         "error": None,
         "error_origin": None,
+        "start_time": datetime.datetime(2019, 12, 31).astimezone().isoformat(),
         "duration_seconds": 0,
+        "runtime_info": runtime_info,
     }
+
 
 def test_time_precision():
     import time
@@ -24,8 +31,11 @@ def test_time_precision():
     assert manager.serialized_result["duration_seconds"] >= 0.35
     assert manager.serialized_result["duration_seconds"] < 0.4
 
-def test_manage_execution_serializes_error():
-    with Manager() as manager:
+
+@freeze_time("2019-12-31")
+def test_manager_serializes_error():
+    runtime_info = {"foo": "bar"}
+    with Manager(runtime_info=runtime_info) as manager:
         raise ValueError()
 
     assert manager.serialized_result["error"][-1] == "ValueError\n"
@@ -35,19 +45,21 @@ def test_manage_execution_serializes_error():
         "success": False,
         "result": None,
         "error_origin": "compute",
+        "start_time": datetime.datetime(2019, 12, 31).astimezone().isoformat(),
         "duration_seconds": 0,
+        "runtime_info": runtime_info,
     }
 
 
-def test_manage_execution_passes_error():
+def test_manager_with_handle_exceptions_passes_error():
     with pytest.raises(ValueError):
-        with Manager(handle_exceptions=False) as manager:
+        with Manager(handle_exceptions=False):
             raise ValueError()
 
 
-def test_manage_execution_passes_keyboard_interrupt():
+def test_manager_passes_keyboard_interrupt():
     with pytest.raises(KeyboardInterrupt):
-        with Manager() as manager:
+        with Manager():
             raise KeyboardInterrupt()
 
 
