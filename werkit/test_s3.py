@@ -1,7 +1,7 @@
 import os
 import uuid
-from botocore.exceptions import ClientError
 import boto3
+from botocore.exceptions import ClientError
 import pytest
 from .s3 import temp_file_on_s3
 
