@@ -87,7 +87,8 @@ workflows:
 
   on-commit:
     jobs:
-      - main
+      - main:
+          context: "Metabolize OSS AWS"
       - lint
       - format
 

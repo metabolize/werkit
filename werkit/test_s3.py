@@ -8,7 +8,7 @@ from .s3 import temp_file_on_s3
 
 @pytest.fixture
 def test_bucket():
-    return os.environ["TEST_BUCKET"]
+    return os.environ["INTEGRATION_TEST_BUCKET"]
 
 
 EXAMPLE_KEY = "example.txt"
