@@ -20,7 +20,7 @@ redis==3.5.3
 git+https://github.com/rq/rq.git@cf501518534429640a9a6d14e022f9329225e701#egg=rq
 
 black ==20.8b1
-flake8==3.8.3
+flake8==3.8.4
 flake8-import-order==0.18.1
 
 # For CI.
