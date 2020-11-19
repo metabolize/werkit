@@ -210,11 +210,11 @@ The werkit default handler is configurable via the following environmnent variab
 Werkit provides tools for programmatically building and deploying functions
 to AWS Lambda. There are two distinct steps: build and deploy.
 
-The build process can run natively using a virtualenv, or in Docker. In
-_either_ of these cases, you can use the native virtualenv method:
+The build process can run natively using a virtualenv, or in Docker. When
+either of the following cases apply, you can use the native virtualenv method:
 
-- Your function's dependencies are pure Python (no compiled extensions).
-- You are building in Linux.
+- The function's dependencies are pure Python (no compiled extensions).
+- You are building the function in Linux.
 
 When building a function using compiled dependencies in OS X, the virtualenv
 method will try to pack up the OS X dependencies which of course won't work
@@ -324,6 +324,8 @@ ENV PYTHONPATH /src
 
 CMD python3 collect_and_zip.py
 ```
+
+Invoke the build:
 
 ```py
 DEPLOY_TOKEN = "..."
