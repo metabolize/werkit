@@ -11,7 +11,7 @@ recommonmark
 
 # Unit tests.
 pytest ==6.1.2
-pytest-cov == 2.10.0
+pytest-cov == 2.10.1
 pytest-redis==2.0.0
 freezegun==0.3.15
 
