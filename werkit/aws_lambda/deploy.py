@@ -48,7 +48,10 @@ def perform_create(
 
 
 def perform_update_code(
-    path_to_zipfile, function_name, s3_code_bucket=None, verbose=False,
+    path_to_zipfile,
+    function_name,
+    s3_code_bucket=None,
+    verbose=False,
 ):
     common_args = {"FunctionName": function_name}
 
@@ -91,7 +94,9 @@ def create_or_update_lambda(
                 "When zipfile is larger than 50 MB, s3_code_bucket is required"
             )
         with temp_file_on_s3(
-            local_path=path_to_zipfile, bucket=s3_code_bucket, verbose=verbose,
+            local_path=path_to_zipfile,
+            bucket=s3_code_bucket,
+            verbose=verbose,
         ) as temp_key:
             boto3_function({"S3Bucket": s3_code_bucket, "S3Key": temp_key})
             pif(message)
