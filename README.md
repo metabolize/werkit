@@ -205,6 +205,207 @@ The werkit default handler is configurable via the following environmnent variab
 * `LAMBDA_WORKER_TIMEOUT`: How long to wait in seconds for the lambda worker function to return before returning a TimeoutError
 
 
+### Building and deploying functions to AWS Lambda
+
+Werkit provides tools for programmatically building and deploying functions
+to AWS Lambda. There are two distinct steps: build and deploy.
+
+The build process can run natively using a virtualenv, or in Docker. When
+either of the following cases apply, you can use the native virtualenv method:
+
+- The function's dependencies are pure Python (no compiled extensions).
+- You are building the function in Linux.
+
+When building a function using compiled dependencies in OS X, the virtualenv
+method will try to pack up the OS X dependencies which of course won't work
+on Lambda. In that case you must use the Docker method.
+
+#### Building a function natively using a virtualenv
+
+```py
+def build_natively(build_dir="build", target_dir="build"):
+    import shutil
+    from werkit.aws_lambda.build import (
+        collect_zipfile_contents,
+        create_venv_with_dependencies,
+        create_zipfile_from_dir,
+    )
+
+    shutil.rmtree(build_dir, ignore_errors=True)
+
+    venv_dir = os.path.join(build_dir, "venv")
+    create_venv_with_dependencies(
+        venv_dir=venv_dir,
+        # These are the defaults, which you can override if necessary.
+        upgrade_pip=True,
+        install_wheel=True,
+        install_werkit=False,
+        install_requirements_from=["requirements.txt"],
+        # You can pass credentials to `pip install`.
+        environment={"DEPLOY_TOKEN": DEPLOY_TOKEN},
+    )
+
+    collect_zipfile_contents(
+        target_dir=os.path.join(build_dir, "contents"),
+        venv_dir=os.path.join(build_dir, "venv"),
+        src_dirs=["mypackage", "assets"],
+        # Specify additional system files to copy to `lib/` inside the zipfile.
+        lib_files=[...],
+    )
+
+    temp_path_to_zipfile = os.path.join(target_dir, "function.zip")
+    create_zipfile_from_dir(
+        dir_path=os.path.join(build_dir, "contents"),
+        path_to_zipfile=temp_path_to_zipfile
+    )
+```
+
+#### Building a function using Docker
+
+Create a `collect_and_zip.py` script which will run in Docker, with `/target`
+mounted to a folder on the host system.
+
+```py
+from werkit.aws_lambda.build import create_zipfile_from_dir
+
+VERBOSE = False
+
+collect_zipfile_contents(
+    target_dir="/build/contents",
+    venv_dir="/build/venv",
+    src_dirs=["mypackage", "assets"],
+    # Specify additional system files to copy to `lib/` inside the zipfile.
+    lib_files=[...],
+)
+
+# To improve performance, zip into the container and copy to the host
+# afterward.
+create_zipfile_from_dir(
+    dir_path="/build/contents",
+    path_to_zipfile="/build/function.zip"
+)
+shutil.copyfile("/build/function.zip", "/target/function.zip")
+```
+
+Create a `Dockerfile`:
+
+```Dockerfile
+FROM python:3.7
+
+WORKDIR /src
+
+# Install any system dependencies you want to include in the zipfile.
+RUN apt-get install -y --no-install-recommends ...
+RUN rm -rf /var/lib/apt/lists/*
+
+# Install werkit, along with any other dependencies needed for
+# `collect_and_zip.py`.
+RUN python3 -m pip install "werkit==0.10.0"
+
+# Optionally receive credentials from the environment.
+ARG DEPLOY_TOKEN
+
+# Create the venv. As is necessary for some Docker base images, upgrade pip and
+# install wheel.
+RUN python3 -m venv /build/venv
+RUN /build/venv/bin/pip install --upgrade pip wheel
+
+# Install Python dependencies.
+COPY requirements.txt /src/
+RUN DEPLOY_TOKEN=${DEPLOY_TOKEN} /build/venv/bin/pip install -r requirements.txt
+
+COPY mypackage/ /src/mypackage/
+COPY assets/ /src/assets/
+COPY collect_and_zip.py /src/
+
+# Optionally set PYTHONPATH if `collect_and_zip.py` imports any internal source
+# code.
+ENV PYTHONPATH /src
+
+CMD python3 collect_and_zip.py
+```
+
+Invoke the build:
+
+```py
+DEPLOY_TOKEN = "..."
+
+def build_in_docker(build_dir="build", target_dir="build"):
+    from executor import execute
+
+    docker_tag = "mypackage-lambda-builder"
+
+    execute(
+        "docker",
+        "build",
+        "-t",
+        docker_tag,
+        "-f",
+        "Dockerfile",
+        # Optionally pass credentials for the Docker build process.
+        "--build-arg",
+        f"DEPLOY_TOKEN={DEPLOY_TOKEN}",
+        ".",
+    )
+    print("Build image created")
+
+    os.makedirs("build/", exist_ok=True)
+    execute(
+        "docker",
+        "run",
+        "--volume",
+        f"{os.path.abspath("build/")}:/target:Z",
+        "-t",
+        docker_tag,
+    )
+    print("Build finished")
+```
+
+#### Deploying the function
+
+```py
+# A Lambda role is always required.
+LAMBDA_ROLE = ...
+# When the zipfile is larger than 50 MB, a temporary bucket is required.
+S3_CODE_BUCKET = ...
+
+def create():
+    from werkit.aws_lambda.deploy import perform_create
+
+    perform_create(
+        function_name="myfunction",
+        path_to_zipfile="build/function.zip",
+        # The importable name of your handler function, which should have the
+        # signature `def handler(event, context):`.
+        handler="mypackage.worker.handler",
+        role=LAMBDA_ROLE,
+        # Required when the zipfile is larger than 50 MB.
+        s3_code_bucket=S3_CODE_BUCKET,
+        # Optionally override.
+        timeout=TIMEOUT,
+        memory_size=WORKER_MEMORY_SIZE,
+        runtime="python3.8",
+        env_vars={},
+    )
+```
+
+#### Updating the code for an existing function
+
+```py
+LAMBDA_ROLE = ...
+S3_CODE_BUCKET = ...
+
+def update_code():
+    from werkit.aws_lambda.deploy import perform_update_code
+
+    perform_update_code(
+        function_name="myfunction",
+        path_to_zipfile="build/function.zip",
+        # Required when the zipfile is larger than 50 MB.
+        s3_code_bucket=S3_CODE_BUCKET,
+    )
+```
+
 ## Contribute
 
 - Issue Tracker: https://github.com/metabolize/werkit/issues
