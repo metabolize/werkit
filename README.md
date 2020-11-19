@@ -255,6 +255,7 @@ def build_natively(build_dir="build", target_dir="build"):
         lib_files=[...],
     )
 
+    os.makedirs(target_dir, exist_ok=True)
     temp_path_to_zipfile = os.path.join(target_dir, "function.zip")
     create_zipfile_from_dir(
         dir_path=contents_dir,
