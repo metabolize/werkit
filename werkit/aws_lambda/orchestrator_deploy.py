@@ -21,10 +21,14 @@ def prepare_zip_file(build_dir, path_to_orchestrator_zip):
         install_requirements_from=["requirements.txt", "requirements_client.txt"],
     )
     collect_zipfile_contents(
-        target_dir=zip_dir, venv_dir=venv_dir, src_files=[], src_dirs=["werkit"],
+        target_dir=zip_dir,
+        venv_dir=venv_dir,
+        src_files=[],
+        src_dirs=["werkit"],
     )
     create_zipfile_from_dir(
-        dir_path=zip_dir, path_to_zipfile=path_to_orchestrator_zip,
+        dir_path=zip_dir,
+        path_to_zipfile=path_to_orchestrator_zip,
     )
 
 
