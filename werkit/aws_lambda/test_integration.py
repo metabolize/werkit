@@ -86,6 +86,7 @@ def test_integration_success(tmpdir):
         assert isinstance(data["start_timestamp"], float)
 
         results = data["results"]
+        print(results)
         assert isinstance(results, list)
         assert all([r["success"] is True for r in results])
         assert [r["result"] for r in results] == [6, 7, 8, 9]
