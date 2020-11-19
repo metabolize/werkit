@@ -41,11 +41,15 @@ def common_options(function):
         help="Name of the orchestrator lambda function",
     )(function)
     function = click.option(
-        "--s3-code-bucket", default=None, help="S3 bucket where code is uploaded",
+        "--s3-code-bucket",
+        default=None,
+        help="S3 bucket where code is uploaded",
     )(function)
-    function = click.option("--verbose", default=False, help="Enable verbose output",)(
-        function
-    )
+    function = click.option(
+        "--verbose",
+        default=False,
+        help="Enable verbose output",
+    )(function)
     return function
 
 
@@ -65,7 +69,9 @@ def deploy_options(function):
         show_envvar=True,
     )(function)
     function = click.option(
-        "--worker-timeout", default=600, help="Timeout for each worker function",
+        "--worker-timeout",
+        default=600,
+        help="Timeout for each worker function",
     )(function)
     function = click.option(
         "--orchestrator-timeout",
@@ -104,7 +110,10 @@ def deploy(
 @cli.command()
 @common_options
 def update_code(
-    path_to_orchestrator_zip, orchestrator_function_name, s3_code_bucket, verbose,
+    path_to_orchestrator_zip,
+    orchestrator_function_name,
+    s3_code_bucket,
+    verbose,
 ):
     _clean()
     update_orchestrator_code(

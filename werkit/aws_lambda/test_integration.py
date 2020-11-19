@@ -28,7 +28,8 @@ def create_test_functions(
 
     path_to_worker_zip = str(tmpdir / "worker.zip")
     create_zipfile_from_dir(
-        dir_path="werkit/aws_lambda/test_worker/", path_to_zipfile=path_to_worker_zip,
+        dir_path="werkit/aws_lambda/test_worker/",
+        path_to_zipfile=path_to_worker_zip,
     )
     env_vars = {}
     if worker_delay:
@@ -133,7 +134,9 @@ def test_integration_unhandled_exception(tmpdir):
 @pytest.mark.slow
 def test_integration_timeout_failure(tmpdir):
     worker_function_name, orchestrator_function_name = create_test_functions(
-        tmpdir=tmpdir, worker_timeout=1, worker_delay=3,
+        tmpdir=tmpdir,
+        worker_timeout=1,
+        worker_delay=3,
     )
 
     try:
