@@ -1,8 +1,8 @@
 -r requirements.txt
 -r requirements_client.txt
+-r requirements_aws_lambda_build.txt
 
 # Used in dev.py.
-executor >= 21.0
 click >=7.0,<8.0
 
 # Documentation.

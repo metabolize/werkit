@@ -24,7 +24,10 @@ setup(
     },
     packages=find_packages(),
     install_requires=load("requirements.txt"),
-    extras_require={"client": load("requirements_client.txt")},
+    extras_require={
+        "client": load("requirements_client.txt"),
+        "aws_lambda_build": load("requirements_aws_lambda_build.txt"),
+    },
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",

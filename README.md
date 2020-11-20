@@ -224,6 +224,7 @@ on Lambda. In that case you must use the Docker method.
 
 ```py
 def build_natively(build_dir="build", target_dir="build"):
+    import os
     import shutil
     from werkit.aws_lambda.build import (
         collect_zipfile_contents,
@@ -245,17 +246,19 @@ def build_natively(build_dir="build", target_dir="build"):
         environment={"DEPLOY_TOKEN": DEPLOY_TOKEN},
     )
 
+    contents_dir = os.path.join(build_dir, "contents")
     collect_zipfile_contents(
-        target_dir=os.path.join(build_dir, "contents"),
-        venv_dir=os.path.join(build_dir, "venv"),
+        target_dir=contents_dir,
+        venv_dir=venv_dir,
         src_dirs=["mypackage", "assets"],
         # Specify additional system files to copy to `lib/` inside the zipfile.
         lib_files=[...],
     )
 
+    os.makedirs(target_dir, exist_ok=True)
     temp_path_to_zipfile = os.path.join(target_dir, "function.zip")
     create_zipfile_from_dir(
-        dir_path=os.path.join(build_dir, "contents"),
+        dir_path=contents_dir,
         path_to_zipfile=temp_path_to_zipfile
     )
 ```
