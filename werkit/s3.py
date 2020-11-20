@@ -5,7 +5,7 @@ from contextlib import contextmanager
 
 
 @contextmanager
-def temp_file_on_s3(local_path, bucket, key=None, verbose=False, ret_etag=False):
+def temp_file_on_s3(local_path, bucket, key=None, verbose=False):
     """
     Copy the given path to S3. Delete the object from S3 when the block
     exits.
@@ -24,10 +24,10 @@ def temp_file_on_s3(local_path, bucket, key=None, verbose=False, ret_etag=False)
 
     file_on_s3 = f"s3://{bucket}/{key}"
     pif(f"Uploading {local_path} to {file_on_s3}")
-    response = s3_client.upload_file(Filename=local_path, Bucket=bucket, Key=key)
+    s3_client.upload_file(Filename=local_path, Bucket=bucket, Key=key)
 
     try:
-        yield (key, response["ETag"]) if ret_etag else key
+        yield key
     finally:
         pif(f"Removing {file_on_s3}")
         s3_client.delete_object(Bucket=bucket, Key=key)
