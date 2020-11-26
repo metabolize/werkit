@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.11.0
+
+- Add `werkit.s3.temp_file_on_s3_from_string()`.
+- Document Lambda-building functions.
+- Support installing Lambda-building dependencies using
+  `pip install werkit[aws_lambda_build]`.
+
+
 ## 0.10.0
 
 ### New features
