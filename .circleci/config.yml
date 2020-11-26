@@ -100,6 +100,7 @@ workflows:
             branches:
               only: main
     jobs:
-      - main
+      - main:
+          context: "Metabolize OSS AWS"
       - lint
       - format
