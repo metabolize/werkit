@@ -13,6 +13,9 @@ load_dotenv()
 
 def role():
     """
+    The role is accessed inside a function so pytest can import the module
+    without triggering a KeyError.
+
     This role must have the following policy: AWSLambdaRole.
     """
     return os.environ["INTEGRATION_TEST_LAMBDA_ROLE"]
