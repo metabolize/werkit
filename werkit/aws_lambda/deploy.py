@@ -96,7 +96,11 @@ def create_or_update_lambda(
     if force_upload_to_s3_code_bucket or needs_s3_upload(path_to_zipfile):
         if not s3_code_bucket:
             raise ValueError(
-                "When zipfile is larger than 50 MB, or force_upload_to_s3_code_bucket is True, then s3_code_bucket is required"
+                '''
+                When zipfile is larger than 50 MB,
+                or force_upload_to_s3_code_bucket is True,
+                then s3_code_bucket is required
+                '''
             )
         with temp_file_on_s3(
             local_path=path_to_zipfile,
