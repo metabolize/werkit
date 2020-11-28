@@ -38,12 +38,7 @@ def create_venv_with_dependencies(
         )
 
     if len(install_requirements_from) > 0:
-        args = [
-            python,
-            "-m",
-            "pip",
-            "install",
-        ]
+        args = [python, "-m", "pip", "install"]
         for requirements_file in install_requirements_from:
             args += ["-r", requirements_file]
         execute(*args, environment=environment)
@@ -57,12 +52,7 @@ def find_site_packages_dir(venv_dir):
 
 
 def collect_zipfile_contents(
-    target_dir,
-    venv_dir,
-    src_files=[],
-    src_dirs=[],
-    lib_files=[],
-    verbose=False,
+    target_dir, venv_dir, src_files=[], src_dirs=[], lib_files=[], verbose=False
 ):
     def pif(x):
         if verbose:
