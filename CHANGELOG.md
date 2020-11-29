@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.12.0
+
+- Added `force_upload_to_s3_code_bucket` option to Lambda deploy functions
+  to force code to be uploaded to S3.
+
 ## 0.11.0
 
 - Add `werkit.s3.temp_file_on_s3_from_string()`.
