@@ -6,7 +6,9 @@
   "scripts": {
     "format": "prettier --check \"*.ts\"",
     "format:fix": "prettier --write \"*.ts\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "check-package-version": "test $(cd .. && python3 -c \"import werkit; print(werkit.__version__)\") = $(node -e \"console.log(require('./package.json').version)\") || echo 'Package versions are not in sync'",
+    "prepublishOnly": "npm run check-version"
   },
   "files": [
     "types.ts"
