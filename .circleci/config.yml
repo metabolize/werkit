@@ -1,4 +1,8 @@
 version: 2
+
+orbs:
+  node: circleci/node@4.1.0
+
 jobs:
   main:
     docker:
@@ -81,6 +85,16 @@ jobs:
           command: |
             . venv/bin/activate
             ./dev.py black-check
+
+      - node/install
+
+      - run:
+          name: Check TypeScript format
+          when: always
+          working_directory: types
+          command: |
+            npm ci
+            npm run format
 
 workflows:
   version: 2

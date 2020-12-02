@@ -409,6 +409,15 @@ def update_code():
     )
 ```
 
+## Type definitions
+
+[TypeScript types are available][types] for the Werkit job message format.
+
+[![version](https://img.shields.io/npm/v/werkit?style=flat-square)][npm]
+
+[types]: https://github.com/metabolize/werkit/tree/main/types
+[npm]: https://www.npmjs.com/package/werkit
+
 ## Contribute
 
 - Issue Tracker: https://github.com/metabolize/werkit/issues
