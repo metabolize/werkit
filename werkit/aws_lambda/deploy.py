@@ -106,7 +106,6 @@ def perform_create(
     _create_or_update(
         local_path_to_zipfile=local_path_to_zipfile,
         s3_path_to_zipfile=s3_path_to_zipfile,
-        function_name=function_name,
         message="Lambda function created",
         create_or_update_fn=create,
         verbose=verbose,
@@ -136,7 +135,6 @@ def perform_update_code(
     _create_or_update(
         local_path_to_zipfile=local_path_to_zipfile,
         s3_path_to_zipfile=s3_path_to_zipfile,
-        function_name=function_name,
         message="Lambda function code updated",
         create_or_update_fn=update,
         verbose=verbose,
