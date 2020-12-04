@@ -39,7 +39,7 @@ def create_test_functions(
     if worker_should_throw:
         env_vars["SHOULD_THROW"] = "TRUE"
     perform_create(
-        path_to_zipfile=path_to_worker_zip,
+        local_path_to_zipfile=path_to_worker_zip,
         handler="service.handler",
         function_name=worker_function_name,
         role=role(),
