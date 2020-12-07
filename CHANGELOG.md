@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.13.0
+
+### BREAKING CHANGES
+
+- For `werkit.aws_lambda.deploy.perform_create()` and `perform_update_code()`,
+  the `path_to_zipfile` argument is renamed to `local_path_to_zipfile`. These
+  functions can also accept an `s3_path_to_zipfile` which has already been
+  uploaded to the `s3_code_bucket`.
+
 ## 0.12.0
 
 - Added `force_upload_to_s3_code_bucket` option to Lambda deploy functions
