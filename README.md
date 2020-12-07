@@ -377,7 +377,7 @@ def create():
 
     perform_create(
         function_name="myfunction",
-        path_to_zipfile="build/function.zip",
+        local_path_to_zipfile="build/function.zip",
         # The importable name of your handler function, which should have the
         # signature `def handler(event, context):`.
         handler="mypackage.worker.handler",
@@ -403,7 +403,7 @@ def update_code():
 
     perform_update_code(
         function_name="myfunction",
-        path_to_zipfile="build/function.zip",
+        local_path_to_zipfile="build/function.zip",
         # Required when the zipfile is larger than 50 MB.
         s3_code_bucket=S3_CODE_BUCKET,
     )
