@@ -9,6 +9,7 @@ export interface WerkitSuccessResult<ResultType> extends WerkitMeta {
   result: ResultType
   error: null
   error_origin: null
+  messageKey : any
 }
 
 export type WerkitErrorOrigin = 'compute' | 'system' | 'orchestration'
@@ -18,6 +19,7 @@ export interface WerkitErrorResult extends WerkitMeta {
   result: null
   error: string[]
   error_origin: WerkitErrorOrigin
+  messageKey : any
 }
 
 export type WerkitResult<ResultType> =
