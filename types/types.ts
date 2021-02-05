@@ -4,24 +4,24 @@ export interface WerkitMeta {
   runtime_info?: any
 }
 
-export interface WerkitSuccessResult<ResultType> extends WerkitMeta {
+export interface WerkitSuccessResult<ResultType, MessageKeyType> extends WerkitMeta {
   success: true
   result: ResultType
   error: null
   error_origin: null
-  messageKey : any
+  message_key : MessageKeyType
 }
 
 export type WerkitErrorOrigin = 'compute' | 'system' | 'orchestration'
 
-export interface WerkitErrorResult extends WerkitMeta {
+export interface WerkitErrorResult<MessageKeyType> extends WerkitMeta {
   success: false
   result: null
-  error: string[]
+  error: string[] | Error
   error_origin: WerkitErrorOrigin
-  messageKey : any
+  message_key : MessageKeyType
 }
 
-export type WerkitResult<ResultType> =
-  | WerkitSuccessResult<ResultType>
-  | WerkitErrorResult
+export type WerkitResult<ResultType, MessageKeyType> =
+  | WerkitSuccessResult<ResultType, MessageKeyType>
+  | WerkitErrorResult<MessageKeyType>
