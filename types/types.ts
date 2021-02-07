@@ -18,7 +18,7 @@ export type WerkitErrorOrigin = 'compute' | 'system' | 'orchestration'
 export interface WerkitErrorResult<MessageKeyType> extends WerkitMeta {
   success: false
   result: null
-  error: string[] | Error
+  error: string[]
   error_origin: WerkitErrorOrigin
   message_key: MessageKeyType
 }

@@ -1,6 +1,6 @@
 {
   "name": "@metabolize/werkit",
-  "version": "0.13.0-alpha.1",
+  "version": "0.13.0-alpha.2",
   "description": "TypeScript types for Werkit, a toolkit for encapsulating Python-based computation into deployable and distributable tasks",
   "main": "types.ts",
   "scripts": {
