@@ -1,13 +1,13 @@
 {
   "name": "werkit",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "TypeScript types for Werkit, a toolkit for encapsulating Python-based computation into deployable and distributable tasks",
   "main": "types.ts",
   "scripts": {
     "format": "prettier --check \"*.ts\"",
     "format:fix": "prettier --write \"*.ts\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "check-package-version": "test $(cd .. && python3 -c \"import werkit; print(werkit.__version__)\") = $(node -e \"console.log(require('./package.json').version)\") || echo 'Package versions are not in sync'",
+    "check-package-version": "if [ $(cd .. && python3 -c \"import werkit; print(werkit.__version__)\") = $(node -e \"console.log(require('./package.json').version)\") ]; then exit 0; else echo 'Package versions are not in sync'; exit 1; fi;",
     "prepublishOnly": "npm run check-package-version"
   },
   "files": [
@@ -16,9 +16,6 @@
   "author": "Metabolize",
   "license": "MIT",
   "repository": "metabolize/werkit",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/curvewise"
-  },
   "keywords": [
     "devops",
     "computation",
