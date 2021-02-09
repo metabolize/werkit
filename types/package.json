@@ -16,9 +16,6 @@
   "author": "Metabolize",
   "license": "MIT",
   "repository": "metabolize/werkit",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/curvewise"
-  },
   "keywords": [
     "devops",
     "computation",
