@@ -47,16 +47,14 @@ def create_venv_with_dependencies(
 def find_site_packages_dir(venv_dir):
     try:
         return next(
-            [
-                p
-                for p in [
-                    os.path.join(venv_dir, "lib64", "python3.8", "site-packages"),
-                    os.path.join(venv_dir, "lib", "python3.8", "site-packages"),
-                    os.path.join(venv_dir, "lib64", "python3.7", "site-packages"),
-                    os.path.join(venv_dir, "lib", "python3.7", "site-packages"),
-                ]
-                if os.path.exists(p)
+            p
+            for p in [
+                os.path.join(venv_dir, "lib64", "python3.8", "site-packages"),
+                os.path.join(venv_dir, "lib", "python3.8", "site-packages"),
+                os.path.join(venv_dir, "lib64", "python3.7", "site-packages"),
+                os.path.join(venv_dir, "lib", "python3.7", "site-packages"),
             ]
+            if os.path.exists(p)
         )
     except StopIteration:
         raise ValueError(f"Unable to locate site-packages folder in {venv_dir}")
