@@ -27,6 +27,7 @@ def prepare_zip_file(build_dir, path_to_orchestrator_zip):
 
 
 def deploy_orchestrator(
+    aws_region,
     build_dir,
     path_to_orchestrator_zip,
     orchestrator_function_name,
@@ -43,6 +44,7 @@ def deploy_orchestrator(
         env_vars["LAMBDA_WORKER_TIMEOUT"] = str(worker_timeout)
 
     perform_create(
+        aws_region=aws_region,
         local_path_to_zipfile=path_to_orchestrator_zip,
         handler="werkit.aws_lambda.default_handler.handler",
         function_name=orchestrator_function_name,
@@ -56,6 +58,7 @@ def deploy_orchestrator(
 
 
 def update_orchestrator_code(
+    aws_region,
     build_dir,
     path_to_orchestrator_zip,
     orchestrator_function_name,
@@ -65,6 +68,7 @@ def update_orchestrator_code(
     prepare_zip_file(build_dir, path_to_orchestrator_zip)
 
     perform_update_code(
+        aws_region=aws_region,
         local_path_to_zipfile=path_to_orchestrator_zip,
         function_name=orchestrator_function_name,
         s3_code_bucket=s3_code_bucket,

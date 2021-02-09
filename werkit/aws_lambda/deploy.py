@@ -68,6 +68,7 @@ def _create_or_update(
 
 
 def perform_create(
+    aws_region,
     handler,
     function_name,
     role,
@@ -93,7 +94,7 @@ def perform_create(
         if memory_size is not None:
             extra_options["MemorySize"] = memory_size
 
-        boto3.client("lambda").create_function(
+        boto3.client("lambda", region_name=aws_region).create_function(
             FunctionName=function_name,
             Runtime=runtime,
             Role=role,
@@ -115,6 +116,7 @@ def perform_create(
 
 
 def perform_update_code(
+    aws_region,
     function_name,
     local_path_to_zipfile=None,
     s3_path_to_zipfile=None,
@@ -128,7 +130,7 @@ def perform_update_code(
         )
 
     def update(code_arguments):
-        boto3.client("lambda").update_function_code(
+        boto3.client("lambda", region_name=aws_region).update_function_code(
             FunctionName=function_name, **code_arguments
         )
 

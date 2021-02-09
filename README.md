@@ -376,6 +376,8 @@ def create():
     from werkit.aws_lambda.deploy import perform_create
 
     perform_create(
+        # Region is required.
+        aws_region="us-east-1",
         function_name="myfunction",
         local_path_to_zipfile="build/function.zip",
         # The importable name of your handler function, which should have the
@@ -402,6 +404,7 @@ def update_code():
     from werkit.aws_lambda.deploy import perform_update_code
 
     perform_update_code(
+        aws_region="us-east-1",
         function_name="myfunction",
         local_path_to_zipfile="build/function.zip",
         # Required when the zipfile is larger than 50 MB.
