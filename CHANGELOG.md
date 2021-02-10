@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.14.0
+
+### BREAKING CHANGES
+
+- Lambda deploy functions (e.g. `perform_create()`) require an explicit
+  `aws_region`. 
+
+## Bug fixes
+
+- Update orchestrator build to support Python 3.8 in addition to 3.7.
+
 ## 0.13.0
 
 ### BREAKING CHANGES
