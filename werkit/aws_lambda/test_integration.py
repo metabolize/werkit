@@ -10,6 +10,8 @@ from .orchestrator_deploy import deploy_orchestrator
 
 load_dotenv()
 
+AWS_REGION = "us-east-1"
+
 
 def role():
     """
@@ -39,6 +41,7 @@ def create_test_functions(
     if worker_should_throw:
         env_vars["SHOULD_THROW"] = "TRUE"
     perform_create(
+        aws_region=AWS_REGION,
         local_path_to_zipfile=path_to_worker_zip,
         handler="service.handler",
         function_name=worker_function_name,
@@ -48,6 +51,7 @@ def create_test_functions(
     )
 
     deploy_orchestrator(
+        aws_region=AWS_REGION,
         build_dir=str(tmpdir / "build"),
         path_to_orchestrator_zip=str(tmpdir / "orchestrator.zip"),
         orchestrator_function_name=orchestrator_function_name,
