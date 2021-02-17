@@ -62,40 +62,51 @@ class Manager:
         self.start_time = datetime.datetime.now()
         return self
 
-    def __exit__(self, type, value, traceback):
-        duration_seconds = round(
+    def _note_did_exit(self):
+        self.duration_seconds = round(
             (datetime.datetime.now() - self.start_time).total_seconds(),
             self.time_precision,
         )
 
+    def note_compute_success(self):
+        self.serialized_result = wrap_result(
+            serializable_result=self.result,
+            start_time=self.start_time,
+            duration_seconds=self.duration_seconds,
+            runtime_info=self.runtime_info,
+        )
+
+    def note_compute_exception(self, exception):
+        """
+        Return a value suitable for returning from `__exit__`.
+        """
+        self.serialized_result = wrap_exception(
+            exception=exception,
+            error_origin="compute",
+            start_time=self.start_time,
+            duration_seconds=self.duration_seconds,
+            runtime_info=self.runtime_info,
+        )
+        if self.handle_exceptions:
+            print(
+                "Error handled by werkit. (To disable, invoke `Manager()` with `handle_exceptions=False`.)"
+            )
+            print("".join(self.serialized_result["error"]))
+            return True
+        else:
+            return False
+
+    def __exit__(self, type, value, traceback):
+        self._note_did_exit()
+
         if type in [KeyboardInterrupt, SystemExit]:
             raise value
+        elif value:
+            return self.note_compute_exception(value)
 
-        if value:
-            self.serialized_result = wrap_exception(
-                exception=value,
-                error_origin="compute",
-                start_time=self.start_time,
-                duration_seconds=duration_seconds,
-                runtime_info=self.runtime_info,
-            )
-            if self.handle_exceptions:
-                print(
-                    "Error handled by werkit. (To disable, invoke `Manager()` with `handle_exceptions=False`.)"
-                )
-                print("".join(self.serialized_result["error"]))
-                return True
-            else:
-                return False
-        else:
-            self.serialized_result = wrap_result(
-                serializable_result=self.result,
-                start_time=self.start_time,
-                duration_seconds=duration_seconds,
-                runtime_info=self.runtime_info,
-            )
+        self.note_compute_success()
 
         if self.verbose:
             print(
-                "Completed in {}".format(format_time(duration_seconds)), file=sys.stderr
+                "Completed in {}".format(format_time(self.duration_seconds)), file=sys.stderr
             )
