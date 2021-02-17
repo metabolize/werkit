@@ -108,5 +108,6 @@ class Manager:
 
         if self.verbose:
             print(
-                "Completed in {}".format(format_time(self.duration_seconds)), file=sys.stderr
+                "Completed in {}".format(format_time(self.duration_seconds)),
+                file=sys.stderr,
             )
