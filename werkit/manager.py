@@ -118,7 +118,7 @@ class Manager:
         # inside the block.
         try:
             self.result
-        except AttributeError as e:
+        except AttributeError:
             return self.note_compute_exception(
                 AttributeError("'result' has not been set on the 'Manager' instance")
             )
