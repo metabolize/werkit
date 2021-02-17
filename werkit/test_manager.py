@@ -92,8 +92,9 @@ def test_verbose_success(capfd):
     out, err = capfd.readouterr()
     assert err == "Completed in 0.0 sec\n"
 
+
 def test_verbose_error(capfd):
-    with Manager(verbose=True) as manager:
+    with Manager(verbose=True):
         raise ValueError()
 
     out, err = capfd.readouterr()
