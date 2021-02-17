@@ -51,6 +51,28 @@ def test_manager_serializes_error():
     }
 
 
+@freeze_time("2019-12-31")
+def test_manager_serializes_expected_error_when_result_not_set():
+    runtime_info = {"foo": "bar"}
+    with Manager(runtime_info=runtime_info) as manager:
+        pass
+
+    assert (
+        manager.serialized_result["error"][-1]
+        == "AttributeError: 'result' has not been set on the 'Manager' instance\n"
+    )
+    del manager.serialized_result["error"]
+
+    assert manager.serialized_result == {
+        "success": False,
+        "result": None,
+        "error_origin": "compute",
+        "start_time": datetime.datetime(2019, 12, 31).astimezone().isoformat(),
+        "duration_seconds": 0,
+        "runtime_info": runtime_info,
+    }
+
+
 def test_manager_with_handle_exceptions_passes_error():
     with pytest.raises(ValueError):
         with Manager(handle_exceptions=False):

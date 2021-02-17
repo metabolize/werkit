@@ -56,17 +56,19 @@ class Manager:
         self.handle_exceptions = handle_exceptions
         self.verbose = verbose
         self.time_precision = time_precision
-        self.result = None
+
+    @property
+    def result(self):
+        return self._result
+
+    @result.setter
+    def result(self, value):
+        self.config.schema.result.validate(value)
+        self._result = value
 
     def __enter__(self):
         self.start_time = datetime.datetime.now()
         return self
-
-    def _note_did_exit(self):
-        self.duration_seconds = round(
-            (datetime.datetime.now() - self.start_time).total_seconds(),
-            self.time_precision,
-        )
 
     def note_compute_success(self):
         self.serialized_result = wrap_result(
@@ -97,12 +99,29 @@ class Manager:
             return False
 
     def __exit__(self, type, value, traceback):
-        self._note_did_exit()
+        self.duration_seconds = round(
+            (datetime.datetime.now() - self.start_time).total_seconds(),
+            self.time_precision,
+        )
 
         if type in [KeyboardInterrupt, SystemExit]:
             raise value
         elif value:
+            if self.verbose:
+                print(
+                    "Errored in {}".format(format_time(self.duration_seconds)),
+                    file=sys.stderr,
+                )
             return self.note_compute_exception(value)
+
+        # In case of success, make sure the `result` setter has been invoked
+        # inside the block.
+        try:
+            self.result
+        except AttributeError as e:
+            return self.note_compute_exception(
+                AttributeError("'result' has not been set on the 'Manager' instance")
+            )
 
         self.note_compute_success()
 
