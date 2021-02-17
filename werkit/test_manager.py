@@ -85,9 +85,16 @@ def test_manager_passes_keyboard_interrupt():
             raise KeyboardInterrupt()
 
 
-def test_verbose(capfd):
+def test_verbose_success(capfd):
     with Manager(verbose=True) as manager:
         manager.result = 2
 
     out, err = capfd.readouterr()
     assert err == "Completed in 0.0 sec\n"
+
+def test_verbose_error(capfd):
+    with Manager(verbose=True) as manager:
+        raise ValueError()
+
+    out, err = capfd.readouterr()
+    assert err == "Errored in 0.0 sec\n"

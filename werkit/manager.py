@@ -57,15 +57,6 @@ class Manager:
         self.verbose = verbose
         self.time_precision = time_precision
 
-    @property
-    def result(self):
-        return self._result
-
-    @result.setter
-    def result(self, value):
-        self.config.schema.result.validate(value)
-        self._result = value
-
     def __enter__(self):
         self.start_time = datetime.datetime.now()
         return self
