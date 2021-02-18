@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.15.0
+
+### BREAKING CHANGES
+
+- Manager: Require that callers set `manager.result` in the context handler as
+  intended, returning a compute error if not. To get the old behavior, set
+  `manager.result = None`.
+- Manager: Extract `note_compute_success()` and `note_compute_exception()` to
+  allow more flexibility by consumers.
+
 ## 0.14.0
 
 ### BREAKING CHANGES
