@@ -1,3 +1,10 @@
+export type WerkitRequest<
+  RequestOptionsType,
+  MessageKeyType
+> = RequestOptionsType & {
+  message_key: MessageKeyType
+}
+
 export interface WerkitMeta {
   start_time: string
   duration_seconds: number
