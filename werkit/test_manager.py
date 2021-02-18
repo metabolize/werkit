@@ -51,6 +51,28 @@ def test_manager_serializes_error():
     }
 
 
+@freeze_time("2019-12-31")
+def test_manager_serializes_expected_error_when_result_not_set():
+    runtime_info = {"foo": "bar"}
+    with Manager(runtime_info=runtime_info) as manager:
+        pass
+
+    assert (
+        manager.serialized_result["error"][-1]
+        == "AttributeError: 'result' has not been set on the 'Manager' instance\n"
+    )
+    del manager.serialized_result["error"]
+
+    assert manager.serialized_result == {
+        "success": False,
+        "result": None,
+        "error_origin": "compute",
+        "start_time": datetime.datetime(2019, 12, 31).astimezone().isoformat(),
+        "duration_seconds": 0,
+        "runtime_info": runtime_info,
+    }
+
+
 def test_manager_with_handle_exceptions_passes_error():
     with pytest.raises(ValueError):
         with Manager(handle_exceptions=False):
@@ -63,9 +85,17 @@ def test_manager_passes_keyboard_interrupt():
             raise KeyboardInterrupt()
 
 
-def test_verbose(capfd):
+def test_verbose_success(capfd):
     with Manager(verbose=True) as manager:
         manager.result = 2
 
     out, err = capfd.readouterr()
     assert err == "Completed in 0.0 sec\n"
+
+
+def test_verbose_error(capfd):
+    with Manager(verbose=True):
+        raise ValueError()
+
+    out, err = capfd.readouterr()
+    assert err == "Errored in 0.0 sec\n"

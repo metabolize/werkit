@@ -56,46 +56,68 @@ class Manager:
         self.handle_exceptions = handle_exceptions
         self.verbose = verbose
         self.time_precision = time_precision
-        self.result = None
 
     def __enter__(self):
         self.start_time = datetime.datetime.now()
         return self
 
+    def note_compute_success(self):
+        self.serialized_result = wrap_result(
+            serializable_result=self.result,
+            start_time=self.start_time,
+            duration_seconds=self.duration_seconds,
+            runtime_info=self.runtime_info,
+        )
+
+    def note_compute_exception(self, exception):
+        """
+        Return a value suitable for returning from `__exit__`.
+        """
+        self.serialized_result = wrap_exception(
+            exception=exception,
+            error_origin="compute",
+            start_time=self.start_time,
+            duration_seconds=self.duration_seconds,
+            runtime_info=self.runtime_info,
+        )
+        if self.handle_exceptions:
+            print(
+                "Error handled by werkit. (To disable, invoke `Manager()` with `handle_exceptions=False`.)"
+            )
+            print("".join(self.serialized_result["error"]))
+            return True
+        else:
+            return False
+
     def __exit__(self, type, value, traceback):
-        duration_seconds = round(
+        self.duration_seconds = round(
             (datetime.datetime.now() - self.start_time).total_seconds(),
             self.time_precision,
         )
 
         if type in [KeyboardInterrupt, SystemExit]:
             raise value
-
-        if value:
-            self.serialized_result = wrap_exception(
-                exception=value,
-                error_origin="compute",
-                start_time=self.start_time,
-                duration_seconds=duration_seconds,
-                runtime_info=self.runtime_info,
-            )
-            if self.handle_exceptions:
+        elif value:
+            if self.verbose:
                 print(
-                    "Error handled by werkit. (To disable, invoke `Manager()` with `handle_exceptions=False`.)"
+                    "Errored in {}".format(format_time(self.duration_seconds)),
+                    file=sys.stderr,
                 )
-                print("".join(self.serialized_result["error"]))
-                return True
-            else:
-                return False
-        else:
-            self.serialized_result = wrap_result(
-                serializable_result=self.result,
-                start_time=self.start_time,
-                duration_seconds=duration_seconds,
-                runtime_info=self.runtime_info,
+            return self.note_compute_exception(value)
+
+        # In case of success, make sure the `result` setter has been invoked
+        # inside the block.
+        try:
+            self.result
+        except AttributeError:
+            return self.note_compute_exception(
+                AttributeError("'result' has not been set on the 'Manager' instance")
             )
+
+        self.note_compute_success()
 
         if self.verbose:
             print(
-                "Completed in {}".format(format_time(duration_seconds)), file=sys.stderr
+                "Completed in {}".format(format_time(self.duration_seconds)),
+                file=sys.stderr,
             )
