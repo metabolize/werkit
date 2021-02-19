@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.16.0
+
+Same as 0.15.0.
+
 ## 0.15.0
 
 ### BREAKING CHANGES
