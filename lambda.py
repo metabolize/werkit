@@ -113,7 +113,11 @@ def deploy(
 @cli.command()
 @common_options
 def update_code(
-    region, path_to_orchestrator_zip, orchestrator_function_name, s3_code_bucket, verbose
+    region,
+    path_to_orchestrator_zip,
+    orchestrator_function_name,
+    s3_code_bucket,
+    verbose,
 ):
     _clean()
     update_orchestrator_code(
