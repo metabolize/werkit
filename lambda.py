@@ -41,6 +41,13 @@ def common_options(function):
         help="Name of the orchestrator lambda function",
     )(function)
     function = click.option(
+        "--region",
+        required=True,
+        envvar="AWS_REGION",
+        show_envvar=True,
+        help="AWS region to deploy to",
+    )(function)
+    function = click.option(
         "--s3-code-bucket", default=None, help="S3 bucket where code is uploaded"
     )(function)
     function = click.option("--verbose", default=False, help="Enable verbose output")(
@@ -79,6 +86,7 @@ def deploy_options(function):
 @common_options
 @deploy_options
 def deploy(
+    region,
     path_to_orchestrator_zip,
     orchestrator_function_name,
     s3_code_bucket,
@@ -90,6 +98,7 @@ def deploy(
 ):
     _clean()
     deploy_orchestrator(
+        aws_region=region,
         build_dir=BUILD_DIR,
         path_to_orchestrator_zip=path_to_orchestrator_zip,
         orchestrator_function_name=orchestrator_function_name,
@@ -104,10 +113,11 @@ def deploy(
 @cli.command()
 @common_options
 def update_code(
-    path_to_orchestrator_zip, orchestrator_function_name, s3_code_bucket, verbose
+    region, path_to_orchestrator_zip, orchestrator_function_name, s3_code_bucket, verbose
 ):
     _clean()
     update_orchestrator_code(
+        aws_region=region,
         build_dir=BUILD_DIR,
         path_to_orchestrator_zip=path_to_orchestrator_zip,
         orchestrator_function_name=orchestrator_function_name,
