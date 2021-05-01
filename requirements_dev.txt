@@ -26,4 +26,4 @@ flake8-import-order==0.18.1
 # For CI.
 coveralls ==3.0.0
 
-python-dotenv==0.15.0
+python-dotenv==0.17.1
