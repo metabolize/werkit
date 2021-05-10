@@ -19,7 +19,7 @@ freezegun==1.1.0
 redis==3.5.3
 git+https://github.com/rq/rq.git@cf501518534429640a9a6d14e022f9329225e701#egg=rq
 
-black ==21.4b2
+black ==21.5b1
 flake8==3.9.2
 flake8-import-order==0.18.1
 
