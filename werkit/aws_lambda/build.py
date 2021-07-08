@@ -13,6 +13,7 @@ def create_venv_with_dependencies(
     install_wheel=True,
     install_werkit=False,
     install_requirements_from=["requirements.txt"],
+    install_transitive_dependencies=True,
     environment={},
 ):
     venv.create(venv_dir, with_pip=True)
@@ -39,6 +40,8 @@ def create_venv_with_dependencies(
 
     if len(install_requirements_from) > 0:
         args = [python, "-m", "pip", "install"]
+        if not install_transitive_dependencies:
+            args += ["--no-dependencies"]
         for requirements_file in install_requirements_from:
             args += ["-r", requirements_file]
         execute(*args, environment=environment)
