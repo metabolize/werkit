@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.17.0
+
+Same as 0.16.0.
+
 ## 0.16.0
 
 - Add `WerkitRequest` type.
