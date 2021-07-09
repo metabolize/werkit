@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.17.0
+
+### New features
+
+- `create_venv_with_dependencies`: Optionally omit transitive dependencies.
+
 ## 0.16.0
 
 Same as 0.15.0.
