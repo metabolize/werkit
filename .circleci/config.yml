@@ -38,7 +38,9 @@ jobs:
       - checkout
 
       - *install_poetry
-      - *install_python_deps
+      - run:
+          name: Install python dependencies
+          command: poetry install --no-ansi --no-interaction
       - *show_versions
 
       - run:
