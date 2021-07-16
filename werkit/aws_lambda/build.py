@@ -1,10 +1,10 @@
+import importlib
 import os
 import shutil
 import sys
 import venv
 import zipfile
 from executor import execute
-from ..package_version import __version__
 
 
 def create_venv_with_dependencies(
@@ -33,7 +33,7 @@ def create_venv_with_dependencies(
             "-m",
             "pip",
             "install",
-            f"werkit=={__version__}",
+            f"werkit=={importlib.metadata.version('werkit')}",
             # f"werkit@git+https://github.com/metabolize/werkit.git@...",
             environment=environment,
         )
