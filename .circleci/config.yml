@@ -40,7 +40,7 @@ jobs:
       - *install_poetry
       - run:
           name: Install python dependencies
-          command: poetry install --no-ansi --no-interaction
+          command: poetry install --no-ansi --no-interaction --extras aws_lambda_build
       - *show_versions
 
       - run:
