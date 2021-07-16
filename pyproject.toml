@@ -1,0 +1,56 @@
+[tool.poetry]
+name = "werkit"
+version = "0.17.0"
+description = "Toolkit for encapsulating Python-based computation into deployable and distributable tasks"
+authors = ["Paul Melnikow <github@paulmelnikow.com>", "Metabolize"]
+license = "MIT"
+include = ["CHANGELOG.md"]
+exclude = ["**/test_*.py"]
+homepage = "https://werkit.readthedocs.io/en/stable/"
+repository = "https://github.com/lace/werkit"
+documentation = "https://ounce.readthedocs.io/en/werkit/"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: System :: Distributed Computing",
+    "Topic :: Scientific/Engineering",
+    "Operating System :: OS Independent",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.7,<4"
+boto3 = {version = "1.17.69", optional = true}
+executor = {version = ">=21.0", optional = true}
+redis = {version = "3.5.3", optional = true}
+rq = {git = "https://github.com/rq/rq.git", rev = "cf501518534429640a9a6d14e022f9329225e701", optional = true}
+
+[tool.poetry.extras]
+aws_lambda_build = ["executor"]
+client = ["boto3", "harrison"]
+parallel = ["redis", "rq"]
+
+[tool.poetry.dev-dependencies]
+black = "21.6b0"
+click = "8.0.1"
+coverage = "5.5"
+coveralls = "3.0.1"
+executor = "23.2"
+flake8 = "3.9.2"
+flake8-import-order = "0.18.1"
+freezegun = "1.1.0"
+pytest = "6.2.4"
+pytest-cov = "2.12.1"
+pytest-redis = "2.0.0"
+python-dotenv = ">=0.17.1<0.18"
+
+[build-system]
+# Lint requires setuptools.
+requires = ["setuptools", "poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+markers = ["slow"]
+norecursedirs = ["build", "node_modules"]
+
+[tool.coverage.report]
+omit = ["**/test_*.py"]

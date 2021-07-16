@@ -3,9 +3,9 @@ import uuid
 import boto3
 from dotenv import load_dotenv
 import pytest
-from .build import create_zipfile_from_dir
-from .deploy import perform_create
-from .orchestrator_deploy import deploy_orchestrator
+from werkit.aws_lambda.build import create_zipfile_from_dir
+from werkit.aws_lambda.deploy import perform_create
+from werkit.aws_lambda.orchestrator_deploy import deploy_orchestrator
 
 
 load_dotenv()

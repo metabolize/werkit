@@ -2,7 +2,7 @@ import os
 import pytest
 from redis import Redis
 from rq import Worker
-from .invoke import (
+from werkit.parallel.invoke import (
     DEFAULT_QUEUE_NAME,
     clean,
     get_aggregate_status,

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S poetry run python
 
 import shutil
 import click
