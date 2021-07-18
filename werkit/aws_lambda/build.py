@@ -12,9 +12,9 @@ def export_poetry_requirements(
 ):
     args = ["poetry", "export", "--output", output_file]
     if with_credentials:
-        args.push("--with-credentials")
+        args.append("--with-credentials")
     if not with_hashes:
-        args.push("--without-hashes")
+        args.append("--without-hashes")
     for extra in extras:
         args += ["--extras", extra]
     execute(args)
