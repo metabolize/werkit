@@ -3,6 +3,7 @@ from .build import (
     collect_zipfile_contents,
     create_venv_with_dependencies,
     create_zipfile_from_dir,
+    export_poetry_requirements,
 )
 from .deploy import perform_create, perform_update_code
 
@@ -15,10 +16,11 @@ def prepare_zip_file(build_dir, path_to_orchestrator_zip):
 
     venv_dir = os.path.join(build_dir, "venv")
     zip_dir = os.path.join(build_dir, "zip")
+    exported_requirements = os.path.join(build_dir, "requirements.txt")
+    export_poetry_requirements(output_file=exported_requirements, extras=["client"])
 
     create_venv_with_dependencies(
-        venv_dir,
-        install_requirements_from=["requirements.txt", "requirements_client.txt"],
+        venv_dir, install_requirements_from=[exported_requirements]
     )
     collect_zipfile_contents(
         target_dir=zip_dir, venv_dir=venv_dir, src_files=[], src_dirs=["werkit"]

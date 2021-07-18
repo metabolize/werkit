@@ -7,6 +7,19 @@ import zipfile
 from executor import execute
 
 
+def export_poetry_requirements(
+    output_file, extras=[], with_credentials=True, with_hashes=True
+):
+    args = ["poetry", "export", "--output", output_file]
+    if with_credentials:
+        args.push("--with-credentials")
+    if not with_hashes:
+        args.push("--without-hashes")
+    for extra in extras:
+        args += ["--extras", extra]
+    execute(args)
+
+
 def create_venv_with_dependencies(
     venv_dir,
     upgrade_pip=True,
