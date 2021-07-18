@@ -17,7 +17,7 @@ def export_poetry_requirements(
         args.append("--without-hashes")
     for extra in extras:
         args += ["--extras", extra]
-    execute(args)
+    execute(*args)
 
 
 def create_venv_with_dependencies(
