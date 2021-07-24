@@ -232,6 +232,14 @@ python-versions = ">=3.5"
 python-dateutil = ">=2.7"
 
 [[package]]
+name = "harrison"
+version = "2.0.0"
+description = "Time a block of code"
+category = "main"
+optional = true
+python-versions = "*"
+
+[[package]]
 name = "humanfriendly"
 version = "9.2"
 description = "Human friendly output for text interfaces using Python"
@@ -635,13 +643,13 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [extras]
 aws_lambda_build = ["executor"]
 client = ["boto3"]
-lambda_common = []
+lambda_common = ["harrison"]
 parallel = ["redis", "rq"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "91658e0e6200d643fa51bd8feef60cf035a79b61a0e58ff759ce5770f8fca524"
+content-hash = "f903061385a8c9e969f9a0551b988d36c26076f59f31f0659e48d531a49d2d96"
 
 [metadata.files]
 appdirs = [
@@ -768,6 +776,10 @@ flake8-import-order = [
 freezegun = [
     {file = "freezegun-1.1.0-py2.py3-none-any.whl", hash = "sha256:2ae695f7eb96c62529f03a038461afe3c692db3465e215355e1bb4b0ab408712"},
     {file = "freezegun-1.1.0.tar.gz", hash = "sha256:177f9dd59861d871e27a484c3332f35a6e3f5d14626f2bf91be37891f18927f3"},
+]
+harrison = [
+    {file = "harrison-2.0.0-py3-none-any.whl", hash = "sha256:9e29a352e5a4082d9967b15d52ac4c703dcbddc4719292dea02810727f2cad02"},
+    {file = "harrison-2.0.0.tar.gz", hash = "sha256:ddd1abe199429c68fcae31c2774e556c7a6cd36ebd665f2363ea084b0cf9d673"},
 ]
 humanfriendly = [
     {file = "humanfriendly-9.2-py2.py3-none-any.whl", hash = "sha256:332da98c24cc150efcc91b5508b19115209272bfdf4b0764a56795932f854271"},

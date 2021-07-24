@@ -21,6 +21,7 @@ classifiers = [
 python = ">=3.7,<4"
 boto3 = {version = "1.17.69", optional = true}
 executor = {version = ">=21.0", optional = true}
+harrison = {version = ">=2.0,<3.0", optional = true}
 redis = {version = "3.5.3", optional = true}
 rq = {git = "https://github.com/rq/rq.git", rev = "cf501518534429640a9a6d14e022f9329225e701", optional = true}
 
