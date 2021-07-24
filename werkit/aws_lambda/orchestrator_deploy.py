@@ -17,7 +17,9 @@ def prepare_zip_file(build_dir, path_to_orchestrator_zip):
     venv_dir = os.path.join(build_dir, "venv")
     zip_dir = os.path.join(build_dir, "zip")
     exported_requirements = os.path.join(build_dir, "requirements.txt")
-    export_poetry_requirements(output_file=exported_requirements, extras=["client"])
+    export_poetry_requirements(
+        output_file=exported_requirements, extras=["lambda_common"]
+    )
 
     create_venv_with_dependencies(
         venv_dir, install_requirements_from=[exported_requirements]

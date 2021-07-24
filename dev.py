@@ -32,6 +32,8 @@ def install():
         "--extras",
         "client",
         "--extras",
+        "lambda_common",
+        "--extras",
         "parallel",
     )
 

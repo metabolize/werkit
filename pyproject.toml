@@ -26,7 +26,8 @@ rq = {git = "https://github.com/rq/rq.git", rev = "cf501518534429640a9a6d14e022f
 
 [tool.poetry.extras]
 aws_lambda_build = ["executor"]
-client = ["boto3", "harrison"]
+client = ["boto3"]
+lambda_common = ["harrison"]
 parallel = ["redis", "rq"]
 
 [tool.poetry.dev-dependencies]
