@@ -30,6 +30,8 @@ def create_test_functions(
     unique = uuid.uuid4().hex
     worker_function_name = f"werkit_integ_test_worker_{unique}"
     orchestrator_function_name = f"werkit_integ_test_orchestrator_{unique}"
+    print(f"Unique worker function: {worker_function_name}")
+    print(f"Unique orchestrator function: {orchestrator_function_name}")
 
     path_to_worker_zip = str(tmpdir / "worker.zip")
     create_zipfile_from_dir(
