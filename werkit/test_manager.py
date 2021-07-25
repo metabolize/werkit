@@ -1,7 +1,7 @@
 import datetime
 from freezegun import freeze_time
 import pytest
-from . import Manager
+from werkit import Manager
 
 
 @freeze_time("2019-12-31")

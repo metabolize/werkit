@@ -3,88 +3,82 @@ version: 2.1
 orbs:
   node: circleci/node@4.1.0
 
+with_python: &with_python
+  docker:
+    - image: circleci/python:3.7
+
+with_python_and_redis: &with_python_and_redis
+  docker:
+    - image: circleci/python:3.7
+    - image: redis
+
+install_poetry: &install_poetry
+  run:
+    name: Install Poetry
+    command: |
+      pip install poetry==1.2.0a1
+      poetry --version
+
+install_python_deps: &install_python_deps
+  run:
+    name: Install python dependencies
+    command: poetry install --no-ansi --no-interaction
+
+show_versions: &show_versions
+  run:
+    name: Show versions
+    command: poetry show
+
+
 jobs:
   main:
-    docker:
-      - image: circleci/python:3.7
-      - image: redis
+    <<: *with_python_and_redis
 
     steps:
       - checkout
 
+      - *install_poetry
       - run:
           name: Install python dependencies
           command: |
-            mkdir -p venv
-            virtualenv venv
-            . venv/bin/activate
-            set -o pipefail; pip install --upgrade -r requirements_dev.txt | cat
-
-      - run:
-          name: Show versions
-          command: |
-            . venv/bin/activate
-            pip freeze
+            poetry install \
+              --no-ansi --no-interaction \
+              --extras client \
+              --extras lambda_common \
+              --extras parallel
+      - *show_versions
 
       - run:
           name: Run tests
-          command: |
-            . venv/bin/activate
-            ./dev.py coverage
+          command: ./dev.py coverage
 
   lint:
-    docker:
-      - image: circleci/python:3.7
+    <<: *with_python
 
     steps:
       - checkout
 
-      - run:
-          name: Install python dependencies
-          command: |
-            mkdir -p venv
-            virtualenv venv
-            . venv/bin/activate
-            set -o pipefail; pip install --upgrade -r requirements_dev.txt | cat
-
-      - run:
-          name: Show versions
-          command: |
-            . venv/bin/activate
-            pip freeze
+      - *install_poetry
+      - *install_python_deps
+      - *show_versions
 
       - run:
           name: Check lint
-          command: |
-            . venv/bin/activate
-            ./dev.py lint
+          command: ./dev.py lint
 
   format:
-    docker:
-      - image: circleci/python:3.7
+    <<: *with_python
 
     steps:
       - checkout
 
-      - run:
-          name: Install python dependencies
-          command: |
-            mkdir -p venv
-            virtualenv venv
-            . venv/bin/activate
-            set -o pipefail; pip install --upgrade -r requirements_dev.txt | cat
-
-      - run:
-          name: Show versions
-          command: |
-            . venv/bin/activate
-            pip freeze
+      - *install_poetry
+      - *install_python_deps
+      - *show_versions
 
       - run:
           name: Check code format
-          command: |
-            . venv/bin/activate
-            ./dev.py black-check
+          command: ./dev.py black-check
 
       - node/install
 

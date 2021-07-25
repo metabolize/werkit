@@ -1,10 +1,23 @@
+import importlib
 import os
 import shutil
 import sys
 import venv
 import zipfile
 from executor import execute
-from ..package_version import __version__
+
+
+def export_poetry_requirements(
+    output_file, extras=[], with_credentials=True, with_hashes=True
+):
+    args = ["poetry", "export", "--output", output_file]
+    if with_credentials:
+        args.append("--with-credentials")
+    if not with_hashes:
+        args.append("--without-hashes")
+    for extra in extras:
+        args += ["--extras", extra]
+    execute(*args)
 
 
 def create_venv_with_dependencies(
@@ -33,7 +46,7 @@ def create_venv_with_dependencies(
             "-m",
             "pip",
             "install",
-            f"werkit=={__version__}",
+            f"werkit=={importlib.metadata.version('werkit')}",
             # f"werkit@git+https://github.com/metabolize/werkit.git@...",
             environment=environment,
         )

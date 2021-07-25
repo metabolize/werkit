@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S poetry run python
 
 import os
 import click
@@ -22,8 +22,20 @@ def cli():
 
 
 @cli.command()
-def init():
-    execute("pip3 install --upgrade -r requirements_dev.txt")
+def install():
+    execute(
+        "poetry",
+        "install",
+        "--remove-untracked",
+        "--extras",
+        "aws_lambda_build",
+        "--extras",
+        "client",
+        "--extras",
+        "lambda_common",
+        "--extras",
+        "parallel",
+    )
 
 
 @cli.command()
@@ -66,20 +78,9 @@ def black_check():
 
 
 @cli.command()
-def doc():
-    execute("rm -rf build/ doc/build/ doc/api/")
-    execute("sphinx-build -b singlehtml doc doc/build")
-
-
-@cli.command()
-def doc_open():
-    execute("open doc/build/index.html")
-
-
-@cli.command()
 def publish():
     execute("rm -rf dist/")
-    execute("python3 setup.py sdist bdist_wheel")
+    execute("poetry build")
     execute("twine upload dist/*")
 
 

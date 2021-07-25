@@ -3,9 +3,9 @@ import uuid
 import boto3
 from dotenv import load_dotenv
 import pytest
-from .build import create_zipfile_from_dir
-from .deploy import perform_create
-from .orchestrator_deploy import deploy_orchestrator
+from werkit.aws_lambda.build import create_zipfile_from_dir
+from werkit.aws_lambda.deploy import perform_create
+from werkit.aws_lambda.orchestrator_deploy import deploy_orchestrator
 
 
 load_dotenv()
@@ -30,6 +30,8 @@ def create_test_functions(
     unique = uuid.uuid4().hex
     worker_function_name = f"werkit_integ_test_worker_{unique}"
     orchestrator_function_name = f"werkit_integ_test_orchestrator_{unique}"
+    print(f"Unique worker function: {worker_function_name}")
+    print(f"Unique orchestrator function: {orchestrator_function_name}")
 
     path_to_worker_zip = str(tmpdir / "worker.zip")
     create_zipfile_from_dir(

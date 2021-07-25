@@ -3,7 +3,7 @@ import uuid
 import boto3
 from botocore.exceptions import ClientError
 import pytest
-from .s3 import temp_file_on_s3, temp_file_on_s3_from_string
+from werkit.s3 import temp_file_on_s3, temp_file_on_s3_from_string
 
 
 @pytest.fixture

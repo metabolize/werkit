@@ -49,10 +49,8 @@ def myfunc(param, verbose=False, handle_exceptions=True):
 
 Werkit supports parallel computation using Redis and RQ.
 
-You must install the dependencies separately:
-
 ```sh
-pip install redis rq
+pip install werkit[parallel]
 ```
 
 ### Requesting work
@@ -421,17 +419,17 @@ def update_code():
 [types]: https://github.com/metabolize/werkit/tree/main/types
 [npm]: https://www.npmjs.com/package/werkit
 
-## Contribute
 
-- Issue Tracker: https://github.com/metabolize/werkit/issues
-- Source Code: https://github.com/metabolize/werkit
+## Development
 
-Pull requests welcome!
+First, [install Poetry][].
 
+After cloning the repo, run `./bootstrap.zsh` to initialize a virtual
+environment with the project's dependencies.
 
-## Support
+Subsequently, run `./dev.py install` to update the dependencies.
 
-If you are having issues, please let us know.
+[install poetry]: https://python-poetry.org/docs/#installation
 
 
 ## License
