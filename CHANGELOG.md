@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.18.0
+
+### BREAKING CHANGES
+
+- Remove `werkit.__version__`.
+
+### New features
+
+- Add `aws_lambda.build.export_poetry_requirements()`.
+
 ## 0.17.0
 
 ### New features
