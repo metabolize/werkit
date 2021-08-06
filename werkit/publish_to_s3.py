@@ -45,7 +45,7 @@ def perform_publish(environment, verbose, bucket_name, with_manifest):
     version = environment.version
     sha1 = environment.sha1
 
-    assert version is not None or sha1 is not None
+    assert version is not None != sha1 is not None
 
     common_kwargs = dict(
         bucket_name=bucket_name,
