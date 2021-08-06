@@ -1,5 +1,6 @@
 import os
 
+
 def local_path_for_built_lambda(function_name):
     return os.path.join("lambdas", f"{function_name}.zip")
 
@@ -56,7 +57,7 @@ def perform_publish(environment, verbose, bucket_name, with_manifest):
     version = environment.version
     sha1 = environment.sha1
 
-    assert version is not None != sha1 is not None
+    assert (version is not None) != (sha1 is not None)
 
     common_kwargs = dict(
         bucket_name=bucket_name,
