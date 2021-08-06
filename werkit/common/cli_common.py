@@ -13,6 +13,7 @@ InferredFunctionEnvironment = namedtuple(
 def infer_function_environment_from_ci_environment(aws):
     import os
     import re
+    # CircleCI is supported though contributions are welcome for other CI's.
     tag = os.environ["CIRCLE_TAG"]
 
     match = re.search(r"([a-z0-9-]+)@([0-9]+\.[0-9]+\.[0-9]+)$", tag)
