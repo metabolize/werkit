@@ -1,4 +1,11 @@
-from .common.build import local_path_for_built_lambda, local_path_for_manifest
+import os
+
+def local_path_for_built_lambda(function_name):
+    return os.path.join("lambdas", f"{function_name}.zip")
+
+
+def local_path_for_manifest(function_name):
+    return os.path.join("lambdas", f"{function_name}.manifest.json")
 
 
 def _get_s3_key_base(function_name, version, sha1, with_manifest):
@@ -8,12 +15,16 @@ def _get_s3_key_base(function_name, version, sha1, with_manifest):
         return f"{function_name}/branches/{sha1}"
 
 
-def s3_key_for_built_lambda(function_name, version=None, sha1=None, with_manifest=False):
+def s3_key_for_built_lambda(
+    function_name, version=None, sha1=None, with_manifest=False
+):
     return f"{_get_s3_key_base(function_name, version, sha1, with_manifest)}.zip"
 
 
 def s3_key_for_manifest(function_name, version=None, sha1=None, with_manifest=False):
-    return f"{_get_s3_key_base(function_name, version, sha1, with_manifest)}.manifest.json"
+    return (
+        f"{_get_s3_key_base(function_name, version, sha1, with_manifest)}.manifest.json"
+    )
 
 
 def publish_file_to_s3(key, filename, bucket_name, verbose):
@@ -54,7 +65,10 @@ def perform_publish(environment, verbose, bucket_name, with_manifest):
 
     publish_file_to_s3(
         key=s3_key_for_built_lambda(
-            function_name=function_name, version=version, sha1=sha1, with_manifest=with_manifest
+            function_name=function_name,
+            version=version,
+            sha1=sha1,
+            with_manifest=with_manifest,
         ),
         filename=local_path_for_built_lambda(function_name=function_name),
         **common_kwargs,
@@ -63,7 +77,10 @@ def perform_publish(environment, verbose, bucket_name, with_manifest):
     if with_manifest:
         publish_file_to_s3(
             key=s3_key_for_manifest(
-                function_name=function_name, version=version, sha1=sha1, with_manifest=with_manifest
+                function_name=function_name,
+                version=version,
+                sha1=sha1,
+                with_manifest=with_manifest,
             ),
             filename=local_path_for_manifest(function_name=function_name),
             **common_kwargs,
