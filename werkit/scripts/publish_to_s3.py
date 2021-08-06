@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 
 
@@ -5,7 +6,7 @@ def set_path():
     import sys
 
     sys.path.insert(
-        0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+        0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
     )
 
 
@@ -15,7 +16,7 @@ from werkit.common.cli_common import (  # noqa: E402
     infer_commit_from_ci_environment,
     infer_function_environment_from_ci_environment,
 )
-from werkit.common.publish_to_s3 import (  # noqa: E402
+from werkit.publish_to_s3 import (  # noqa: E402
     perform_publish,
 )
 import click  # noqa: E402
