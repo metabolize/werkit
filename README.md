@@ -238,7 +238,6 @@ def build_natively(build_dir="build", target_dir="build"):
         # These are the defaults, which you can override if necessary.
         upgrade_pip=True,
         install_wheel=True,
-        install_werkit=False,
         install_requirements_from=["requirements.txt"],
         # You can pass credentials to `pip install`.
         environment={"DEPLOY_TOKEN": DEPLOY_TOKEN},

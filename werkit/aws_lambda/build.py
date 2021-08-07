@@ -5,8 +5,6 @@ import venv
 import zipfile
 from executor import execute
 
-from ..package_version import __version__
-
 
 def export_poetry_requirements(
     output_file, extras=[], with_credentials=True, with_hashes=True
@@ -25,7 +23,6 @@ def create_venv_with_dependencies(
     venv_dir,
     upgrade_pip=True,
     install_wheel=True,
-    install_werkit=False,
     install_requirements_from=["requirements.txt"],
     install_transitive_dependencies=True,
     environment={},
@@ -40,17 +37,6 @@ def create_venv_with_dependencies(
 
     if install_wheel:
         execute(python, "-m", "pip", "install", "wheel", environment=environment)
-
-    if install_werkit:
-        execute(
-            python,
-            "-m",
-            "pip",
-            "install",
-            f"werkit=={__version__}",
-            # f"werkit@git+https://github.com/metabolize/werkit.git@...",
-            environment=environment,
-        )
 
     if len(install_requirements_from) > 0:
         args = [python, "-m", "pip", "install"]
