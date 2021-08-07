@@ -1,10 +1,11 @@
-import importlib
 import os
 import shutil
 import sys
 import venv
 import zipfile
 from executor import execute
+
+from ..package_version import __version__
 
 
 def export_poetry_requirements(
@@ -46,7 +47,7 @@ def create_venv_with_dependencies(
             "-m",
             "pip",
             "install",
-            f"werkit=={importlib.metadata.version('werkit')}",
+            f"werkit=={__version__}",
             # f"werkit@git+https://github.com/metabolize/werkit.git@...",
             environment=environment,
         )
