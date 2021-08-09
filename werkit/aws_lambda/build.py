@@ -1,4 +1,3 @@
-import importlib
 import os
 import shutil
 import sys
@@ -24,7 +23,6 @@ def create_venv_with_dependencies(
     venv_dir,
     upgrade_pip=True,
     install_wheel=True,
-    install_werkit=False,
     install_requirements_from=["requirements.txt"],
     install_transitive_dependencies=True,
     environment={},
@@ -39,17 +37,6 @@ def create_venv_with_dependencies(
 
     if install_wheel:
         execute(python, "-m", "pip", "install", "wheel", environment=environment)
-
-    if install_werkit:
-        execute(
-            python,
-            "-m",
-            "pip",
-            "install",
-            f"werkit=={importlib.metadata.version('werkit')}",
-            # f"werkit@git+https://github.com/metabolize/werkit.git@...",
-            environment=environment,
-        )
 
     if len(install_requirements_from) > 0:
         args = [python, "-m", "pip", "install"]
