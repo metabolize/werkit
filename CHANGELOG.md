@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.20.0
+
+### Bug fixes
+
+Fix bug in `publish_to_s3` CLI
+
 ## 0.19.0
 
 ### New features
