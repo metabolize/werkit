@@ -576,16 +576,16 @@ testing = ["fields", "hunter", "process-tests", "six", "pytest-xdist", "virtuale
 
 [[package]]
 name = "pytest-redis"
-version = "2.0.0"
+version = "2.1.1"
 description = "Redis fixtures and fixture factories for Pytest."
 category = "dev"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.7"
 
 [package.dependencies]
-mirakuru = ">=0.2"
-port-for = ">=0.3.1"
-pytest = ">=3.0.0"
+mirakuru = "*"
+port-for = "*"
+pytest = "*"
 redis = "*"
 
 [package.extras]
@@ -868,7 +868,7 @@ parallel = ["redis"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "4dd3d415e89bec220f43051780d1d5e0e85abf38805555704161018275852d8e"
+content-hash = "5e7dfc8a75c7db2a3ad54789ec076dd753fe893fcd7478ecd06358343e5cbf08"
 
 [metadata.files]
 appdirs = [
@@ -1203,7 +1203,8 @@ pytest-cov = [
     {file = "pytest_cov-2.12.1-py2.py3-none-any.whl", hash = "sha256:261bb9e47e65bd099c89c3edf92972865210c36813f80ede5277dceb77a4a62a"},
 ]
 pytest-redis = [
-    {file = "pytest_redis-2.0.0-py3-none-any.whl", hash = "sha256:725041832a679d0fe190b7d789505b26a3ae8edcc5dc6ab1aafb1bdce8265c5f"},
+    {file = "pytest-redis-2.1.1.tar.gz", hash = "sha256:d8126e1929bdacb7f5db913327662e9841cbd78512c620c0c66100f226e55074"},
+    {file = "pytest_redis-2.1.1-py3-none-any.whl", hash = "sha256:54fe89691a69f8dedea2cc6b63e94d6f2c338490377d5a0c14bc0cfbf6a24a3a"},
 ]
 python-dateutil = [
     {file = "python-dateutil-2.8.2.tar.gz", hash = "sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86"},
