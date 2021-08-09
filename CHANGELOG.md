@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.19.0
+
+### New features
+
+- Added `publish_to_s3`
+
+### BREAKING CHANGES
+
+Remove `install_werkit` flag from `create_venv_with_dependencies`
+
 ## 0.18.0
 
 ### BREAKING CHANGES
