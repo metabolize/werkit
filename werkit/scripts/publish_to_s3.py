@@ -35,7 +35,7 @@ def cli():
     "--with-manifest/--without-manifest",
     help="Function inclues a manifest",
     default=False,
-    is_flag=True
+    is_flag=True,
 )
 def infer_and_publish(verbose, bucket_name, with_manifest):
     environment = infer_function_environment_from_ci_environment()
@@ -55,7 +55,7 @@ def infer_and_publish(verbose, bucket_name, with_manifest):
     "--with-manifest/--without-manifest",
     help="Function inclues a manifest",
     default=False,
-    is_flag=True
+    is_flag=True,
 )
 def publish_using_sha1(verbose, function_name, bucket_name, with_manifest):
     environment = infer_commit_from_ci_environment(function_name)
