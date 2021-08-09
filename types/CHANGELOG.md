@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.19.0
+
+Same as 0.16.0.
+
 ## 0.18.0
 
 Same as 0.16.0.
