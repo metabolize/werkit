@@ -10,7 +10,7 @@ InferredFunctionEnvironment = namedtuple(
 )
 
 
-def infer_function_environment_from_ci_environment(aws):
+def infer_function_environment_from_ci_environment():
     import os
     import re
 
