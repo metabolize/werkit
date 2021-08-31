@@ -33,7 +33,7 @@ if os.environ.get("CI"):
 else:
     from pytest_redis.factories import redis_proc, redisdb
 
-    new_redis_proc = redis_proc(executable=path_to_redis(), logsdir="/tmp")
+    new_redis_proc = redis_proc(executable=path_to_redis())
     redis_conn = redisdb("new_redis_proc")
 
 
