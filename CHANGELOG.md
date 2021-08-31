@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.20.0
+
+### New features
+
+- `publish_to_s3`: Support semver prerelease versions.
+
 ## 0.19.1
 
 ### Bug fixes
