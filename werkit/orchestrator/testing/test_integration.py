@@ -73,13 +73,26 @@ def create_test_functions(
     return worker_function_name, orchestrator_function_name
 
 
+EXAMPLE_MESSAGE_KEY = {"someParameters": ["just", "a", "message", "key", "nbd"]}
+
+
 def invoke_orchestrator(orchestrator_function_name):
     import json
 
     response = boto3.client("lambda").invoke(
         FunctionName=orchestrator_function_name,
         Payload=json.dumps(
-            {"message_key": None, "input": [1, 2, 3, 4], "extra_args": [2, 3]}
+            {
+                "message_key": EXAMPLE_MESSAGE_KEY,
+                "itemPropertyName": "exponent",
+                "itemCollection": {
+                    "first": 1,
+                    "second": 2,
+                    "tenth": 10,
+                    "twentieth": 20,
+                },
+                "commonInput": {"base": 2},
+            }
         ),
     )
     return json.load(response["Payload"])
@@ -97,11 +110,16 @@ def test_integration_success(tmpdir):
 
         schema.output_message.validate(data)
 
-        results = data["results"]
-        print(results)
-        assert isinstance(results, list)
-        assert all([r["success"] is True for r in results])
-        assert [r["result"] for r in results] == [6, 7, 8, 9]
+        result = data["result"]
+        print(result)
+        assert isinstance(result, object)
+        assert all([r["output"]["success"] is True for r in result.values()])
+        assert {k: r["output"]["result"] for k, r in result.items()} == {
+            "first": 2 ** 1,
+            "second": 2 ** 4,
+            "tenth": 2 ** 10,
+            "twentieth": 2 ** 10,
+        }
     finally:
         client = boto3.client("lambda")
         client.delete_function(FunctionName=worker_function_name)
@@ -120,17 +138,17 @@ def test_integration_unhandled_exception(tmpdir):
 
         schema.output_message.validate(data)
 
-        results = data["results"]
-        assert all([r["success"] is False for r in results])
-        assert all([r["error_origin"] == "system" for r in results])
+        result = data["result"]
+        assert all([r["success"] is False for r in result.values()])
+        assert all([r["error_origin"] == "system" for r in result.values()])
         assert all(
             [
-                r["error"]
+                r["output"]["error"]
                 == [
                     '  File "/var/task/test_worker_service.py", line 36, in handler\n    raise Exception("Whoops!")\n',
                     "Exception: Whoops!",
                 ]
-                for r in results
+                for r in result.values()
             ]
         )
     finally:
@@ -151,7 +169,7 @@ def test_integration_timeout_failure(tmpdir):
 
         schema.output_message.validate(data)
 
-        results = data["results"]
+        results = data["result"]
         assert all([r["success"] is False for r in results])
         assert all([r["error_origin"] == "orchestration" for r in results])
         assert all(

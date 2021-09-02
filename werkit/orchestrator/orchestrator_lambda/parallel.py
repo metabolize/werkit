@@ -28,8 +28,8 @@ async def call_worker_service(
         payload = await event_loop.run_in_executor(executor, response["Payload"].read)
     output = json.loads(payload.decode())
     return {
-        "startTimestamp": start_timestamp,
-        "roundtripSeconds": roundtrip_timer,
+        "orchestrationStartTimestamp": start_timestamp,
+        "workerRoundtripSeconds": roundtrip_timer,
         "output": output,
     }
 

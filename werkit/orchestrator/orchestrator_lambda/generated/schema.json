@@ -12,20 +12,97 @@
     },
     "OrchestratorOutput<any,any>": {
       "additionalProperties": {
-        "additionalProperties": false,
-        "properties": {
-          "output": {
-            "$ref": "#/definitions/WerkitOutputMessage%3Cany%2Cany%3E"
+        "anyOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "duration_seconds": {
+                "type": "number"
+              },
+              "error": {
+                "type": "null"
+              },
+              "error_origin": {
+                "type": "null"
+              },
+              "message_key": {},
+              "orchestrationStartTimestamp": {
+                "type": "number"
+              },
+              "result": {},
+              "runtime_info": {},
+              "start_time": {
+                "type": "string"
+              },
+              "success": {
+                "const": true,
+                "type": "boolean"
+              },
+              "workerRoundtripSeconds": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "duration_seconds",
+              "error",
+              "error_origin",
+              "message_key",
+              "orchestrationStartTimestamp",
+              "result",
+              "start_time",
+              "success",
+              "workerRoundtripSeconds"
+            ],
+            "type": "object"
           },
-          "roundtripSeconds": {
-            "type": "number"
-          },
-          "startTimestamp": {
-            "type": "number"
+          {
+            "additionalProperties": false,
+            "properties": {
+              "duration_seconds": {
+                "type": "number"
+              },
+              "error": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "error_origin": {
+                "$ref": "#/definitions/WerkitErrorOrigin"
+              },
+              "message_key": {},
+              "orchestrationStartTimestamp": {
+                "type": "number"
+              },
+              "result": {
+                "type": "null"
+              },
+              "runtime_info": {},
+              "start_time": {
+                "type": "string"
+              },
+              "success": {
+                "const": false,
+                "type": "boolean"
+              },
+              "workerRoundtripSeconds": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "duration_seconds",
+              "error",
+              "error_origin",
+              "message_key",
+              "orchestrationStartTimestamp",
+              "result",
+              "start_time",
+              "success",
+              "workerRoundtripSeconds"
+            ],
+            "type": "object"
           }
-        },
-        "required": ["startTimestamp", "roundtripSeconds", "output"],
-        "type": "object"
+        ]
       },
       "type": "object"
     },
@@ -120,16 +197,6 @@
         }
       ]
     },
-    "WerkitOutputMessage<any,any>": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/WerkitSuccessOutputMessage%3Cany%2Cany%3E"
-        },
-        {
-          "$ref": "#/definitions/WerkitErrorOutputMessage%3Cany%3E"
-        }
-      ]
-    },
     "WerkitSuccessOutputMessage<OrchestratorOutput<any,any>,any>": {
       "additionalProperties": false,
       "properties": {
@@ -146,40 +213,6 @@
         "result": {
           "$ref": "#/definitions/OrchestratorOutput%3Cany%2Cany%3E"
         },
-        "runtime_info": {},
-        "start_time": {
-          "type": "string"
-        },
-        "success": {
-          "const": true,
-          "type": "boolean"
-        }
-      },
-      "required": [
-        "duration_seconds",
-        "error",
-        "error_origin",
-        "message_key",
-        "result",
-        "start_time",
-        "success"
-      ],
-      "type": "object"
-    },
-    "WerkitSuccessOutputMessage<any,any>": {
-      "additionalProperties": false,
-      "properties": {
-        "duration_seconds": {
-          "type": "number"
-        },
-        "error": {
-          "type": "null"
-        },
-        "error_origin": {
-          "type": "null"
-        },
-        "message_key": {},
-        "result": {},
         "runtime_info": {},
         "start_time": {
           "type": "string"
