@@ -1,7 +1,6 @@
 import asyncio
 import datetime
 import json
-from functools import partial
 import boto3
 from botocore.exceptions import ClientError
 from harrison import Timer
@@ -32,7 +31,7 @@ async def call_worker_service(
     output = json.loads(payload.decode())
     print("output before augmentation", output)
     output["orchestrationStartTimestamp"] = start_timestamp
-    output["workerRoundtripSeconds"] = roundtrip_timer
+    output["workerRoundtripSeconds"] = roundtrip_timer.elapsed_time_s
     print("output after augmentation", output)
     return output
 
