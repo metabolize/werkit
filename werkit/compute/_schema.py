@@ -4,17 +4,23 @@ class Schema:
     """
 
     def __init__(
-        self, schema, request_ref=None, result_ref=None, serialized_result_ref=None
+        self,
+        schema,
+        input_message_ref="#/definitions/AnyInputMessage",
+        output_ref="#/definitions/Output",
+        output_message_ref="#/definitions/AnyOutputMessage",
     ):
         from jsonschema import RefResolver
 
         self.resolver = RefResolver.from_schema(schema)
-        self.request = None if request_ref is None else self.validator_for(request_ref)
-        self.result = None if result_ref is None else self.validator_for(result_ref)
-        self.serialized_result = (
+        self.input_message = (
+            None if input_message_ref is None else self.validator_for(input_message_ref)
+        )
+        self.output = None if output_ref is None else self.validator_for(output_ref)
+        self.output_message = (
             None
-            if serialized_result_ref is None
-            else self.validator_for(serialized_result_ref)
+            if output_message_ref is None
+            else self.validator_for(output_message_ref)
         )
 
     @classmethod
