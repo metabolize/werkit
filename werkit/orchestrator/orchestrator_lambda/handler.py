@@ -62,19 +62,21 @@ def handler(
     worker_lambda_function_name=env_worker_lambda_function_name,
     timeout=env_worker_lambda_timeout or 120,
 ):
+    print("input_message", event)
     with Manager(input_message=event, schema=schema) as manager:
         if not worker_lambda_function_name:
             raise Exception(
                 f"Environment variable {LAMBDA_WORKER_FUNCTION_NAME} must be defined, "
                 + "or default kwArg lambda_worker_function_name must be bound to the handler"
             )
+        item_collection = event["itemCollection"]
         event_loop = asyncio.get_event_loop()
         with concurrent.futures.ThreadPoolExecutor(max_workers=1023) as executor:
             all_results = event_loop.run_until_complete(
                 parallel_map_on_lambda(
                     message_key=manager.message_key,
                     item_property_name=event["itemPropertyName"],
-                    item_collection=event["itemCollection"],
+                    item_collection=item_collection,
                     common_input=event["commonInput"],
                     worker_lambda_function_name=worker_lambda_function_name,
                     timeout=timeout,
@@ -82,7 +84,10 @@ def handler(
                     executor=executor,
                 )
             )
-            manager.result = {
-                k: manager.serialize_result(result) for k, result in all_results.items()
-            }
+            manager.result = dict(
+                zip(
+                    item_collection.keys(),
+                    [manager.serialize_result(result) for result in all_results],
+                )
+            )
     return manager.serialized_result
