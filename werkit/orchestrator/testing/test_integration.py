@@ -5,12 +5,19 @@ from dotenv import load_dotenv
 import pytest
 from werkit.aws_lambda.build import create_zipfile_from_dir
 from werkit.aws_lambda.deploy import perform_create
+from werkit.compute import Schema
 from werkit.orchestrator.deploy import deploy_orchestrator
 
 
 load_dotenv()
 
 AWS_REGION = "us-east-1"
+
+
+schema = Schema.load_relative_to_file(
+    __file__,
+    ["..", "orchestrator_lambda", "generated", "schema.json"],
+)
 
 
 def role():
@@ -88,13 +95,7 @@ def test_integration_success(tmpdir):
         data = invoke_orchestrator(orchestrator_function_name)
         print(data)
 
-        # If ths following assertion fails, it's because the service does not
-        # use the werkit manager to handle exceptions.
-        assert set(data.keys()) == set(
-            ["results", "orchestrator_duration_seconds", "start_timestamp"]
-        )
-        assert isinstance(data["orchestrator_duration_seconds"], float)
-        assert isinstance(data["start_timestamp"], float)
+        schema.output_message.validate(data)
 
         results = data["results"]
         print(results)
@@ -117,11 +118,7 @@ def test_integration_unhandled_exception(tmpdir):
         data = invoke_orchestrator(orchestrator_function_name)
         print(data)
 
-        assert set(data.keys()) == set(
-            ["results", "orchestrator_duration_seconds", "start_timestamp"]
-        )
-        assert isinstance(data["orchestrator_duration_seconds"], float)
-        assert isinstance(data["start_timestamp"], float)
+        schema.output_message.validate(data)
 
         results = data["results"]
         assert all([r["success"] is False for r in results])
@@ -152,11 +149,7 @@ def test_integration_timeout_failure(tmpdir):
         data = invoke_orchestrator(orchestrator_function_name)
         print(data)
 
-        assert set(data.keys()) == set(
-            ["results", "orchestrator_duration_seconds", "start_timestamp"]
-        )
-        assert isinstance(data["orchestrator_duration_seconds"], float)
-        assert isinstance(data["start_timestamp"], float)
+        schema.output_message.validate(data)
 
         results = data["results"]
         assert all([r["success"] is False for r in results])
