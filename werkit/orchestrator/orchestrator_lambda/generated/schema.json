@@ -175,10 +175,7 @@
     "WerkitInputMessage<Input<any>,any>": {
       "additionalProperties": false,
       "properties": {
-        "commonInput": {
-          "additionalProperties": false,
-          "type": "object"
-        },
+        "commonInput": {},
         "itemCollection": {
           "type": "object"
         },

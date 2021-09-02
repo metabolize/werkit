@@ -8,14 +8,14 @@ import {
 // it can't fully validate its input (at least not using JSON Schema) according
 // to the `OrchestratorInput` type exported from `werkit`. Instead, this more
 // permissinve type definition is used.
-export interface Input<WorkerInputType> {
-  itemPropertyName: keyof WorkerInputType
-  commonInput: Partial<WorkerInputType>
+export interface Input {
+  itemPropertyName: string
+  commonInput: any
   itemCollection: Record<string, any>
 }
 
-export type InputMessage<WorkerInputType, MessageKeyType> = WerkitInputMessage<
-  Input<WorkerInputType>,
+export type InputMessage<MessageKeyType> = WerkitInputMessage<
+  Input,
   MessageKeyType
 >
 

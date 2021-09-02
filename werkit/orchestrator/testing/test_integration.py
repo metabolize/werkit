@@ -90,9 +90,12 @@ def invoke_orchestrator(orchestrator_function_name):
         },
         "commonInput": {"base": 2},
     }
-    schema.input_message.validate(message)
+    # print("validating first schema!")
+    # schema.input_message.validate(message)
+    # print("validated first schema!")
     from ..orchestrator_lambda.handler import schema as handler_schema
     handler_schema.input_message.validate(message)
+    print("validated second schema!")
 
     response = boto3.client("lambda").invoke(
         FunctionName=orchestrator_function_name,
