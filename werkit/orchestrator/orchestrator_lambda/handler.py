@@ -82,7 +82,7 @@ def handler(
                     executor=executor,
                 )
             )
-            manager.result = [
-                manager.serialize_result(result) for result in all_results
-            ]
+            manager.result = {
+                k: manager.serialize_result(result) for k, result in all_results.items()
+            }
     return manager.serialized_result
