@@ -4,6 +4,9 @@
     "AnyInputMessage": {
       "$ref": "#/definitions/InputMessage%3Cany%2Cany%3E"
     },
+    "AnyOutput": {
+      "$ref": "#/definitions/Output%3Cany%2Cany%3E"
+    },
     "AnyOutputMessage": {
       "$ref": "#/definitions/OutputMessage%3Cany%2Cany%3E"
     },
@@ -105,6 +108,9 @@
         ]
       },
       "type": "object"
+    },
+    "Output<any,any>": {
+      "$ref": "#/definitions/OrchestratorOutput%3Cany%2Cany%3E"
     },
     "OutputMessage<any,any>": {
       "$ref": "#/definitions/WerkitOutputMessage%3COrchestratorOutput%3Cany%2Cany%3E%2Cany%3E"

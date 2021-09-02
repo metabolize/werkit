@@ -20,6 +20,7 @@ env_worker_lambda_timeout = (
 schema = Schema.load_relative_to_file(
     __file__,
     ["generated", "schema.json"],
+    output_ref="#/definitions/AnyOutput",
 )
 
 
