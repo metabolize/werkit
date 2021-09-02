@@ -34,6 +34,8 @@ def serialize_result(message_key, result):
 
 
 def handler(event, context):
+    print("event", event)
+
     time.sleep(DELAY_SECONDS)
     if SHOULD_THROW:
         raise Exception("Whoops!")
