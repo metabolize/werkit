@@ -11,7 +11,7 @@ import {
 export interface Input<WorkerInputType> {
   itemPropertyName: keyof WorkerInputType
   commonInput: Partial<WorkerInputType>
-  inputCollection: Record<string, any>
+  itemCollection: Record<string, any>
 }
 
 export type InputMessage<WorkerInputType, MessageKeyType> = WerkitInputMessage<

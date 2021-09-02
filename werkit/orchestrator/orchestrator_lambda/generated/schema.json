@@ -179,7 +179,7 @@
           "additionalProperties": false,
           "type": "object"
         },
-        "inputCollection": {
+        "itemCollection": {
           "type": "object"
         },
         "itemPropertyName": {},
@@ -187,7 +187,7 @@
       },
       "required": [
         "commonInput",
-        "inputCollection",
+        "itemCollection",
         "itemPropertyName",
         "message_key"
       ],
