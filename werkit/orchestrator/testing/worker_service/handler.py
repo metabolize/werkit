@@ -42,4 +42,6 @@ def handler(event, context):
 
     result = event["base"] ** event["exponent"]
 
-    return serialize_result(message_key=event["message_key"], result=result)
+    serialized = serialize_result(message_key=event["message_key"], result=result)
+    print("serialized", serialized)
+    return serialized
