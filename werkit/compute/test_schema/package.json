@@ -1,0 +1,21 @@
+{
+  "name": "test_schema",
+  "private": true,
+  "version": "0.20.0",
+  "description": "Schema for manager tests",
+  "scripts": {
+    "format": "prettier --check \"*.ts\"",
+    "format:fix": "prettier --write \"*.ts\"",
+    "schema:update": "1schema update"
+  },
+  "author": "Metabolize",
+  "license": "MIT",
+  "repository": "metabolize/werkit",
+  "dependencies": {
+    "werkit": "file:../../../types"
+  },
+  "devDependencies": {
+    "1schema": "^0.1.5",
+    "prettier": "^2.2.1"
+  }
+}

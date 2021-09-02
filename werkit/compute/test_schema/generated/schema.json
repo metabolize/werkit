@@ -1,0 +1,160 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AnyRequestMessage": {
+      "$ref": "#/definitions/RequestMessage%3Cany%3E"
+    },
+    "AnyResponseMessage": {
+      "$ref": "#/definitions/ResponseMessage%3Cany%3E"
+    },
+    "Input": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": ["label", "message"],
+      "type": "object"
+    },
+    "Output": {
+      "additionalProperties": false,
+      "properties": {
+        "someNumber": {
+          "type": "number"
+        },
+        "someString": {
+          "type": "string"
+        }
+      },
+      "required": ["someString", "someNumber"],
+      "type": "object"
+    },
+    "RequestMessage<any>": {
+      "$ref": "#/definitions/WerkitRequest%3CInput%2Cany%3E"
+    },
+    "ResponseMessage<any>": {
+      "$ref": "#/definitions/WerkitResult%3COutput%2Cany%3E"
+    },
+    "WerkitErrorOrigin": {
+      "enum": ["compute", "system", "orchestration"],
+      "type": "string"
+    },
+    "WerkitErrorResult<any>": {
+      "additionalProperties": false,
+      "properties": {
+        "duration_seconds": {
+          "type": "number"
+        },
+        "error": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "error_origin": {
+          "$ref": "#/definitions/WerkitErrorOrigin"
+        },
+        "message_key": {},
+        "result": {
+          "type": "null"
+        },
+        "runtime_info": {},
+        "start_time": {
+          "type": "string"
+        },
+        "success": {
+          "const": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "duration_seconds",
+        "error",
+        "error_origin",
+        "message_key",
+        "result",
+        "start_time",
+        "success"
+      ],
+      "type": "object"
+    },
+    "WerkitMeta": {
+      "additionalProperties": false,
+      "properties": {
+        "duration_seconds": {
+          "type": "number"
+        },
+        "runtime_info": {},
+        "start_time": {
+          "type": "string"
+        }
+      },
+      "required": ["start_time", "duration_seconds"],
+      "type": "object"
+    },
+    "WerkitRequest<Input,any>": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "message_key": {}
+      },
+      "required": ["label", "message", "message_key"],
+      "type": "object"
+    },
+    "WerkitResult<Output,any>": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/WerkitSuccessResult%3COutput%2Cany%3E"
+        },
+        {
+          "$ref": "#/definitions/WerkitErrorResult%3Cany%3E"
+        }
+      ]
+    },
+    "WerkitSuccessResult<Output,any>": {
+      "additionalProperties": false,
+      "properties": {
+        "duration_seconds": {
+          "type": "number"
+        },
+        "error": {
+          "type": "null"
+        },
+        "error_origin": {
+          "type": "null"
+        },
+        "message_key": {},
+        "result": {
+          "$ref": "#/definitions/Output"
+        },
+        "runtime_info": {},
+        "start_time": {
+          "type": "string"
+        },
+        "success": {
+          "const": true,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "duration_seconds",
+        "error",
+        "error_origin",
+        "message_key",
+        "result",
+        "start_time",
+        "success"
+      ],
+      "type": "object"
+    }
+  }
+}

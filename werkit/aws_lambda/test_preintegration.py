@@ -1,5 +1,5 @@
 from .test_worker.service import handler
-from ..schema import validate_result
+from ..compute._serialization import validate_result
 
 
 def test_test_service():

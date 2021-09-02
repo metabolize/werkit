@@ -1,7 +1,7 @@
 import datetime
 import sys
-from .formatting import format_time
-from .schema import wrap_exception, wrap_result
+from ._formatting import format_time
+from ._serialization import serialize_exception, serialize_result
 
 
 class Manager:
@@ -9,7 +9,9 @@ class Manager:
     Wrap a bit of cloud or batch computation, automatically handling and
     serializing errors and timing the computation.
 
-    Always returns a dictionary with the following keys:
+    Either set `manager.result` with the result of the computation or raise an
+    exception. When the handler closes, `manager.serialized_result` will be a
+    dictionary with the following keys:
 
     - `success` (`bool`): `True` so long as no exception was raised.
     - `result` (`object`): In case of succes, the deserialized result.
@@ -28,6 +30,10 @@ class Manager:
     - `runtime_info` (`object`): User-provided runtime metadata.
 
     Args:
+        schema (werkit.compute.Schema): A helper object containing the
+            request, result, and serialized result schemas.
+        destination (werkit.compute.Destination): An optional destination
+            to which the serialized result is dispatched.
         handle_exceptions (bool): When `True`, exceptions thrown within the
             block are caught and serialized, as is useful for wrapping cloud
             processes or batch jobs, where you don't want to crash. When
@@ -50,8 +56,32 @@ class Manager:
     """
 
     def __init__(
-        self, runtime_info=None, handle_exceptions=True, verbose=False, time_precision=2
+        self,
+        message_key,
+        schema,
+        destination=None,
+        runtime_info=None,
+        handle_exceptions=True,
+        verbose=False,
+        time_precision=2,
     ):
+        # Import late to avoid circular import.
+        from werkit.compute import Destination, Schema
+
+        self.message_key = message_key
+
+        if not isinstance(schema, Schema):
+            raise ValueError(
+                "Expected schema to be an instance of werkit.compute.Schema"
+            )
+        self.schema = schema
+
+        if destination is not None and not isinstance(destination, Destination):
+            raise ValueError(
+                "Expected destination to be an instance of werkit.compute.Destination"
+            )
+        self.destination = destination
+
         self.runtime_info = runtime_info
         self.handle_exceptions = handle_exceptions
         self.verbose = verbose
@@ -61,19 +91,30 @@ class Manager:
         self.start_time = datetime.datetime.now()
         return self
 
-    def note_compute_success(self):
-        self.serialized_result = wrap_result(
+    @property
+    def result(self):
+        return self._result
+
+    @result.setter
+    def result(self, value):
+        self.schema.result.validate(value)
+        self._result = value
+
+    def _note_compute_success(self):
+        self.serialized_result = serialize_result(
+            message_key=self.message_key,
             serializable_result=self.result,
             start_time=self.start_time,
             duration_seconds=self.duration_seconds,
             runtime_info=self.runtime_info,
         )
 
-    def note_compute_exception(self, exception):
+    def _note_compute_exception(self, exception):
         """
         Return a value suitable for returning from `__exit__`.
         """
-        self.serialized_result = wrap_exception(
+        self.serialized_result = serialize_exception(
+            message_key=self.message_key,
             exception=exception,
             error_origin="compute",
             start_time=self.start_time,
@@ -103,18 +144,18 @@ class Manager:
                     "Errored in {}".format(format_time(self.duration_seconds)),
                     file=sys.stderr,
                 )
-            return self.note_compute_exception(value)
+            return self._note_compute_exception(value)
 
         # In case of success, make sure the `result` setter has been invoked
         # inside the block.
         try:
             self.result
         except AttributeError:
-            return self.note_compute_exception(
-                AttributeError("'result' has not been set on the 'Manager' instance")
+            return self._note_compute_exception(
+                AttributeError("'result' was not set on the 'Manager' instance")
             )
 
-        self.note_compute_success()
+        self._note_compute_success()
 
         if self.verbose:
             print(

@@ -5,7 +5,7 @@ import os
 from botocore.exceptions import ClientError
 from harrison import Timer
 from .parallel import parallel_map_on_lambda
-from ..schema import validate_result, wrap_exception
+from ..compute._serialization import validate_result, wrap_exception
 
 LAMBDA_WORKER_FUNCTION_NAME = "LAMBDA_WORKER_FUNCTION_NAME"
 env_lambda_worker_function_name = os.environ.get(LAMBDA_WORKER_FUNCTION_NAME)
