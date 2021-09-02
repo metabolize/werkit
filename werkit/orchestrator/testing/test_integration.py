@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import pytest
 from werkit.aws_lambda.build import create_zipfile_from_dir
 from werkit.aws_lambda.deploy import perform_create
-from werkit.aws_lambda.orchestrator_deploy import deploy_orchestrator
+from werkit.orchestrator.deploy import deploy_orchestrator
 
 
 load_dotenv()
@@ -35,7 +35,8 @@ def create_test_functions(
 
     path_to_worker_zip = str(tmpdir / "worker.zip")
     create_zipfile_from_dir(
-        dir_path="werkit/aws_lambda/test_worker/", path_to_zipfile=path_to_worker_zip
+        dir_path="werkit/aws_lambda/worker_service_for_testing/",
+        path_to_zipfile=path_to_worker_zip,
     )
     env_vars = {}
     if worker_delay:
@@ -45,7 +46,7 @@ def create_test_functions(
     perform_create(
         aws_region=AWS_REGION,
         local_path_to_zipfile=path_to_worker_zip,
-        handler="service.handler",
+        handler="handler.handler",
         function_name=worker_function_name,
         role=role(),
         timeout=10,
@@ -129,7 +130,7 @@ def test_integration_unhandled_exception(tmpdir):
             [
                 r["error"]
                 == [
-                    '  File "/var/task/service.py", line 36, in handler\n    raise Exception("Whoops!")\n',
+                    '  File "/var/task/test_worker_service.py", line 36, in handler\n    raise Exception("Whoops!")\n',
                     "Exception: Whoops!",
                 ]
                 for r in results

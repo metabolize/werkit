@@ -66,6 +66,18 @@ jobs:
           name: Check lint
           command: ./dev.py lint
 
+      - node/install
+
+      - run:
+          name: Install Node dependencies
+          when: always
+          command: npm ci
+
+      - run:
+          name: Check that schema are up to date
+          when: always
+          command: 1schema check
+
   format:
     <<: *with_python
 
@@ -83,12 +95,14 @@ jobs:
       - node/install
 
       - run:
+          name: Install Node dependencies
+          when: always
+          command: npm ci
+
+      - run:
           name: Check TypeScript format
           when: always
-          working_directory: types
-          command: |
-            npm ci
-            npm run format
+          command: npm run format
 
 workflows:
   version: 2

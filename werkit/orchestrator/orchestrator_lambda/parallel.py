@@ -12,47 +12,42 @@ event_loop = asyncio.get_event_loop()
 
 
 async def call_worker_service(
-    lambda_worker_function_name,
-    extra_args,
+    worker_lambda_function_name,
     _input,
-    with_timing=True,
     event_loop=event_loop,
     executor=None,
 ):
-    invocation_start_timestamp = datetime.datetime.utcnow().timestamp()
-    invoke = partial(
-        lambda_client.invoke,
-        FunctionName=lambda_worker_function_name,
-        Payload=json.dumps({"input": _input, "extra_args": extra_args}),
-    )
-    with Timer(verbose=False) as response_timer:
-        response = await event_loop.run_in_executor(executor, invoke)
+    def invoke_lambda():
+        lambda_client.invoke(
+            FunctionName=worker_lambda_function_name, Payload=json.dumps(_input)
+        )
+
+    start_timestamp = datetime.datetime.utcnow().timestamp()
+    with Timer(verbose=False) as roundtrip_timer:
+        response = await event_loop.run_in_executor(executor, invoke_lambda)
         payload = await event_loop.run_in_executor(executor, response["Payload"].read)
-    result = json.loads(payload.decode())
-    if with_timing:
-        result["invocation_start_timestamp"] = invocation_start_timestamp
-        result["lambda_roundtrip_seconds"] = response_timer.elapsed_time_s
-    return result
+    output = json.loads(payload.decode())
+    return {
+        "startTimestamp": start_timestamp,
+        "roundtripSeconds": roundtrip_timer,
+        "output": output,
+    }
 
 
 async def wait_for(
-    timeout,
-    lambda_worker_function_name,
-    extra_args,
     _input,
-    with_timing=True,
+    timeout,
+    worker_lambda_function_name,
     event_loop=event_loop,
     executor=None,
 ):
     try:
         return await asyncio.wait_for(
             call_worker_service(
-                lambda_worker_function_name,
-                extra_args,
-                _input,
+                worker_lambda_function_name=worker_lambda_function_name,
+                _input=_input,
                 event_loop=event_loop,
                 executor=executor,
-                with_timing=with_timing,
             ),
             timeout=timeout,
         )
@@ -65,24 +60,28 @@ async def wait_for(
 
 
 async def parallel_map_on_lambda(
-    lambda_worker_function_name,
+    message_key,
+    item_property_name,
+    item_collection,
+    common_input,
+    worker_lambda_function_name,
     timeout,
-    input,
-    extra_args=[],
-    with_timing=True,
     event_loop=event_loop,
     executor=None,
 ):
     coroutines = [
         wait_for(
+            _input={
+                **common_input,
+                "message_key": message_key,
+                "itemKey": item_key,
+                item_property_name: item,
+            },
+            worker_lambda_function_name=worker_lambda_function_name,
             timeout=timeout,
-            lambda_worker_function_name=lambda_worker_function_name,
-            _input=item,
-            extra_args=extra_args,
-            with_timing=with_timing,
             event_loop=event_loop,
             executor=executor,
         )
-        for item in input
+        for item_key, item in item_collection.items()
     ]
     return await asyncio.gather(*coroutines, return_exceptions=True)

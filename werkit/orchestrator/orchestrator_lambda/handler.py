@@ -1,12 +1,11 @@
 import asyncio
 import concurrent
-import datetime
 import os
 from botocore.exceptions import ClientError
-from harrison import Timer
-from .parallel import parallel_map_on_lambda
 
-from ..compute._serialization import serialize_exception  # noqa: I202
+from werkit.compute import Manager, Schema
+from .parallel import parallel_map_on_lambda
+from ...compute._serialization import serialize_exception
 
 LAMBDA_WORKER_FUNCTION_NAME = "LAMBDA_WORKER_FUNCTION_NAME"
 env_lambda_worker_function_name = os.environ.get(LAMBDA_WORKER_FUNCTION_NAME)
@@ -18,8 +17,13 @@ env_lambda_worker_timeout = (
     else None
 )
 
+schema = Schema.load_relative_to_file(
+    __file__,
+    ["generated", "schema.json"],
+)
 
-def transform_result(result, start_time):
+
+def transform_result(message_key, result, start_time):
     if (
         isinstance(result, ClientError)
         or isinstance(result, asyncio.TimeoutError)
@@ -27,13 +31,17 @@ def transform_result(result, start_time):
         or isinstance(result, Exception)
     ):
         return serialize_exception(
-            exception=result, error_origin="orchestration", start_time=start_time
+            message_key=message_key,
+            exception=result,
+            error_origin="orchestration",
+            start_time=start_time,
         )
     elif isinstance(result, dict) and "errorMessage" in result:
         # https://docs.aws.amazon.com/lambda/latest/dg/python-exceptions.html
         # Unhandled exception in Lambda, with `errorMessage`, `errorType`, and
         # `stackTrace`.
         return {
+            "message_key": message_key,
             "success": False,
             "result": None,
             "error": result["stackTrace"]
@@ -43,7 +51,7 @@ def transform_result(result, start_time):
             "duration_seconds": -1,
         }
     else:
-        # validate_result(result)
+        schema.output_message.validate(result)
         return result
 
 
@@ -53,10 +61,7 @@ def handler(
     lambda_worker_function_name=env_lambda_worker_function_name,
     timeout=env_lambda_worker_timeout or 120,
 ):
-    start_time = datetime.datetime.now()
-    start_timestamp = datetime.datetime.utcnow().timestamp()
-
-    with Timer(verbose=False) as response_timer:
+    with Manager(input_message=event, schema=schema) as manager:
         if not lambda_worker_function_name:
             raise Exception(
                 f"Environment variable {LAMBDA_WORKER_FUNCTION_NAME} must be defined, "
@@ -64,7 +69,7 @@ def handler(
             )
         event_loop = asyncio.get_event_loop()
         with concurrent.futures.ThreadPoolExecutor(max_workers=1023) as executor:
-            results = event_loop.run_until_complete(
+            all_results = event_loop.run_until_complete(
                 parallel_map_on_lambda(
                     lambda_worker_function_name,
                     timeout,
@@ -73,12 +78,7 @@ def handler(
                     **event,
                 )
             )
-            results = [
-                transform_result(result=result, start_time=start_time)
-                for result in results
+            manager.result = [
+                manager.serialize_result(result) for result in all_results
             ]
-    return {
-        "results": results,
-        "orchestrator_duration_seconds": response_timer.elapsed_time_s,
-        "start_timestamp": start_timestamp,
-    }
+    return manager.serialized_result

@@ -15,7 +15,7 @@ EXAMPLE_RESULT = {"someString": "this is a string!", "someNumber": math.pi}
 
 schema = Schema.load_relative_to_file(
     __file__,
-    ["test_schema", "generated", "schema.json"],
+    ["generated", "manager_testing.schema.json"],
 )
 
 

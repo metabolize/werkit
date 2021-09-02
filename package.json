@@ -1,21 +1,22 @@
 {
-  "name": "test_schema",
+  "name": "werkit-root",
   "private": true,
   "version": "0.20.0",
-  "description": "Schema for manager tests",
+  "description": "Werkit TypeScript dev depenencies",
   "scripts": {
-    "format": "prettier --check \"*.ts\"",
-    "format:fix": "prettier --write \"*.ts\"",
+    "format": "prettier --check \"**/*.ts\"",
+    "format:fix": "prettier --write \"**/*.ts\"",
     "schema:update": "1schema update"
   },
   "author": "Metabolize",
   "license": "MIT",
   "repository": "metabolize/werkit",
   "dependencies": {
-    "werkit": "file:../../../types"
+    "werkit": "file:./types"
   },
   "devDependencies": {
     "1schema": "^0.1.5",
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "type-fest": "^2.1.0"
   }
 }

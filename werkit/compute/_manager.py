@@ -47,7 +47,12 @@ class Manager:
 
     Example:
 
-        with Manager(handle_exceptions=handle_exceptions) as manager:
+        with Manager(
+            input_message=params,
+            schema=schema,
+            handle_exceptions=handle_exceptions,
+            verbose=verbose,
+        ) as manager:
             result = perform_computation()
             # If needed, convert result to JSON-serializable objects.
             as_native = transform(result)
@@ -111,10 +116,24 @@ class Manager:
         self.schema.output.validate(value)
         self._result = value
 
-    def _note_compute_success(self):
-        self.serialized_result = serialize_result(
+    def serialize_result(self, result):
+        return serialize_result(
             message_key=self.message_key,
-            serializable_result=self.result,
+            serializable_result=result,
+            start_time=self.start_time,
+            duration_seconds=self.duration_seconds,
+            runtime_info=self.runtime_info,
+        )
+
+    def _note_compute_success(self, result):
+        self.serialized_result = self.serialize_result(result)
+        self.schema.output_message.validate(self.serialized_result)
+
+    def serialize_exception(self, exception):
+        return serialize_exception(
+            message_key=self.message_key,
+            exception=exception,
+            error_origin="compute",
             start_time=self.start_time,
             duration_seconds=self.duration_seconds,
             runtime_info=self.runtime_info,
@@ -124,14 +143,7 @@ class Manager:
         """
         Return a value suitable for returning from `__exit__`.
         """
-        self.serialized_result = serialize_exception(
-            message_key=self.message_key,
-            exception=exception,
-            error_origin="compute",
-            start_time=self.start_time,
-            duration_seconds=self.duration_seconds,
-            runtime_info=self.runtime_info,
-        )
+        self.serialized_result = self.serialize_exception(exception)
         self.schema.output_message.validate(self.serialized_result)
         if self.handle_exceptions:
             print(
@@ -167,7 +179,7 @@ class Manager:
                 AttributeError("'result' was not set on the 'Manager' instance")
             )
 
-        self._note_compute_success()
+        self._note_compute_success(self.result)
 
         if self.verbose:
             print(
