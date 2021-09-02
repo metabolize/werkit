@@ -18,7 +18,7 @@ async def call_worker_service(
     executor=None,
 ):
     def invoke_lambda():
-        lambda_client.invoke(
+        return lambda_client.invoke(
             FunctionName=worker_lambda_function_name, Payload=json.dumps(_input)
         )
 

@@ -56,6 +56,8 @@ def transform_result(message_key, result, start_time):
         return result
 
 
+# TODO: This handler should have a unit test which uses a stubbed lambda. This
+# would dramatically simplify debugging this code.
 def handler(
     event,
     context,
