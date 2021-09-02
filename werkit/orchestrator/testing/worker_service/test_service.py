@@ -1,5 +1,5 @@
 from werkit.compute import Schema
-from .service import handler
+from .handler import handler
 
 EXAMPLE_EVENT = {"message_key": None, "base": 2, "exponent": 10}
 EXAMPLE_RESULT = 2 ** 10
