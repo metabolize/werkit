@@ -10,7 +10,7 @@ export interface Output {
   someNumber: number
 }
 
-export type RequestMessage<MessageKeyType> = WerkitRequest<Input, MessageKeyType>
-export type ResponseMessage<MessageKeyType> = WerkitResult<Output, MessageKeyType>
-export type AnyRequestMessage = RequestMessage<any>
-export type AnyResponseMessage = ResponseMessage<any>
+export type InputMessage<MessageKeyType> = WerkitRequest<Input, MessageKeyType>
+export type OutputMessage<MessageKeyType> = WerkitResult<Output, MessageKeyType>
+export type AnyInputMessage = InputMessage<any>
+export type AnyOutputMessage = OutputMessage<any>

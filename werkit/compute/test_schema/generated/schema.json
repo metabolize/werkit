@@ -1,11 +1,11 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
-    "AnyRequestMessage": {
-      "$ref": "#/definitions/RequestMessage%3Cany%3E"
+    "AnyInputMessage": {
+      "$ref": "#/definitions/InputMessage%3Cany%3E"
     },
-    "AnyResponseMessage": {
-      "$ref": "#/definitions/ResponseMessage%3Cany%3E"
+    "AnyOutputMessage": {
+      "$ref": "#/definitions/OutputMessage%3Cany%3E"
     },
     "Input": {
       "additionalProperties": false,
@@ -20,6 +20,9 @@
       "required": ["label", "message"],
       "type": "object"
     },
+    "InputMessage<any>": {
+      "$ref": "#/definitions/WerkitRequest%3CInput%2Cany%3E"
+    },
     "Output": {
       "additionalProperties": false,
       "properties": {
@@ -33,10 +36,7 @@
       "required": ["someString", "someNumber"],
       "type": "object"
     },
-    "RequestMessage<any>": {
-      "$ref": "#/definitions/WerkitRequest%3CInput%2Cany%3E"
-    },
-    "ResponseMessage<any>": {
+    "OutputMessage<any>": {
       "$ref": "#/definitions/WerkitResult%3COutput%2Cany%3E"
     },
     "WerkitErrorOrigin": {

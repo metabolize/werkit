@@ -6,25 +6,30 @@ from werkit.compute import Manager, Schema
 
 EXAMPLE_RUNTIME_INFO = {"foo": "bar"}
 EXAMPLE_MESSAGE_KEY = {"someParameters": ["just", "a", "message", "key", "nbd"]}
+EXAMPLE_INPUT_MESSAGE = {
+    "label": "hey",
+    "message": "there",
+    "message_key": {"someParameters": ["just", "a", "message", "key", "nbd"]}
+}
 EXAMPLE_RESULT = {"someString": "this is a string!", "someNumber": math.pi}
 
 schema = Schema.load_relative_to_file(
     __file__,
     ["test_schema", "generated", "schema.json"],
-    request_ref="#/definitions/AnyRequestMessage",
+    request_ref="#/definitions/AnyInputMessage",
     result_ref="#/definitions/Output",
-    serialized_result_ref="#/definitions/AnyResponseMessage",
+    serialized_result_ref="#/definitions/AnyOutputMessage",
 )
 
 
 def create_manager(
-    message_key=EXAMPLE_MESSAGE_KEY,
+    input_message=EXAMPLE_INPUT_MESSAGE,
     schema=schema,
     runtime_info=EXAMPLE_RUNTIME_INFO,
     **kwargs
 ):
     return Manager(
-        message_key=message_key, schema=schema, runtime_info=runtime_info, **kwargs
+        input_message=input_message, schema=schema, runtime_info=runtime_info, **kwargs
     )
 
 

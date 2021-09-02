@@ -57,7 +57,7 @@ class Manager:
 
     def __init__(
         self,
-        message_key,
+        input_message,
         schema,
         destination=None,
         runtime_info=None,
@@ -67,8 +67,6 @@ class Manager:
     ):
         # Import late to avoid circular import.
         from werkit.compute import Destination, Schema
-
-        self.message_key = message_key
 
         if not isinstance(schema, Schema):
             raise ValueError(
@@ -86,9 +84,18 @@ class Manager:
         self.handle_exceptions = handle_exceptions
         self.verbose = verbose
         self.time_precision = time_precision
+        self.input_message = input_message
+
+    @property
+    def message_key(self):
+        try:
+            return self.input_message["message_key"]
+        except (KeyError, TypeError):
+            raise ValueError("Input message is missing `message_key` property")
 
     def __enter__(self):
         self.start_time = datetime.datetime.now()
+        self.schema.request.validate(self.input_message)
         return self
 
     @property

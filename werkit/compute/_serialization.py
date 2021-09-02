@@ -23,7 +23,12 @@ def serialize_result(
 
 
 def serialize_exception(
-    message_key, exception, error_origin, start_time, duration_seconds=-1, runtime_info=None
+    message_key,
+    exception,
+    error_origin,
+    start_time,
+    duration_seconds=-1,
+    runtime_info=None,
 ):
     """
     Wrap an exception in the `werkit.Manager` result schema.

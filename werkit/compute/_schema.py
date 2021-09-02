@@ -37,7 +37,7 @@ class Schema:
                 os.path.dirname(file_obj),
                 *path_components,
             ),
-            **kwargs
+            **kwargs,
         )
 
     def validator_for(self, ref):

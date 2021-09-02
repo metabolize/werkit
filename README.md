@@ -37,10 +37,16 @@ pip install werkit
 ## Usage
 
 ```py
-from werkit import Manager
+from werkit.compute import Manager
+
+schema = Schema.load_relative_to_file(__file__, ["path", "to", "schema.json"],
+    request_ref="#/definitions/AnyRequestMessage",
+    result_ref="#/definitions/Output",
+    serialized_result_ref="#/definitions/AnyResponseMessage",
+)
 
 def myfunc(param, verbose=False, handle_exceptions=True):
-    with Manager(handle_exceptions=handle_exceptions, verbose=verbose) as manager:
+    with Manager(message_key=param["message_key"], schema=schema, handle_exceptions=handle_exceptions, verbose=verbose) as manager:
         manager.result = do_some_computation()
     return manager.serialized_result
 ```
