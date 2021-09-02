@@ -35,7 +35,7 @@ def create_test_functions(
 
     path_to_worker_zip = str(tmpdir / "worker.zip")
     create_zipfile_from_dir(
-        dir_path="werkit/aws_lambda/worker_service_for_testing/",
+        dir_path="werkit/orchestrator/testing/worker_service/",
         path_to_zipfile=path_to_worker_zip,
     )
     env_vars = {}
