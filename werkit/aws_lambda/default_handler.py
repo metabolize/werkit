@@ -6,7 +6,7 @@ from botocore.exceptions import ClientError
 from harrison import Timer
 from .parallel import parallel_map_on_lambda
 
-from ..compute._serialization import serialize_exception, serialize_result  # noqa: I202
+from ..compute._serialization import serialize_exception  # noqa: I202
 
 LAMBDA_WORKER_FUNCTION_NAME = "LAMBDA_WORKER_FUNCTION_NAME"
 env_lambda_worker_function_name = os.environ.get(LAMBDA_WORKER_FUNCTION_NAME)
