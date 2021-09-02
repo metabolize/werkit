@@ -98,6 +98,13 @@ class Manager:
         except (KeyError, TypeError):
             raise ValueError("Input message is missing `message_key` property")
 
+    @property
+    def duration_seconds(self):
+        return round(
+            (datetime.datetime.now() - self.start_time).total_seconds(),
+            self.time_precision,
+        )
+
     def __enter__(self):
         self.start_time = datetime.datetime.now()
         try:
@@ -155,11 +162,6 @@ class Manager:
             return False
 
     def __exit__(self, type, value, traceback):
-        self.duration_seconds = round(
-            (datetime.datetime.now() - self.start_time).total_seconds(),
-            self.time_precision,
-        )
-
         if type in [KeyboardInterrupt, SystemExit]:
             raise value
         elif value:
