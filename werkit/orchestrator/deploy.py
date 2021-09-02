@@ -50,7 +50,7 @@ def deploy_orchestrator(
     perform_create(
         aws_region=aws_region,
         local_path_to_zipfile=path_to_orchestrator_zip,
-        handler="werkit.orchestrator.handler.handler",
+        handler="werkit.orchestrator.orchestrator_lambda.handler.handler",
         function_name=orchestrator_function_name,
         role=role,
         timeout=orchestrator_timeout,
