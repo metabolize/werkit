@@ -16,7 +16,6 @@
   },
   "devDependencies": {
     "1schema": "^0.1.5",
-    "prettier": "^2.2.1",
-    "type-fest": "^2.1.0"
+    "prettier": "^2.2.1"
   }
 }

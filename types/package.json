@@ -18,8 +18,5 @@
     "devops",
     "computation",
     "compute"
-  ],
-  "dependencies": {
-    "type-fest": "^2.1.0"
-  }
+  ]
 }
