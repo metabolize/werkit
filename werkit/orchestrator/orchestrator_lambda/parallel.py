@@ -27,11 +27,9 @@ async def call_worker_service(
         response = await event_loop.run_in_executor(executor, invoke_lambda)
         payload = await event_loop.run_in_executor(executor, response["Payload"].read)
     output = json.loads(payload.decode())
-    return {
-        "orchestrationStartTimestamp": start_timestamp,
-        "workerRoundtripSeconds": roundtrip_timer,
-        "output": output,
-    }
+    output["orchestrationStartTimestamp"] = start_timestamp
+    output["workerRoundtripSeconds"] = roundtrip_timer
+    return output
 
 
 async def wait_for(
