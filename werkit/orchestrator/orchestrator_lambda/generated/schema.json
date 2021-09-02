@@ -11,16 +11,22 @@
       "$ref": "#/definitions/WerkitInputMessage%3CInput%3Cany%3E%2Cany%3E"
     },
     "OrchestratorOutput<any,any>": {
-      "additionalProperties": false,
-      "properties": {
-        "results": {
-          "additionalProperties": {
+      "additionalProperties": {
+        "additionalProperties": false,
+        "properties": {
+          "output": {
             "$ref": "#/definitions/WerkitOutputMessage%3Cany%2Cany%3E"
           },
-          "type": "object"
-        }
+          "roundtripSeconds": {
+            "type": "number"
+          },
+          "startTimestamp": {
+            "type": "number"
+          }
+        },
+        "required": ["startTimestamp", "roundtripSeconds", "output"],
+        "type": "object"
       },
-      "required": ["results"],
       "type": "object"
     },
     "OutputMessage<any,any>": {
