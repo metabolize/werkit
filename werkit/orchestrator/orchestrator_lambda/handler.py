@@ -52,7 +52,6 @@ def transform_result(message_key, result, start_time):
             "duration_seconds": -1,
         }
     else:
-        schema.output_message.validate(result)
         return result
 
 
