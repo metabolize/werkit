@@ -9,7 +9,7 @@ EXAMPLE_MESSAGE_KEY = {"someParameters": ["just", "a", "message", "key", "nbd"]}
 EXAMPLE_INPUT_MESSAGE = {
     "label": "hey",
     "message": "there",
-    "message_key": {"someParameters": ["just", "a", "message", "key", "nbd"]}
+    "message_key": {"someParameters": ["just", "a", "message", "key", "nbd"]},
 }
 EXAMPLE_RESULT = {"someString": "this is a string!", "someNumber": math.pi}
 
@@ -112,6 +112,14 @@ def test_manager_passes_keyboard_interrupt():
     with pytest.raises(KeyboardInterrupt):
         with create_manager():
             raise KeyboardInterrupt()
+
+
+def test_manager_passes_value_error_when_no_message_key_present():
+    with pytest.raises(
+        ValueError, match="Input message is missing `message_key` property"
+    ):
+        with create_manager(input_message=math.pi) as manager:
+            manager.result = EXAMPLE_RESULT
 
 
 def test_verbose_success(capfd):

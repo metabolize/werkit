@@ -95,7 +95,11 @@ class Manager:
 
     def __enter__(self):
         self.start_time = datetime.datetime.now()
-        self.schema.request.validate(self.input_message)
+        try:
+            self.schema.request.validate(self.input_message)
+        except:  # noqa: E722
+            if not self.__exit__(*sys.exc_info()):
+                raise
         return self
 
     @property

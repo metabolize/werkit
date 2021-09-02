@@ -3,5 +3,5 @@ from abc import ABC, abstractmethod
 
 class Destination(ABC):
     @abstractmethod
-    def send(self, message_key, serialized_result):
+    def send(self, message_key, serialized_result):  # pragma: no cover
         pass

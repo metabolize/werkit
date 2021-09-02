@@ -5,7 +5,8 @@ import os
 from botocore.exceptions import ClientError
 from harrison import Timer
 from .parallel import parallel_map_on_lambda
-from ..compute._serialization import validate_result, wrap_exception
+# from ..compute._serialization import validate_result, wrap_exception
+from ..compute._serialization import wrap_exception
 
 LAMBDA_WORKER_FUNCTION_NAME = "LAMBDA_WORKER_FUNCTION_NAME"
 env_lambda_worker_function_name = os.environ.get(LAMBDA_WORKER_FUNCTION_NAME)
@@ -42,7 +43,7 @@ def transform_result(result, start_time):
             "duration_seconds": -1,
         }
     else:
-        validate_result(result)
+        # validate_result(result)
         return result
 
 
