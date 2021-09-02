@@ -76,7 +76,7 @@ jobs:
       - run:
           name: Check that schema are up to date
           when: always
-          command: 1schema check
+          command: ./node_modules/.bin/1schema check
 
   format:
     <<: *with_python
