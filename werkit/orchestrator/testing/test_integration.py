@@ -79,21 +79,24 @@ EXAMPLE_MESSAGE_KEY = {"someParameters": ["just", "a", "message", "key", "nbd"]}
 def invoke_orchestrator(orchestrator_function_name):
     import json
 
+    message = {
+        "message_key": EXAMPLE_MESSAGE_KEY,
+        "itemPropertyName": "exponent",
+        "itemCollection": {
+            "first": 1,
+            "second": 2,
+            "tenth": 10,
+            "twentieth": 20,
+        },
+        "commonInput": {"base": 2},
+    }
+    schema.input_message.validate(message)
+    from ..orchestrator_lambda.handler import schema as handler_schema
+    handler_schema.input_message.validate(message)
+
     response = boto3.client("lambda").invoke(
         FunctionName=orchestrator_function_name,
-        Payload=json.dumps(
-            {
-                "message_key": EXAMPLE_MESSAGE_KEY,
-                "itemPropertyName": "exponent",
-                "itemCollection": {
-                    "first": 1,
-                    "second": 2,
-                    "tenth": 10,
-                    "twentieth": 20,
-                },
-                "commonInput": {"base": 2},
-            }
-        ),
+        Payload=json.dumps(message),
     )
     return json.load(response["Payload"])
 
@@ -139,7 +142,7 @@ def test_integration_unhandled_exception(tmpdir):
         schema.output_message.validate(data)
 
         result = data["result"]
-        assert set(result.keys()) == set(["first","second", "tenth", "twentieth"])
+        assert set(result.keys()) == set(["first", "second", "tenth", "twentieth"])
         assert all([r["success"] is False for r in result.values()])
         assert all([r["error_origin"] == "system" for r in result.values()])
         assert all(
@@ -171,7 +174,7 @@ def test_integration_timeout_failure(tmpdir):
         schema.output_message.validate(data)
 
         result = data["result"]
-        assert set(result.keys()) == set(["first","second", "tenth", "twentieth"])
+        assert set(result.keys()) == set(["first", "second", "tenth", "twentieth"])
         assert all([r["success"] is False for r in result.values()])
         assert all([r["error_origin"] == "orchestration" for r in result.values()])
         assert all(
