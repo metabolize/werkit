@@ -89,7 +89,14 @@ def handler(
             manager.result = dict(
                 zip(
                     item_collection.keys(),
-                    [manager.serialize_result(result) for result in all_results],
+                    [
+                        transform_result(
+                            message_key=manager.message_key,
+                            result=result,
+                            start_time=manager.start_time,
+                        )
+                        for result in all_results
+                    ],
                 )
             )
     return manager.serialized_result
