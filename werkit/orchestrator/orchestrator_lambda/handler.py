@@ -8,10 +8,10 @@ from .parallel import parallel_map_on_lambda
 from ...compute._serialization import serialize_exception
 
 LAMBDA_WORKER_FUNCTION_NAME = "LAMBDA_WORKER_FUNCTION_NAME"
-env_lambda_worker_function_name = os.environ.get(LAMBDA_WORKER_FUNCTION_NAME)
+env_worker_lambda_function_name = os.environ.get(LAMBDA_WORKER_FUNCTION_NAME)
 
 LAMBDA_WORKER_TIMEOUT = "LAMBDA_WORKER_TIMEOUT"
-env_lambda_worker_timeout = (
+env_worker_lambda_timeout = (
     int(os.environ[LAMBDA_WORKER_TIMEOUT])
     if LAMBDA_WORKER_TIMEOUT in os.environ
     else None
@@ -58,11 +58,11 @@ def transform_result(message_key, result, start_time):
 def handler(
     event,
     context,
-    lambda_worker_function_name=env_lambda_worker_function_name,
-    timeout=env_lambda_worker_timeout or 120,
+    worker_lambda_function_name=env_worker_lambda_function_name,
+    timeout=env_worker_lambda_timeout or 120,
 ):
     with Manager(input_message=event, schema=schema) as manager:
-        if not lambda_worker_function_name:
+        if not worker_lambda_function_name:
             raise Exception(
                 f"Environment variable {LAMBDA_WORKER_FUNCTION_NAME} must be defined, "
                 + "or default kwArg lambda_worker_function_name must be bound to the handler"
@@ -71,11 +71,14 @@ def handler(
         with concurrent.futures.ThreadPoolExecutor(max_workers=1023) as executor:
             all_results = event_loop.run_until_complete(
                 parallel_map_on_lambda(
-                    lambda_worker_function_name,
-                    timeout,
+                    message_key=manager.message_key,
+                    item_property_name=event["itemPropertyName"],
+                    item_collection=event["itemCollection"],
+                    common_input=event["commonInput"],
+                    worker_lambda_function_name=worker_lambda_function_name,
+                    timeout=timeout,
                     event_loop=event_loop,
                     executor=executor,
-                    **event,
                 )
             )
             manager.result = [
