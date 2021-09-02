@@ -16,9 +16,6 @@ EXAMPLE_RESULT = {"someString": "this is a string!", "someNumber": math.pi}
 schema = Schema.load_relative_to_file(
     __file__,
     ["test_schema", "generated", "schema.json"],
-    request_ref="#/definitions/AnyInputMessage",
-    result_ref="#/definitions/Output",
-    serialized_result_ref="#/definitions/AnyOutputMessage",
 )
 
 

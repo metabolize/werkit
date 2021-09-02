@@ -96,7 +96,7 @@ class Manager:
     def __enter__(self):
         self.start_time = datetime.datetime.now()
         try:
-            self.schema.request.validate(self.input_message)
+            self.schema.input_message.validate(self.input_message)
         except:  # noqa: E722
             if not self.__exit__(*sys.exc_info()):
                 raise
@@ -108,7 +108,7 @@ class Manager:
 
     @result.setter
     def result(self, value):
-        self.schema.result.validate(value)
+        self.schema.output.validate(value)
         self._result = value
 
     def _note_compute_success(self):
@@ -132,6 +132,7 @@ class Manager:
             duration_seconds=self.duration_seconds,
             runtime_info=self.runtime_info,
         )
+        self.schema.output_message.validate(self.serialized_result)
         if self.handle_exceptions:
             print(
                 "Error handled by werkit. (To disable, invoke `Manager()` with `handle_exceptions=False`.)"
