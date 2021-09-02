@@ -139,6 +139,7 @@ def test_integration_unhandled_exception(tmpdir):
         schema.output_message.validate(data)
 
         result = data["result"]
+        assert set(result.keys()) == set(["first","second", "tenth", "twentieth"])
         assert all([r["success"] is False for r in result.values()])
         assert all([r["error_origin"] == "system" for r in result.values()])
         assert all(
@@ -169,13 +170,14 @@ def test_integration_timeout_failure(tmpdir):
 
         schema.output_message.validate(data)
 
-        results = data["result"]
-        assert all([r["success"] is False for r in results])
-        assert all([r["error_origin"] == "orchestration" for r in results])
+        result = data["result"]
+        assert set(result.keys()) == set(["first","second", "tenth", "twentieth"])
+        assert all([r["success"] is False for r in result.values()])
+        assert all([r["error_origin"] == "orchestration" for r in result.values()])
         assert all(
             [
                 r["error"][-1] == "concurrent.futures._base.TimeoutError\n"
-                for r in results
+                for r in result.values()
             ]
         )
     finally:
