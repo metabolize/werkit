@@ -24,11 +24,16 @@ async def call_worker_service(
 
     start_timestamp = datetime.datetime.utcnow().timestamp()
     with Timer(verbose=False) as roundtrip_timer:
+        print("going to invoke")
         response = await event_loop.run_in_executor(executor, invoke_lambda)
+        print("invoked")
         payload = await event_loop.run_in_executor(executor, response["Payload"].read)
+        print("got payload")
     output = json.loads(payload.decode())
+    print("output before augmentation", output)
     output["orchestrationStartTimestamp"] = start_timestamp
     output["workerRoundtripSeconds"] = roundtrip_timer
+    print("output after augmentation", output)
     return output
 
 
