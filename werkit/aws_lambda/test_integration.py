@@ -70,7 +70,9 @@ def invoke_orchestrator(orchestrator_function_name):
 
     response = boto3.client("lambda").invoke(
         FunctionName=orchestrator_function_name,
-        Payload=json.dumps({"message_key": None, "input": [1, 2, 3, 4], "extra_args": [2, 3]}),
+        Payload=json.dumps(
+            {"message_key": None, "input": [1, 2, 3, 4], "extra_args": [2, 3]}
+        ),
     )
     return json.load(response["Payload"])
 

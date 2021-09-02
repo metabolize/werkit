@@ -6,8 +6,7 @@ from botocore.exceptions import ClientError
 from harrison import Timer
 from .parallel import parallel_map_on_lambda
 
-# from ..compute._serialization import validate_result, wrap_exception
-from ..compute._serialization import wrap_exception  # noqa: I202
+from ..compute._serialization import serialize_exception, serialize_result  # noqa: I202
 
 LAMBDA_WORKER_FUNCTION_NAME = "LAMBDA_WORKER_FUNCTION_NAME"
 env_lambda_worker_function_name = os.environ.get(LAMBDA_WORKER_FUNCTION_NAME)
@@ -27,7 +26,7 @@ def transform_result(result, start_time):
         # TODO: Could this be replaced with just the following clause?
         or isinstance(result, Exception)
     ):
-        return wrap_exception(
+        return serialize_exception(
             exception=result, error_origin="orchestration", start_time=start_time
         )
     elif isinstance(result, dict) and "errorMessage" in result:
