@@ -8,16 +8,12 @@ from werkit.aws_lambda.deploy import perform_create
 from werkit.compute import Schema
 from werkit.orchestrator.deploy import deploy_orchestrator
 
+from ..orchestrator_lambda.handler import schema
+
 
 load_dotenv()
 
 AWS_REGION = "us-east-1"
-
-
-schema = Schema.load_relative_to_file(
-    __file__,
-    ["..", "orchestrator_lambda", "generated", "schema.json"],
-)
 
 
 def role():
@@ -90,13 +86,8 @@ def invoke_orchestrator(orchestrator_function_name):
         },
         "commonInput": {"base": 2},
     }
-    # print("validating first schema!")
-    # schema.input_message.validate(message)
-    # print("validated first schema!")
-    from ..orchestrator_lambda.handler import schema as handler_schema
-    handler_schema.input_message.validate(message)
-    print("validated second schema!")
-
+    # Confidence check.
+    schema.input_message.validate(message)
     response = boto3.client("lambda").invoke(
         FunctionName=orchestrator_function_name,
         Payload=json.dumps(message),

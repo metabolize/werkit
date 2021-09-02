@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
     "AnyInputMessage": {
-      "$ref": "#/definitions/InputMessage%3Cany%2Cany%3E"
+      "$ref": "#/definitions/InputMessage%3Cany%3E"
     },
     "AnyOutput": {
       "$ref": "#/definitions/Output%3Cany%2Cany%3E"
@@ -10,8 +10,22 @@
     "AnyOutputMessage": {
       "$ref": "#/definitions/OutputMessage%3Cany%2Cany%3E"
     },
-    "InputMessage<any,any>": {
-      "$ref": "#/definitions/WerkitInputMessage%3CInput%3Cany%3E%2Cany%3E"
+    "Input": {
+      "additionalProperties": false,
+      "properties": {
+        "commonInput": {},
+        "itemCollection": {
+          "type": "object"
+        },
+        "itemPropertyName": {
+          "type": "string"
+        }
+      },
+      "required": ["itemPropertyName", "commonInput", "itemCollection"],
+      "type": "object"
+    },
+    "InputMessage<any>": {
+      "$ref": "#/definitions/WerkitInputMessage%3CInput%2Cany%3E"
     },
     "OrchestratorOutput<any,any>": {
       "additionalProperties": {
@@ -172,14 +186,16 @@
       ],
       "type": "object"
     },
-    "WerkitInputMessage<Input<any>,any>": {
+    "WerkitInputMessage<Input,any>": {
       "additionalProperties": false,
       "properties": {
         "commonInput": {},
         "itemCollection": {
           "type": "object"
         },
-        "itemPropertyName": {},
+        "itemPropertyName": {
+          "type": "string"
+        },
         "message_key": {}
       },
       "required": [

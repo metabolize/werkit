@@ -30,6 +30,6 @@ export type OutputMessage<WorkerOutputType, MessageKeyType> =
     MessageKeyType
   >
 
-export type AnyInputMessage = InputMessage<any, any>
+export type AnyInputMessage = InputMessage<any>
 export type AnyOutput = Output<any, any>
 export type AnyOutputMessage = OutputMessage<any, any>
