@@ -110,8 +110,8 @@ def test_integration_success(tmpdir):
         result = data["result"]
         print(result)
         assert isinstance(result, object)
-        assert all([r["output"]["success"] is True for r in result.values()])
-        assert {k: r["output"]["result"] for k, r in result.items()} == {
+        assert all([r["success"] is True for r in result.values()])
+        assert {k: r["result"] for k, r in result.items()} == {
             "first": 2 ** 1,
             "second": 2 ** 4,
             "tenth": 2 ** 10,
@@ -141,7 +141,7 @@ def test_integration_unhandled_exception(tmpdir):
         assert all([r["error_origin"] == "system" for r in result.values()])
         assert all(
             [
-                r["output"]["error"]
+                r["error"]
                 == [
                     '  File "/var/task/test_worker_service.py", line 36, in handler\n    raise Exception("Whoops!")\n',
                     "Exception: Whoops!",
