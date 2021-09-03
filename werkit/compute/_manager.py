@@ -135,6 +135,10 @@ class Manager:
     def _note_compute_success(self, result):
         self.output_message = self.serialize_result(result)
         self.schema.output_message.validate(self.output_message)
+        if self.destination:
+            self.destination.send(
+                message_key=self.message_key, output_message=self.output_message
+            )
 
     def serialize_exception(self, exception):
         return serialize_exception(
@@ -157,6 +161,10 @@ class Manager:
                 "Error handled by werkit. (To disable, invoke `Manager()` with `handle_exceptions=False`.)"
             )
             print("".join(self.output_message["error"]))
+            if self.destination:
+                self.destination.send(
+                    message_key=self.message_key, output_message=self.output_message
+                )
             return True
         else:
             return False
@@ -187,9 +195,4 @@ class Manager:
             print(
                 "Completed in {}".format(format_time(self.duration_seconds)),
                 file=sys.stderr,
-            )
-
-        if self.destination:
-            self.destination.send(
-                message_key=self.message_key, output_message=self.output_message
             )
