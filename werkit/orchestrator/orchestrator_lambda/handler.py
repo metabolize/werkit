@@ -85,8 +85,6 @@ def handler(
                     executor=executor,
                 )
             )
-            for i, result in enumerate(all_results):
-                print("i", i, "result", result)
             manager.result = dict(
                 zip(
                     item_collection.keys(),
