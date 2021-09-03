@@ -35,7 +35,7 @@ def test_manager_serializes_result():
     with create_manager() as manager:
         manager.result = EXAMPLE_RESULT
 
-    assert manager.serialized_result == {
+    assert manager.output_message == {
         "message_key": EXAMPLE_MESSAGE_KEY,
         "success": True,
         "result": EXAMPLE_RESULT,
@@ -54,8 +54,8 @@ def test_time_precision():
         time.sleep(0.35)
         manager.result = EXAMPLE_RESULT
 
-    assert manager.serialized_result["duration_seconds"] >= 0.35
-    assert manager.serialized_result["duration_seconds"] < 0.4
+    assert manager.output_message["duration_seconds"] >= 0.35
+    assert manager.output_message["duration_seconds"] < 0.4
 
 
 @freeze_time("2019-12-31")
@@ -63,10 +63,10 @@ def test_manager_serializes_error():
     with create_manager() as manager:
         raise ValueError()
 
-    assert manager.serialized_result["error"][-1] == "ValueError\n"
-    del manager.serialized_result["error"]
+    assert manager.output_message["error"][-1] == "ValueError\n"
+    del manager.output_message["error"]
 
-    assert manager.serialized_result == {
+    assert manager.output_message == {
         "message_key": EXAMPLE_MESSAGE_KEY,
         "success": False,
         "result": None,
@@ -83,12 +83,12 @@ def test_manager_serializes_expected_error_when_result_not_set():
         pass
 
     assert (
-        manager.serialized_result["error"][-1]
+        manager.output_message["error"][-1]
         == "AttributeError: 'result' was not set on the 'Manager' instance\n"
     )
-    del manager.serialized_result["error"]
+    del manager.output_message["error"]
 
-    assert manager.serialized_result == {
+    assert manager.output_message == {
         "message_key": EXAMPLE_MESSAGE_KEY,
         "success": False,
         "result": None,

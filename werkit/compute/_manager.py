@@ -10,7 +10,7 @@ class Manager:
     serializing errors and timing the computation.
 
     Either set `manager.result` with the result of the computation or raise an
-    exception. When the handler closes, `manager.serialized_result` will be a
+    exception. When the handler closes, `manager.output_message` will be a
     dictionary with the following keys:
 
     - `success` (`bool`): `True` so long as no exception was raised.
@@ -57,7 +57,7 @@ class Manager:
             # If needed, convert result to JSON-serializable objects.
             as_native = transform(result)
             manager.result = as_native
-        return manager.serialized_result
+        return manager.output_message
     """
 
     def __init__(
@@ -133,8 +133,8 @@ class Manager:
         )
 
     def _note_compute_success(self, result):
-        self.serialized_result = self.serialize_result(result)
-        self.schema.output_message.validate(self.serialized_result)
+        self.output_message = self.serialize_result(result)
+        self.schema.output_message.validate(self.output_message)
 
     def serialize_exception(self, exception):
         return serialize_exception(
@@ -150,13 +150,13 @@ class Manager:
         """
         Return a value suitable for returning from `__exit__`.
         """
-        self.serialized_result = self.serialize_exception(exception)
-        self.schema.output_message.validate(self.serialized_result)
+        self.output_message = self.serialize_exception(exception)
+        self.schema.output_message.validate(self.output_message)
         if self.handle_exceptions:
             print(
                 "Error handled by werkit. (To disable, invoke `Manager()` with `handle_exceptions=False`.)"
             )
-            print("".join(self.serialized_result["error"]))
+            print("".join(self.output_message["error"]))
             return True
         else:
             return False
@@ -191,5 +191,5 @@ class Manager:
 
         if self.destination:
             self.destination.send(
-                message_key=self.message_key, serialized_result=self.serialized_result
+                message_key=self.message_key, output_message=self.output_message
             )

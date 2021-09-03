@@ -45,9 +45,9 @@ class RdsGraphileWorkerDestination(Destination):
         result = [dict(zip(column_names, these_values)) for these_values in values]
         print(result)
 
-    def send(self, message_key, serialized_result):
+    def send(self, message_key, output_message):
         response = self.queue_client.quick_add_job(
-            self.function_name, serialized_result
+            self.function_name, output_message
         )
         print("rds response", response)
 

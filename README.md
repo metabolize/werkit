@@ -51,7 +51,7 @@ def myfunc(params, verbose=False, handle_exceptions=True):
         verbose=verbose,
     ) as manager:
         manager.result = do_some_computation()
-    return manager.serialized_result
+    return manager.output_message
 ```
 
 ## Parallel computation

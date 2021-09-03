@@ -100,4 +100,4 @@ def handler(
                     ],
                 )
             )
-    return manager.serialized_result
+    return manager.output_message
