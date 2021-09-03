@@ -12,8 +12,8 @@ export interface OrchestratorInput<
 export type OrchestratorOutput<WorkerOutputType, MessageKeyType> = Record<
   string,
   {
-    orchestrationStartTimestamp: number
-    workerRoundtripSeconds: number
+    orchestrationStartTimestamp?: number
+    workerRoundtripSeconds?: number
   } & WerkitOutputMessage<WorkerOutputType, MessageKeyType>
 >
 

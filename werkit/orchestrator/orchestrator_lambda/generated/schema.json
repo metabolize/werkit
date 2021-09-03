@@ -64,11 +64,9 @@
               "error",
               "error_origin",
               "message_key",
-              "orchestrationStartTimestamp",
               "result",
               "start_time",
-              "success",
-              "workerRoundtripSeconds"
+              "success"
             ],
             "type": "object"
           },
@@ -111,11 +109,9 @@
               "error",
               "error_origin",
               "message_key",
-              "orchestrationStartTimestamp",
               "result",
               "start_time",
-              "success",
-              "workerRoundtripSeconds"
+              "success"
             ],
             "type": "object"
           }
