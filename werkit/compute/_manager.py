@@ -188,3 +188,8 @@ class Manager:
                 "Completed in {}".format(format_time(self.duration_seconds)),
                 file=sys.stderr,
             )
+
+        if self.destination:
+            self.destination.send(
+                message_key=self.message_key, serialized_result=self.serialized_result
+            )
