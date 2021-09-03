@@ -141,11 +141,9 @@ def test_integration_unhandled_exception(tmpdir):
         assert all([r["error_origin"] == "system" for r in result.values()])
         assert all(
             [
-                r["error"]
-                == [
-                    '  File "/var/task/test_worker_service.py", line 36, in handler\n    raise Exception("Whoops!")\n',
-                    "Exception: Whoops!",
-                ]
+                len(r["error"]) == 2
+                and 'raise Exception("Whoops!")' in r["error"][0]
+                and r["error"][1] == "Exception: Whoops!"
                 for r in result.values()
             ]
         )
