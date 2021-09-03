@@ -31,6 +31,9 @@ async def call_worker_service(
     return output
 
 
+# TODO: This is imported from some utility code which invokes a lambda.
+# Generalize this function and move it outside this `orchestrator_lambda`
+# module.
 async def wait_for(
     _input,
     timeout,
