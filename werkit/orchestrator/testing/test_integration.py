@@ -113,9 +113,9 @@ def test_integration_success(tmpdir):
         assert all([r["success"] is True for r in result.values()])
         assert {k: r["result"] for k, r in result.items()} == {
             "first": 2 ** 1,
-            "second": 2 ** 4,
+            "second": 2 ** 2,
             "tenth": 2 ** 10,
-            "twentieth": 2 ** 10,
+            "twentieth": 2 ** 20,
         }
     finally:
         client = boto3.client("lambda")
