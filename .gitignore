@@ -162,11 +162,8 @@ pip-selfcheck.json
 doc/api/
 
 
-build-lambda.sh
 function.zip
 python-orchestrator.zip
 python-worker.zip
-test-out.json
-test.json
-test13.json
+/node_modules
 /types/node_modules

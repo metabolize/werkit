@@ -3,7 +3,7 @@
 import shutil
 import click
 from dotenv import load_dotenv
-from werkit.aws_lambda.orchestrator_deploy import (
+from werkit.orchestrator.deploy import (
     deploy_orchestrator,
     update_orchestrator_code,
 )

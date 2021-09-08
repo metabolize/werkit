@@ -1,0 +1,252 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AnyInputMessage": {
+      "$ref": "#/definitions/InputMessage%3Cany%3E"
+    },
+    "AnyOutput": {
+      "$ref": "#/definitions/Output%3Cany%2Cany%3E"
+    },
+    "AnyOutputMessage": {
+      "$ref": "#/definitions/OutputMessage%3Cany%2Cany%3E"
+    },
+    "Input": {
+      "additionalProperties": false,
+      "properties": {
+        "commonInput": {},
+        "itemCollection": {
+          "type": "object"
+        },
+        "itemPropertyName": {
+          "type": "string"
+        }
+      },
+      "required": ["itemPropertyName", "commonInput", "itemCollection"],
+      "type": "object"
+    },
+    "InputMessage<any>": {
+      "$ref": "#/definitions/WerkitInputMessage%3CInput%2Cany%3E"
+    },
+    "OrchestratorOutput<any,any>": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "duration_seconds": {
+                "type": "number"
+              },
+              "error": {
+                "type": "null"
+              },
+              "error_origin": {
+                "type": "null"
+              },
+              "message_key": {},
+              "orchestrationStartTimestamp": {
+                "type": "number"
+              },
+              "result": {},
+              "runtime_info": {},
+              "start_time": {
+                "type": "string"
+              },
+              "success": {
+                "const": true,
+                "type": "boolean"
+              },
+              "workerRoundtripSeconds": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "duration_seconds",
+              "error",
+              "error_origin",
+              "message_key",
+              "result",
+              "start_time",
+              "success"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "duration_seconds": {
+                "type": "number"
+              },
+              "error": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "error_origin": {
+                "$ref": "#/definitions/WerkitErrorOrigin"
+              },
+              "message_key": {},
+              "orchestrationStartTimestamp": {
+                "type": "number"
+              },
+              "result": {
+                "type": "null"
+              },
+              "runtime_info": {},
+              "start_time": {
+                "type": "string"
+              },
+              "success": {
+                "const": false,
+                "type": "boolean"
+              },
+              "workerRoundtripSeconds": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "duration_seconds",
+              "error",
+              "error_origin",
+              "message_key",
+              "result",
+              "start_time",
+              "success"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "type": "object"
+    },
+    "Output<any,any>": {
+      "$ref": "#/definitions/OrchestratorOutput%3Cany%2Cany%3E"
+    },
+    "OutputMessage<any,any>": {
+      "$ref": "#/definitions/WerkitOutputMessage%3COrchestratorOutput%3Cany%2Cany%3E%2Cany%3E"
+    },
+    "WerkitComputeMeta": {
+      "additionalProperties": false,
+      "properties": {
+        "duration_seconds": {
+          "type": "number"
+        },
+        "runtime_info": {},
+        "start_time": {
+          "type": "string"
+        }
+      },
+      "required": ["start_time", "duration_seconds"],
+      "type": "object"
+    },
+    "WerkitErrorOrigin": {
+      "enum": ["compute", "system", "orchestration"],
+      "type": "string"
+    },
+    "WerkitErrorOutputMessage<any>": {
+      "additionalProperties": false,
+      "properties": {
+        "duration_seconds": {
+          "type": "number"
+        },
+        "error": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "error_origin": {
+          "$ref": "#/definitions/WerkitErrorOrigin"
+        },
+        "message_key": {},
+        "result": {
+          "type": "null"
+        },
+        "runtime_info": {},
+        "start_time": {
+          "type": "string"
+        },
+        "success": {
+          "const": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "duration_seconds",
+        "error",
+        "error_origin",
+        "message_key",
+        "result",
+        "start_time",
+        "success"
+      ],
+      "type": "object"
+    },
+    "WerkitInputMessage<Input,any>": {
+      "additionalProperties": false,
+      "properties": {
+        "commonInput": {},
+        "itemCollection": {
+          "type": "object"
+        },
+        "itemPropertyName": {
+          "type": "string"
+        },
+        "message_key": {}
+      },
+      "required": [
+        "commonInput",
+        "itemCollection",
+        "itemPropertyName",
+        "message_key"
+      ],
+      "type": "object"
+    },
+    "WerkitOutputMessage<OrchestratorOutput<any,any>,any>": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/WerkitSuccessOutputMessage%3COrchestratorOutput%3Cany%2Cany%3E%2Cany%3E"
+        },
+        {
+          "$ref": "#/definitions/WerkitErrorOutputMessage%3Cany%3E"
+        }
+      ]
+    },
+    "WerkitSuccessOutputMessage<OrchestratorOutput<any,any>,any>": {
+      "additionalProperties": false,
+      "properties": {
+        "duration_seconds": {
+          "type": "number"
+        },
+        "error": {
+          "type": "null"
+        },
+        "error_origin": {
+          "type": "null"
+        },
+        "message_key": {},
+        "result": {
+          "$ref": "#/definitions/OrchestratorOutput%3Cany%2Cany%3E"
+        },
+        "runtime_info": {},
+        "start_time": {
+          "type": "string"
+        },
+        "success": {
+          "const": true,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "duration_seconds",
+        "error",
+        "error_origin",
+        "message_key",
+        "result",
+        "start_time",
+        "success"
+      ],
+      "type": "object"
+    }
+  }
+}

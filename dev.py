@@ -2,17 +2,17 @@
 
 import os
 import click
+from dotenv import load_dotenv
 from executor import execute
+
+load_dotenv()
 
 
 def python_source_files():
     import glob
 
     return (
-        glob.glob("*.py")
-        + glob.glob("werkit/*.py")
-        + glob.glob("werkit/**/*.py")
-        + glob.glob("tests/**/*.py")
+        glob.glob("*.py") + glob.glob("werkit/*.py") + glob.glob("werkit/**/*.py")
     )  # + ["doc/"]
 
 
@@ -35,6 +35,8 @@ def install():
         "lambda_common",
         "--extras",
         "parallel",
+        "--extras",
+        "rds_graphile_worker",
     )
 
 

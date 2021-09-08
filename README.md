@@ -37,12 +37,21 @@ pip install werkit
 ## Usage
 
 ```py
-from werkit import Manager
+from werkit.compute import Manager
 
-def myfunc(param, verbose=False, handle_exceptions=True):
-    with Manager(handle_exceptions=handle_exceptions, verbose=verbose) as manager:
+# By convention, `schema.json` should define `Input`, `AnyInputMessage`,
+# `Output`, and `AnyOutputMessage`.
+schema = Schema.load_relative_to_file(__file__, ["path", "to", "schema.json"])
+
+def myfunc(params, verbose=False, handle_exceptions=True):
+    with Manager(
+        input_message=params,
+        schema=schema,
+        handle_exceptions=handle_exceptions,
+        verbose=verbose,
+    ) as manager:
         manager.result = do_some_computation()
-    return manager.serialized_result
+    return manager.output_message
 ```
 
 ## Parallel computation

@@ -5,7 +5,10 @@ from dotenv import load_dotenv
 import pytest
 from werkit.aws_lambda.build import create_zipfile_from_dir
 from werkit.aws_lambda.deploy import perform_create
-from werkit.aws_lambda.orchestrator_deploy import deploy_orchestrator
+from werkit.compute import Schema
+from werkit.orchestrator.deploy import deploy_orchestrator
+
+from ..orchestrator_lambda.handler import schema
 
 
 load_dotenv()
@@ -35,7 +38,8 @@ def create_test_functions(
 
     path_to_worker_zip = str(tmpdir / "worker.zip")
     create_zipfile_from_dir(
-        dir_path="werkit/aws_lambda/test_worker/", path_to_zipfile=path_to_worker_zip
+        dir_path="werkit/orchestrator/testing/worker_service/",
+        path_to_zipfile=path_to_worker_zip,
     )
     env_vars = {}
     if worker_delay:
@@ -45,7 +49,7 @@ def create_test_functions(
     perform_create(
         aws_region=AWS_REGION,
         local_path_to_zipfile=path_to_worker_zip,
-        handler="service.handler",
+        handler="handler.handler",
         function_name=worker_function_name,
         role=role(),
         timeout=10,
@@ -65,12 +69,28 @@ def create_test_functions(
     return worker_function_name, orchestrator_function_name
 
 
+EXAMPLE_MESSAGE_KEY = {"someParameters": ["just", "a", "message", "key", "nbd"]}
+
+
 def invoke_orchestrator(orchestrator_function_name):
     import json
 
+    message = {
+        "message_key": EXAMPLE_MESSAGE_KEY,
+        "itemPropertyName": "exponent",
+        "itemCollection": {
+            "first": 1,
+            "second": 2,
+            "tenth": 10,
+            "twentieth": 20,
+        },
+        "commonInput": {"base": 2},
+    }
+    # Confidence check.
+    schema.input_message.validate(message)
     response = boto3.client("lambda").invoke(
         FunctionName=orchestrator_function_name,
-        Payload=json.dumps({"input": [1, 2, 3, 4], "extra_args": [2, 3]}),
+        Payload=json.dumps(message),
     )
     return json.load(response["Payload"])
 
@@ -85,19 +105,18 @@ def test_integration_success(tmpdir):
         data = invoke_orchestrator(orchestrator_function_name)
         print(data)
 
-        # If ths following assertion fails, it's because the service does not
-        # use the werkit manager to handle exceptions.
-        assert set(data.keys()) == set(
-            ["results", "orchestrator_duration_seconds", "start_timestamp"]
-        )
-        assert isinstance(data["orchestrator_duration_seconds"], float)
-        assert isinstance(data["start_timestamp"], float)
+        schema.output_message.validate(data)
 
-        results = data["results"]
-        print(results)
-        assert isinstance(results, list)
-        assert all([r["success"] is True for r in results])
-        assert [r["result"] for r in results] == [6, 7, 8, 9]
+        result = data["result"]
+        print(result)
+        assert isinstance(result, object)
+        assert all([r["success"] is True for r in result.values()])
+        assert {k: r["result"] for k, r in result.items()} == {
+            "first": 2 ** 1,
+            "second": 2 ** 2,
+            "tenth": 2 ** 10,
+            "twentieth": 2 ** 20,
+        }
     finally:
         client = boto3.client("lambda")
         client.delete_function(FunctionName=worker_function_name)
@@ -114,23 +133,18 @@ def test_integration_unhandled_exception(tmpdir):
         data = invoke_orchestrator(orchestrator_function_name)
         print(data)
 
-        assert set(data.keys()) == set(
-            ["results", "orchestrator_duration_seconds", "start_timestamp"]
-        )
-        assert isinstance(data["orchestrator_duration_seconds"], float)
-        assert isinstance(data["start_timestamp"], float)
+        schema.output_message.validate(data)
 
-        results = data["results"]
-        assert all([r["success"] is False for r in results])
-        assert all([r["error_origin"] == "system" for r in results])
+        result = data["result"]
+        assert set(result.keys()) == set(["first", "second", "tenth", "twentieth"])
+        assert all([r["success"] is False for r in result.values()])
+        assert all([r["error_origin"] == "system" for r in result.values()])
         assert all(
             [
-                r["error"]
-                == [
-                    '  File "/var/task/service.py", line 36, in handler\n    raise Exception("Whoops!")\n',
-                    "Exception: Whoops!",
-                ]
-                for r in results
+                len(r["error"]) == 2
+                and 'raise Exception("Whoops!")' in r["error"][0]
+                and r["error"][1] == "Exception: Whoops!"
+                for r in result.values()
             ]
         )
     finally:
@@ -149,19 +163,16 @@ def test_integration_timeout_failure(tmpdir):
         data = invoke_orchestrator(orchestrator_function_name)
         print(data)
 
-        assert set(data.keys()) == set(
-            ["results", "orchestrator_duration_seconds", "start_timestamp"]
-        )
-        assert isinstance(data["orchestrator_duration_seconds"], float)
-        assert isinstance(data["start_timestamp"], float)
+        schema.output_message.validate(data)
 
-        results = data["results"]
-        assert all([r["success"] is False for r in results])
-        assert all([r["error_origin"] == "orchestration" for r in results])
+        result = data["result"]
+        assert set(result.keys()) == set(["first", "second", "tenth", "twentieth"])
+        assert all([r["success"] is False for r in result.values()])
+        assert all([r["error_origin"] == "orchestration" for r in result.values()])
         assert all(
             [
                 r["error"][-1] == "concurrent.futures._base.TimeoutError\n"
-                for r in results
+                for r in result.values()
             ]
         )
     finally:

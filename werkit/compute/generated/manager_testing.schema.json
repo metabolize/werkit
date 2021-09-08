@@ -1,0 +1,160 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AnyInputMessage": {
+      "$ref": "#/definitions/InputMessage%3Cany%3E"
+    },
+    "AnyOutputMessage": {
+      "$ref": "#/definitions/OutputMessage%3Cany%3E"
+    },
+    "Input": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": ["label", "message"],
+      "type": "object"
+    },
+    "InputMessage<any>": {
+      "$ref": "#/definitions/WerkitInputMessage%3CInput%2Cany%3E"
+    },
+    "Output": {
+      "additionalProperties": false,
+      "properties": {
+        "someNumber": {
+          "type": "number"
+        },
+        "someString": {
+          "type": "string"
+        }
+      },
+      "required": ["someString", "someNumber"],
+      "type": "object"
+    },
+    "OutputMessage<any>": {
+      "$ref": "#/definitions/WerkitOutputMessage%3COutput%2Cany%3E"
+    },
+    "WerkitComputeMeta": {
+      "additionalProperties": false,
+      "properties": {
+        "duration_seconds": {
+          "type": "number"
+        },
+        "runtime_info": {},
+        "start_time": {
+          "type": "string"
+        }
+      },
+      "required": ["start_time", "duration_seconds"],
+      "type": "object"
+    },
+    "WerkitErrorOrigin": {
+      "enum": ["compute", "system", "orchestration"],
+      "type": "string"
+    },
+    "WerkitErrorOutputMessage<any>": {
+      "additionalProperties": false,
+      "properties": {
+        "duration_seconds": {
+          "type": "number"
+        },
+        "error": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "error_origin": {
+          "$ref": "#/definitions/WerkitErrorOrigin"
+        },
+        "message_key": {},
+        "result": {
+          "type": "null"
+        },
+        "runtime_info": {},
+        "start_time": {
+          "type": "string"
+        },
+        "success": {
+          "const": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "duration_seconds",
+        "error",
+        "error_origin",
+        "message_key",
+        "result",
+        "start_time",
+        "success"
+      ],
+      "type": "object"
+    },
+    "WerkitInputMessage<Input,any>": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "message_key": {}
+      },
+      "required": ["label", "message", "message_key"],
+      "type": "object"
+    },
+    "WerkitOutputMessage<Output,any>": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/WerkitSuccessOutputMessage%3COutput%2Cany%3E"
+        },
+        {
+          "$ref": "#/definitions/WerkitErrorOutputMessage%3Cany%3E"
+        }
+      ]
+    },
+    "WerkitSuccessOutputMessage<Output,any>": {
+      "additionalProperties": false,
+      "properties": {
+        "duration_seconds": {
+          "type": "number"
+        },
+        "error": {
+          "type": "null"
+        },
+        "error_origin": {
+          "type": "null"
+        },
+        "message_key": {},
+        "result": {
+          "$ref": "#/definitions/Output"
+        },
+        "runtime_info": {},
+        "start_time": {
+          "type": "string"
+        },
+        "success": {
+          "const": true,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "duration_seconds",
+        "error",
+        "error_origin",
+        "message_key",
+        "result",
+        "start_time",
+        "success"
+      ],
+      "type": "object"
+    }
+  }
+}
