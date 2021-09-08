@@ -1,11 +1,11 @@
 import os
-from .build import (
+from werkit.aws_lambda.build import (
     collect_zipfile_contents,
     create_venv_with_dependencies,
     create_zipfile_from_dir,
     export_poetry_requirements,
 )
-from .deploy import perform_create, perform_update_code
+from werkit.aws_lambda.deploy import perform_create, perform_update_code
 
 
 def prepare_zip_file(build_dir, path_to_orchestrator_zip):
@@ -50,7 +50,7 @@ def deploy_orchestrator(
     perform_create(
         aws_region=aws_region,
         local_path_to_zipfile=path_to_orchestrator_zip,
-        handler="werkit.aws_lambda.default_handler.handler",
+        handler="werkit.orchestrator.orchestrator_lambda.handler.handler",
         function_name=orchestrator_function_name,
         role=role,
         timeout=orchestrator_timeout,

@@ -2,10 +2,8 @@
   "name": "werkit",
   "version": "0.21.0",
   "description": "TypeScript types for Werkit, a toolkit for encapsulating Python-based computation into deployable and distributable tasks",
-  "main": "types.ts",
+  "main": "index.ts",
   "scripts": {
-    "format": "prettier --check \"*.ts\"",
-    "format:fix": "prettier --write \"*.ts\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "check-package-version": "if [ $(cd .. && poetry version --short) = $(node -e \"console.log(require('./package.json').version)\") ]; then exit 0; else echo 'Package versions are not in sync'; exit 1; fi;",
     "prepublishOnly": "npm run check-package-version"
@@ -20,8 +18,5 @@
     "devops",
     "computation",
     "compute"
-  ],
-  "devDependencies": {
-    "prettier": "^2.2.1"
-  }
+  ]
 }
