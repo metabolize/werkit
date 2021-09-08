@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.21.0
+
+### BREAKING CHANGES
+
+- Manager: Add required schema checking
+- Adopt new terminology: request -> input_message, serialized_result -> output_message
+- Update orchestrator->worker interface to support werkit JSON format
+    - Adopt werkit manager in orchestrator lambda
+    - Add explicit return schemas
+    - Move orchestrator code from `werkit.aws_lambda` to `werkit.orchestrator`
+
+### New features
+
+- Manager: Add optional queue destination
+
 ## 0.20.0
 
 ### New features
