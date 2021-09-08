@@ -9,7 +9,7 @@
     "prepublishOnly": "npm run check-package-version"
   },
   "files": [
-    "types.ts"
+    "*.ts"
   ],
   "author": "Metabolize",
   "license": "MIT",
