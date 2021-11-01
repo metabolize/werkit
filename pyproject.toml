@@ -27,7 +27,7 @@ rds-graphile-worker-client = {version = "^0.1.1", optional = true}
 redis = {version = "3.5.3", optional = true}
 semver = "3.0.0.dev2"
 simplejson = "^3.17.5"
-jsonschema = "^3.2.0"
+jsonschema = ">=3.2,<5.0"
 
 [tool.poetry.extras]
 aws_lambda_build = ["executor"]
