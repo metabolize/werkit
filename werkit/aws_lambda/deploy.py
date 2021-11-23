@@ -119,8 +119,7 @@ def perform_create(
     )
 
     if wait_until_active:
-        waiter = client.get_waiter("function_active")
-        waiter.wait(
+        client.get_waiter("function_active").wait(
             FunctionName=function_name,
             WaiterConfig={
                 "Delay": 1,
@@ -137,16 +136,18 @@ def perform_update_code(
     s3_code_bucket=None,
     verbose=False,
     force_upload_to_s3_code_bucket=False,
+    wait_until_updated=True,
+    wait_until_updated_timeout_seconds=30,
 ):
     if bool(local_path_to_zipfile) == bool(s3_path_to_zipfile):
         raise ValueError(
             "Either `local_path_to_zipfile` or `s3_path_to_zipfile` must be provided (and not both)"
         )
 
+    client = boto3.client("lambda", region_name=aws_region)
+
     def update(code_arguments):
-        boto3.client("lambda", region_name=aws_region).update_function_code(
-            FunctionName=function_name, **code_arguments
-        )
+        client.update_function_code(FunctionName=function_name, **code_arguments)
 
     _create_or_update(
         local_path_to_zipfile=local_path_to_zipfile,
@@ -157,3 +158,12 @@ def perform_update_code(
         s3_code_bucket=s3_code_bucket,
         force_upload_to_s3_code_bucket=force_upload_to_s3_code_bucket,
     )
+
+    if wait_until_updated:
+        client.get_waiter("function_updated").wait(
+            FunctionName=function_name,
+            WaiterConfig={
+                "Delay": 1,
+                "MaxAttempts": wait_until_updated_timeout_seconds,
+            },
+        )
