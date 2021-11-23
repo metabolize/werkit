@@ -81,11 +81,15 @@ def perform_create(
     s3_code_bucket=None,
     verbose=False,
     force_upload_to_s3_code_bucket=False,
+    wait_until_active=True,
+    wait_until_active_timeout_seconds=30,
 ):
     if bool(local_path_to_zipfile) == bool(s3_path_to_zipfile):
         raise ValueError(
             "Either `local_path_to_zipfile` or `s3_path_to_zipfile` must be provided (and not both)"
         )
+
+    client = boto3.client("lambda", region_name=aws_region)
 
     def create(code_arguments):
         extra_options = {}
@@ -94,7 +98,7 @@ def perform_create(
         if memory_size is not None:
             extra_options["MemorySize"] = memory_size
 
-        boto3.client("lambda", region_name=aws_region).create_function(
+        client.create_function(
             FunctionName=function_name,
             Runtime=runtime,
             Role=role,
@@ -113,6 +117,16 @@ def perform_create(
         s3_code_bucket=s3_code_bucket,
         force_upload_to_s3_code_bucket=force_upload_to_s3_code_bucket,
     )
+
+    if wait_until_active:
+        waiter = client.get_waiter("function_active")
+        waiter.wait(
+            FunctionName=function_name,
+            WaiterConfig={
+                "Delay": 1,
+                "MaxAttempts": wait_until_active_timeout_seconds,
+            },
+        )
 
 
 def perform_update_code(
