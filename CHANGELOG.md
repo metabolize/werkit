@@ -7,6 +7,9 @@
   - After updating code, wait until function is updated
   - Background:
     https://aws.amazon.com/de/blogs/compute/coming-soon-expansion-of-aws-lambda-states-to-all-functions/
+- Sync pinned boto3 to 1.18.55, the version which is preinstalled on AWS
+  Lambda.
+- Upgrade jsonschema dependency.
 
 ## 0.21.1
 
