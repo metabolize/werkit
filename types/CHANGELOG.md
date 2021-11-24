@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.22.0
+
+Same as 0.21.1.
+
 ## 0.21.1
 
 - Include missing .ts files.
