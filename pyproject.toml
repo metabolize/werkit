@@ -51,7 +51,7 @@ pytest-cov = "3.0.0"
 pytest-redis = "2.1.1"
 python-dotenv = ">=0.17.1<0.18"
 rq = {git = "https://github.com/rq/rq.git", rev = "cf501518534429640a9a6d14e022f9329225e701"}
-twine = "^3.4.2"
+twine = "^3.7.1"
 
 [build-system]
 # Lint requires setuptools.
