@@ -34,8 +34,6 @@ def install():
         "--extras",
         "lambda_common",
         "--extras",
-        "parallel",
-        "--extras",
         "rds_graphile_worker",
     )
 

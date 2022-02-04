@@ -24,7 +24,6 @@ click = {version = "^8.0.3", optional = true}
 executor = {version = ">=21.0", optional = true}
 harrison = {version = "^2.0", optional = true}
 rds-graphile-worker-client = {version = "^0.1.1", optional = true}
-redis = {version = "3.5.3", optional = true}
 semver = "3.0.0.dev2"
 simplejson = "^3.17.5"
 jsonschema = "^4.1.2"
@@ -33,7 +32,6 @@ jsonschema = "^4.1.2"
 aws_lambda_build = ["executor"]
 client = ["boto3"]
 lambda_common = ["harrison"]
-parallel = ["redis"]
 cli = ["click"]
 rds_graphile_worker = ["rds-graphile-worker-client"]
 
@@ -48,9 +46,7 @@ flake8-import-order = "0.18.1"
 freezegun = "1.1.0"
 pytest = "6.2.5"
 pytest-cov = "3.0.0"
-pytest-redis = "2.1.1"
 python-dotenv = ">=0.17.1<0.18"
-rq = {git = "https://github.com/rq/rq.git", rev = "cf501518534429640a9a6d14e022f9329225e701"}
 twine = "^3.4.2"
 
 [build-system]
