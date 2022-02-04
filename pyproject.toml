@@ -59,4 +59,7 @@ markers = ["slow"]
 norecursedirs = ["build", "node_modules"]
 
 [tool.coverage.report]
-omit = ["**/test_*.py"]
+omit = [
+    "**/test_*.py",
+    "werkit/orchestrator/testing/worker_service/*.py",
+]
