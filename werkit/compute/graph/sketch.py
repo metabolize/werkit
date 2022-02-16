@@ -8,18 +8,18 @@ https://github.com/ets-labs/python-dependency-injector
 
 
 class MyComputeProcess:
-    a = Input(_type="number")
-    b = Input(_type="number")
+    a = Input(_type="Number")
+    b = Input(_type="Number")
 
-    @intermediate(_type="number")
+    @intermediate(_type="Number")
     def i(self, a):
         return a
 
-    @intermediate(_type="number")
+    @intermediate(_type="Number")
     def j(self, b):
         return b
 
-    @output(_type="number")
+    @output(_type="Number")
     def r(self, i, j):
         return i + j
 
