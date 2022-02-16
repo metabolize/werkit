@@ -37,6 +37,8 @@ def install():
         "parallel",
         "--extras",
         "rds_graphile_worker",
+        "--extras",
+        "compute_graph",
     )
 
 
