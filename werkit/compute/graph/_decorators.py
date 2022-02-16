@@ -1,5 +1,5 @@
 import inspect
-from ._types import assert_valid_type
+from ._types import assert_valid_type, Input
 
 
 class BaseNode:
@@ -11,17 +11,10 @@ class BaseNode:
 
         self.dependencies = [x for x in inspect.signature(method).parameters.keys()][1:]
 
-    def __get__(self, instance, type=None):
+    def bind(self, instance):
         import functools
 
-        return functools.partial(self, instance)
-
-    def __call__(self, *args, **kwargs):
-        return self.method(*args, **kwargs)
-
-    @property
-    def __signature__(self):
-        return inspect.signature(self.method)
+        return functools.partial(self.method, instance)
 
     def as_native(self):
         return {"type": self._type, "dependencies": self.dependencies}
@@ -47,3 +40,13 @@ def output(_type: str):
         return Output(method, _type)
 
     return decorator
+
+
+class Bound:
+    def __getattribute__(self, name):
+        attr = object.__getattribute__(self, name)
+        # import pdb; pdb.set_trace()
+        if isinstance(attr, Input) or isinstance(attr, BaseNode):
+            return object.__getattribute__(self, "state_manager").get(name)
+        else:
+            return attr

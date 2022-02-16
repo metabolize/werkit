@@ -1,7 +1,7 @@
-from . import Input, intermediate, output, StateManager
+from . import Input, intermediate, output, StateManager, Bound
 
 
-class MyComputeProcess:
+class MyComputeProcess(Bound):
     a = Input(_type="Number")
     b = Input(_type="Number")
 

@@ -24,16 +24,12 @@ class StateManager:
         if targets is not None:
             self._assert_known_keys(targets)
 
-        graph = {}
-        graph.update(
-            **{
-                k: getattr(self.instance, k)
-                for k in list(self.dependency_graph.intermediates.keys())
-                + list(self.dependency_graph.outputs.keys())
-            },
+        afx = Artifax(
+            {
+                name: self.dependency_graph.compute_nodes[name].bind(self.instance)
+                for name in self.dependency_graph.compute_nodes.keys()
+            }
         )
-
-        afx = Artifax(graph)
         if self.store:
             afx.set(**self.store)
         afx.build(targets=targets)
@@ -47,3 +43,19 @@ class StateManager:
             return self.store
         else:
             return {k: self.store[k] for k in targets}
+
+    def get(self, name):
+        self._assert_known_keys([name])
+
+        try:
+            return self.store[name]
+        except KeyError:
+            pass
+
+        if name in self.dependency_graph.inputs:
+            raise KeyError(f"Input has not been set: {name}")
+
+        if name in self.dependency_graph.compute_nodes.keys():
+            self.evaluate(targets=[name])
+
+        return self.store[name]

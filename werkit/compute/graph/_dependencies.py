@@ -18,13 +18,10 @@ class DependencyGraph:
         self.inputs = attrs_of_type(cls, Input)
         self.intermediates = attrs_of_type(cls, Intermediate)
         self.outputs = attrs_of_type(cls, Output)
+        self.compute_nodes = dict(**self.intermediates, **self.outputs)
 
     def keys(self):
-        return (
-            list(self.inputs.keys())
-            + list(self.intermediates.keys())
-            + list(self.outputs.keys())
-        )
+        return list(self.inputs.keys()) + list(self.compute_nodes.keys())
 
     def as_native(self):
         return {
