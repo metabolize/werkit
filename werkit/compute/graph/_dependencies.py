@@ -19,6 +19,13 @@ class DependencyGraph:
         self.intermediates = attrs_of_type(cls, Intermediate)
         self.outputs = attrs_of_type(cls, Output)
 
+    def keys(self):
+        return (
+            list(self.inputs.keys())
+            + list(self.intermediates.keys())
+            + list(self.outputs.keys())
+        )
+
     def as_native(self):
         return {
             "schemaVersion": 1,

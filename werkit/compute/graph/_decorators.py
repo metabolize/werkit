@@ -1,10 +1,9 @@
+import inspect
 from ._types import assert_valid_type
 
 
 class BaseNode:
     def __init__(self, method, _type):
-        import inspect
-
         self.method = method
 
         assert_valid_type(_type)
@@ -19,6 +18,10 @@ class BaseNode:
 
     def __call__(self, *args, **kwargs):
         return self.method(*args, **kwargs)
+
+    @property
+    def __signature__(self):
+        return inspect.signature(self.method)
 
     def as_native(self):
         return {"type": self._type, "dependencies": self.dependencies}
