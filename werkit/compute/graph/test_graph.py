@@ -50,8 +50,11 @@ def test_dependency_graph_serializes():
     assert dependency_graph.as_native() == {
         "schemaVersion": 1,
         "inputs": {"a": {"type": "Number"}, "b": {"type": "Number"}},
-        "intermediates": {"i": {"type": "Number"}, "j": {"type": "Number"}},
-        "outputs": {"r": {"type": "Number"}},
+        "intermediates": {
+            "i": {"type": "Number", "dependencies": ["a"]},
+            "j": {"type": "Number", "dependencies": ["b"]},
+        },
+        "outputs": {"r": {"type": "Number", "dependencies": ["i", "j"]}},
     }
 
 
