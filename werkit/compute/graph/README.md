@@ -44,9 +44,10 @@ serialized = compute_process.serialize(targets=["i", "j", "r"], handle_exception
 
 ## TODO
 
-1. JSON Schema for compute graph
-2. Type checking results
-3. Provide a way to serialize only the properties which have been computed
-4. Error propagation
-5. Serializing results vs errors
-6. Proper handling of getattr bindings when computation raises an AttributeError
+1. ~~JSON Schema for compute graph~~
+2. Ship compute graph types in werkit npm package
+3. Type checking results
+4. Provide a way to serialize only the properties which have been computed
+5. Error propagation
+6. Serializing results vs errors
+7. Proper handling of getattr bindings when computation raises an AttributeError
