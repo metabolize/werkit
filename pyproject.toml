@@ -30,7 +30,10 @@ semver = "3.0.0.dev2"
 simplejson = "^3.17.5"
 jsonschema = "^4.1.2"
 # artifax = {version = "0.2", optional = true}
-artifax = { git = "https://github.com/curvewise-forks/artifax.git", rev = "0d3cae41b4423939f2cc928074dda06a1f0aa4d1", optional = true }
+artifax = { git = "https://github.com/curvewise-forks/artifax.git", rev = "2e496525a04185525cfedbb3a9375101ec7faec1", optional = true }
+# Temporarily declare artifax dependencies until we publish an artifax fork.
+pathos = {version = "*", optional = true}
+exos = {version = "*", optional = true}
 
 [tool.poetry.extras]
 aws_lambda_build = ["executor"]
@@ -38,7 +41,7 @@ client = ["boto3"]
 lambda_common = ["harrison"]
 cli = ["click"]
 rds_graphile_worker = ["rds-graphile-worker-client"]
-compute_graph = ["artifax"]
+compute_graph = ["artifax", "pathos", "exos"]
 
 [tool.poetry.dev-dependencies]
 black = "21.11b1"
