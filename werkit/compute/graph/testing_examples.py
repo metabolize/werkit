@@ -35,6 +35,9 @@ EXPECTED_SERIALIZED_TREE = {
     "outputs": {"r": {"type": "Number", "dependencies": ["i", "j"]}},
 }
 
+class MyComputeProcessSubclass(MyComputeProcess):
+    pass
+
 
 class MyErroringComputeProcess(MyComputeProcess):
     @output(_type="Number")

@@ -1,6 +1,10 @@
 from artifax.exceptions import UnresolvedDependencyError
 import pytest
-from .testing_examples import MyComputeProcess, MyErroringComputeProcess
+from .testing_examples import (
+    MyComputeProcess,
+    MyComputeProcessSubclass,
+    MyErroringComputeProcess,
+)
 
 
 def test_state_manager_initial_state_is_empty():
@@ -36,6 +40,13 @@ def test_state_manager_evaluate():
     assert state_manager.store == {"a": 1, "i": 1}
 
 
+def test_state_manager_evaluate_on_subclass():
+    state_manager = MyComputeProcessSubclass().state_manager
+    state_manager.seed(a=1, b=2)
+    state_manager.evaluate()
+    assert state_manager.store == {"a": 1, "b": 2, "i": 1, "j": 2, "r": 3}
+
+
 def test_state_manager_evaluate_unknown_key():
     with pytest.raises(KeyError, match=r"Unknown key: bogus"):
         MyComputeProcess().state_manager.evaluate(targets=["bogus"])
@@ -54,7 +65,9 @@ def test_state_manager_evaluate_with_missing_dependencies():
 def test_state_manager_evaluate_exceptions():
     state_manager = MyErroringComputeProcess().state_manager
     state_manager.seed(a=1, b=1)
-    state_manager.evaluate()
+    # TODO: We want computation to continue and errors to propagate.
+    with pytest.raises(ValueError):
+        state_manager.evaluate()
 
 
 def test_state_manager_serialize():
