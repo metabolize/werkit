@@ -49,3 +49,4 @@ serialized = compute_process.serialize(targets=["i", "j", "r"], handle_exception
 3. Provide a way to serialize only the properties which have been computed
 4. Error propagation
 5. Serializing results vs errors
+6. Proper handling of getattr bindings when computation raises an AttributeError
