@@ -4,7 +4,7 @@ from .testing_examples import (
     EXPECTED_INPUTS,
     EXPECTED_OUTPUT,
     EXPECTED_INTERMEDIATES,
-    EXPECTED_SERIALIZED_TREE,
+    EXPECTED_SERIALIZED_DEPENDENCY_GRAPH,
 )
 
 
@@ -29,7 +29,7 @@ def test_dependency_graph_dependencies_have_correct_types():
 def test_dependency_graph_serializes():
     dependency_graph = DependencyGraph(MyComputeProcess)
 
-    assert dependency_graph.as_native() == EXPECTED_SERIALIZED_TREE
+    assert dependency_graph.as_native() == EXPECTED_SERIALIZED_DEPENDENCY_GRAPH
 
 
 def test_dependency_graph_serialization_matches_schema():

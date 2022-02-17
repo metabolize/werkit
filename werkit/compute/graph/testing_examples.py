@@ -23,7 +23,7 @@ EXPECTED_INPUTS = ["a", "b"]
 EXPECTED_INTERMEDIATES = ["i", "j"]
 EXPECTED_OUTPUT = "r"
 
-EXPECTED_SERIALIZED_TREE = {
+EXPECTED_SERIALIZED_DEPENDENCY_GRAPH = {
     "schemaVersion": 1,
     "inputs": {"a": {"valueType": "Number"}, "b": {"valueType": "Number"}},
     "intermediates": {
