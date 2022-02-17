@@ -39,7 +39,8 @@ jobs:
             poetry install \
               --no-ansi --no-interaction \
               --extras client \
-              --extras lambda_common
+              --extras lambda_common \
+              --extras compute_graph
       - *show_versions
 
       - run:
