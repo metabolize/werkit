@@ -12,7 +12,8 @@ def bind_to_state_manager(attr_name="state_manager"):
             def __getattribute__(self, name):
                 attr = object.__getattribute__(self, name)
                 if isinstance(attr, Input) or isinstance(attr, InnerNode):
-                    return object.__getattribute__(self, attr_name).get(name)
+                    state_manager = object.__getattribute__(self, attr_name)
+                    return state_manager.get(name)
                 else:
                     return attr
 
