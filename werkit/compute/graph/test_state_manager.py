@@ -1,6 +1,6 @@
 from artifax.exceptions import UnresolvedDependencyError
 import pytest
-from .testing_example import MyComputeProcess
+from .testing_examples import MyComputeProcess, MyErroringComputeProcess
 
 
 def test_state_manager_initial_state_is_empty():
@@ -52,7 +52,9 @@ def test_state_manager_evaluate_with_missing_dependencies():
 
 
 def test_state_manager_evaluate_exceptions():
-    pass
+    state_manager = MyErroringComputeProcess().state_manager
+    state_manager.seed(a=1, b=1)
+    state_manager.evaluate()
 
 
 def test_state_manager_serialize():

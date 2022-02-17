@@ -34,3 +34,13 @@ EXPECTED_SERIALIZED_TREE = {
     },
     "outputs": {"r": {"type": "Number", "dependencies": ["i", "j"]}},
 }
+
+
+class MyErroringComputeProcess(MyComputeProcess):
+    @output(_type="Number")
+    def s(self):
+        raise ValueError("Whoops")
+
+    @output(_type="Number")
+    def t(self):
+        raise ValueError("Whoops")

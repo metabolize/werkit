@@ -1,5 +1,5 @@
 from . import DependencyGraph
-from .testing_example import (
+from .testing_examples import (
     MyComputeProcess,
     EXPECTED_INPUTS,
     EXPECTED_OUTPUT,

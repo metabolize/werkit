@@ -5,9 +5,9 @@ from ._decorators import Intermediate, Output
 
 def attrs_of_type(obj, _type):
     return {
-        name: _input
-        for name, _input in obj.__dict__.items()
-        if isinstance(_input, _type)
+        name: getattr(obj, name)
+        for name in dir(obj)
+        if not name.startswith("__") and isinstance(getattr(obj, name), _type)
     }
 
 
