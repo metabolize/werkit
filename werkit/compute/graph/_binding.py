@@ -5,7 +5,8 @@ from ._state_manager import StateManager
 def bind_to_state_manager(attr_name="state_manager"):
     def decorator(cls):
         class Bound(cls):
-            def __init__(self):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
                 setattr(self, attr_name, StateManager(self))
 
             def __getattribute__(self, name):
