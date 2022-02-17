@@ -1,4 +1,4 @@
-from ._dependencies import DependencyGraph
+from ._dependency_graph import DependencyGraph
 
 
 class StateManager:
@@ -14,7 +14,7 @@ class StateManager:
                 f"Unknown {'key' if len(unknown_keys) == 1 else 'keys'}: {', '.join(sorted(list(unknown_keys)))}"
             )
 
-    def seed(self, **kwargs):
+    def set(self, **kwargs):
         self._assert_known_keys(kwargs.keys())
         self.store.update(kwargs)
 

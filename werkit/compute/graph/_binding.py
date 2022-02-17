@@ -1,0 +1,20 @@
+from ._dependency_graph import InnerNode, Input
+from ._state_manager import StateManager
+
+
+def bind_to_state_manager(attr_name="state_manager"):
+    def decorator(cls):
+        class Bound(cls):
+            def __init__(self):
+                setattr(self, attr_name, StateManager(self))
+
+            def __getattribute__(self, name):
+                attr = object.__getattribute__(self, name)
+                if isinstance(attr, Input) or isinstance(attr, InnerNode):
+                    return object.__getattribute__(self, attr_name).get(name)
+                else:
+                    return attr
+
+        return Bound
+
+    return decorator

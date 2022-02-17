@@ -1,12 +1,10 @@
-from . import Input, intermediate, output, StateManager, Bound
+from . import Input, intermediate, output, bind_to_state_manager
 
 
-class MyComputeProcess(Bound):
+@bind_to_state_manager()
+class MyComputeProcess:
     a = Input(_type="Number")
     b = Input(_type="Number")
-
-    def __init__(self):
-        self.state_manager = StateManager(self)
 
     @intermediate(_type="Number")
     def i(self, a):
@@ -34,6 +32,7 @@ EXPECTED_SERIALIZED_TREE = {
     },
     "outputs": {"r": {"type": "Number", "dependencies": ["i", "j"]}},
 }
+
 
 class MyComputeProcessSubclass(MyComputeProcess):
     pass
