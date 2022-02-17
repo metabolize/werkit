@@ -3,18 +3,18 @@ from . import Input, intermediate, output, bind_to_state_manager
 
 @bind_to_state_manager()
 class MyComputeProcess:
-    a = Input(_type="Number")
-    b = Input(_type="Number")
+    a = Input(value_type="Number")
+    b = Input(value_type="Number")
 
-    @intermediate(_type="Number")
+    @intermediate(value_type="Number")
     def i(self, a):
         return a
 
-    @intermediate(_type="Number")
+    @intermediate(value_type="Number")
     def j(self, b):
         return b
 
-    @output(_type="Number")
+    @output(value_type="Number")
     def r(self, i, j):
         return i + j
 
@@ -25,12 +25,12 @@ EXPECTED_OUTPUT = "r"
 
 EXPECTED_SERIALIZED_TREE = {
     "schemaVersion": 1,
-    "inputs": {"a": {"type": "Number"}, "b": {"type": "Number"}},
+    "inputs": {"a": {"valueType": "Number"}, "b": {"valueType": "Number"}},
     "intermediates": {
-        "i": {"type": "Number", "dependencies": ["a"]},
-        "j": {"type": "Number", "dependencies": ["b"]},
+        "i": {"valueType": "Number", "dependencies": ["a"]},
+        "j": {"valueType": "Number", "dependencies": ["b"]},
     },
-    "outputs": {"r": {"type": "Number", "dependencies": ["i", "j"]}},
+    "outputs": {"r": {"valueType": "Number", "dependencies": ["i", "j"]}},
 }
 
 
@@ -39,10 +39,10 @@ class MyComputeProcessSubclass(MyComputeProcess):
 
 
 class MyErroringComputeProcess(MyComputeProcess):
-    @output(_type="Number")
+    @output(value_type="Number")
     def s(self):
         raise ValueError("Whoops")
 
-    @output(_type="Number")
+    @output(value_type="Number")
     def t(self):
         raise ValueError("Whoops")
