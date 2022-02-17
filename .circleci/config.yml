@@ -7,11 +7,6 @@ with_python: &with_python
   docker:
     - image: circleci/python:3.7
 
-with_python_and_redis: &with_python_and_redis
-  docker:
-    - image: circleci/python:3.7
-    - image: redis
-
 install_poetry: &install_poetry
   run:
     name: Install Poetry
@@ -32,7 +27,7 @@ show_versions: &show_versions
 
 jobs:
   main:
-    <<: *with_python_and_redis
+    <<: *with_python
 
     steps:
       - checkout
@@ -44,8 +39,7 @@ jobs:
             poetry install \
               --no-ansi --no-interaction \
               --extras client \
-              --extras lambda_common \
-              --extras parallel
+              --extras lambda_common
       - *show_versions
 
       - run:
