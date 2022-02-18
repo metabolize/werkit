@@ -3,9 +3,9 @@
 ## Example
 
 ```py
-from werkit.compute.graph import bind_to_state_manager, intermediate, output
+from werkit.compute.graph import bind_state_manager, intermediate, output
 
-@bind_to_state_manager()
+@bind_state_manager()
 class MyComputeProcess:
     a = Input(value_type="Number")
     b = Input(value_type="Number")
