@@ -744,7 +744,7 @@ jeepney = ">=0.6"
 
 [[package]]
 name = "semver"
-version = "3.0.0.dev2"
+version = "3.0.0.dev3"
 description = "Python helper for Semantic Versioning (http://semver.org)"
 category = "main"
 optional = false
@@ -885,7 +885,7 @@ rds_graphile_worker = ["rds-graphile-worker-client"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "6601aeeb75f553ba428d4a7fea80c0e98a51a68d00d2d327972aa9502f44e1bc"
+content-hash = "a2ab5897596bba4a7bdf7431aef570fb0f0ae3c394eb6afe5f2de62d3288b837"
 
 [metadata.files]
 atomicwrites = [
@@ -1357,8 +1357,8 @@ secretstorage = [
     {file = "SecretStorage-3.3.1.tar.gz", hash = "sha256:fd666c51a6bf200643495a04abb261f83229dcb6fd8472ec393df7ffc8b6f195"},
 ]
 semver = [
-    {file = "semver-3.0.0.dev2-py3-none-any.whl", hash = "sha256:153511dda7e85ce68673607bc7565e252b6495b23a5f631d73c59138b7aea5db"},
-    {file = "semver-3.0.0.dev2.tar.gz", hash = "sha256:55dd56b0144d7fa48708300076d861655769bcfc4334b22cbb08486bf976eb6c"},
+    {file = "semver-3.0.0.dev3-py3-none-any.whl", hash = "sha256:10651d0dacffdce7a2f0658e58894b138f52c2a080f7d69aa999810ebfc1f97d"},
+    {file = "semver-3.0.0.dev3.tar.gz", hash = "sha256:7175229bdcf96a6702b077e30226f041ce112057146ae81e84b51df08a8a75cf"},
 ]
 simplejson = [
     {file = "simplejson-3.17.6-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:a89acae02b2975b1f8e4974cb8cdf9bf9f6c91162fb8dec50c259ce700f2770a"},
