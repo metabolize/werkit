@@ -2,7 +2,7 @@ from __future__ import annotations
 import inspect
 import numbers
 import typing as t
-from typing_extensions import TypedDict
+from typing_extensions import Literal, TypedDict
 from ._built_in_type import (
     BuiltInValueType,
     coerce_value_to_builtin_type,
@@ -123,7 +123,7 @@ def output(value_type: AnyValueType):
 DependencyGraphJSONType = TypedDict(
     "DependencyGraphJSONType",
     {
-        "schemaVersion": t.Literal[1],
+        "schemaVersion": Literal[1],
         "inputs": t.Dict[str, InputJSONType],
         "intermediates": t.Dict[str, ComputeNodeJSONType],
         "outputs": t.Dict[str, ComputeNodeJSONType],
