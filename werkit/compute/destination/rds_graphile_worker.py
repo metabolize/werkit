@@ -1,11 +1,12 @@
 # Force some libraries to be imported right away. This keeps the execution time
 # of the first Lambda invocation consistent with the subsequent execution.
 # Otherwise developers users would have to put a big buffer into the timeout
-import rds_graphile_worker_client
+import rds_graphile_worker_client  # noqa: F401
 from werkit.compute import Destination
 
 
 _graphile_worker_client = None
+
 
 def get_graphile_worker_client():
     import os
@@ -22,6 +23,7 @@ def get_graphile_worker_client():
         )
 
     return _graphile_worker_client
+
 
 class RdsGraphileWorkerDestination(Destination):
     def __init__(self, function_name, debug=False):
@@ -46,9 +48,7 @@ class RdsGraphileWorkerDestination(Destination):
         print(result)
 
     def send(self, message_key, output_message):
-        response = self.queue_client.quick_add_job(
-            self.function_name, output_message
-        )
+        response = self.queue_client.quick_add_job(self.function_name, output_message)
         print("rds response", response)
 
         if self.debug:  # pragma: no cover

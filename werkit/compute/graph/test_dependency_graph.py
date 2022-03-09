@@ -1,10 +1,10 @@
 from . import DependencyGraph
 from .testing_examples import (
-    MyComputeProcess,
     EXPECTED_INPUTS,
-    EXPECTED_OUTPUT,
     EXPECTED_INTERMEDIATES,
+    EXPECTED_OUTPUT,
     EXPECTED_SERIALIZED_DEPENDENCY_GRAPH,
+    MyComputeProcess,
 )
 
 
@@ -20,10 +20,10 @@ def test_dependency_graph_dependencies_have_correct_types():
     dependency_graph = DependencyGraph(MyComputeProcess)
 
     for name in EXPECTED_INPUTS:
-        assert dependency_graph.inputs[name].value_type == "Number"
+        assert dependency_graph.inputs[name].value_type is float
     for name in EXPECTED_INTERMEDIATES:
-        assert dependency_graph.intermediates[name].value_type == "Number"
-    assert dependency_graph.outputs[EXPECTED_OUTPUT].value_type == "Number"
+        assert dependency_graph.intermediates[name].value_type is float
+    assert dependency_graph.outputs[EXPECTED_OUTPUT].value_type is float
 
 
 def test_dependency_graph_serializes():

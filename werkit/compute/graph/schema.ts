@@ -1,17 +1,17 @@
-export type ValueType = 'Number' | 'Point' | 'Measurement'
+export type BuiltInValueType = 'Boolean' | 'Number' | 'String'
 
-export interface Input {
+export interface Input<ValueType extends BuiltInValueType> {
   valueType: ValueType
 }
 
-export interface InnerNode {
+export interface InnerNode<ValueType extends BuiltInValueType> {
   valueType: ValueType
   dependencies: string[]
 }
 
-export interface DependencyGraph {
+export interface DependencyGraph<ValueType extends BuiltInValueType> {
   schemaVersion: 1
-  inputs: { [k: string]: Input }
-  intermediates: { [k: string]: InnerNode }
-  outputs: { [k: string]: InnerNode }
+  inputs: { [k: string]: Input<ValueType> }
+  intermediates: { [k: string]: InnerNode<ValueType> }
+  outputs: { [k: string]: InnerNode<ValueType> }
 }

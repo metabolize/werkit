@@ -12,7 +12,10 @@ def python_source_files():
     import glob
 
     return (
-        glob.glob("*.py") + glob.glob("werkit/*.py") + glob.glob("werkit/**/*.py")
+        glob.glob("*.py")
+        + glob.glob("werkit/*.py")
+        + glob.glob("werkit/**/*.py")
+        + glob.glob("werkit/**/**/*.py")
     )  # + ["doc/"]
 
 
