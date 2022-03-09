@@ -1,3 +1,4 @@
+from numbers import Number
 from . import DependencyGraph
 from .testing_examples import (
     EXPECTED_INPUTS,
@@ -20,10 +21,10 @@ def test_dependency_graph_dependencies_have_correct_types():
     dependency_graph = DependencyGraph(MyComputeProcess)
 
     for name in EXPECTED_INPUTS:
-        assert dependency_graph.inputs[name].value_type is float
+        assert dependency_graph.inputs[name].value_type is Number
     for name in EXPECTED_INTERMEDIATES:
-        assert dependency_graph.intermediates[name].value_type is float
-    assert dependency_graph.outputs[EXPECTED_OUTPUT].value_type is float
+        assert dependency_graph.intermediates[name].value_type is Number
+    assert dependency_graph.outputs[EXPECTED_OUTPUT].value_type is Number
 
 
 def test_dependency_graph_serializes():
@@ -46,7 +47,7 @@ def test_dependency_graph_serialization_matches_schema():
         schema = json.load(f)
     resolver = RefResolver.from_schema(schema)
     validator = Draft7Validator(
-        {"$ref": "#/definitions/DependencyGraph"}, resolver=resolver
+        {"$ref": "#/definitions/DependencyGraphWithBuiltinTypes"}, resolver=resolver
     )
 
     validator.validate(serialized)

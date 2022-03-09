@@ -4,54 +4,66 @@ import typing as t
 from typing_extensions import TypedDict
 from ._value_types import (
     AnyValueType,
+    BUILT_IN_VALUE_TYPES,
     assert_valid_value_type,
     value_type_to_str,
 )
 
 
-InputJSONType = TypedDict("Input", {"valueType": str})
-
-
-class Input:
+class BaseNode:
     def __init__(self, value_type: AnyValueType):
         assert_valid_value_type(value_type)
         self.value_type = value_type
 
+    def coerce(self, name: str, value: any) -> t.Any:
+        if self.value_type in BUILT_IN_VALUE_TYPES:
+            if isinstance(value, self.value_type):
+                return value
+            else:
+                raise ValueError(
+                    f"Value for {name} is {type(value)}, expected {self.value_type}"
+                )
+        else:
+            return self.value_type.coerce(name=name, value=value)
+
+
+InputJSONType = TypedDict("Input", {"valueType": str})
+
+
+class Input(BaseNode):
     def as_native(self) -> InputJSONType:
         return {"valueType": value_type_to_str(self.value_type)}
 
 
-InnerNodeJSONType = TypedDict(
-    "InnerNode", {"valueType": str, "dependencies": t.List[str]}
+ComputeNodeJSONType = TypedDict(
+    "ComputeNode", {"valueType": str, "dependencies": t.List[str]}
 )
 
 
-class InnerNode:
+class ComputeNode(BaseNode):
     def __init__(self, method, value_type: AnyValueType):
+        super().__init__(value_type=value_type)
+
         self.method = method
-
-        assert_valid_value_type(value_type)
-        self.value_type = value_type
-
         self.dependencies = [x for x in inspect.signature(method).parameters.keys()][1:]
 
-    def bind(self, instance: InnerNode):
+    def bind(self, instance: ComputeNode):
         import functools
 
         return functools.partial(self.method, instance)
 
-    def as_native(self) -> InnerNodeJSONType:
+    def as_native(self) -> ComputeNodeJSONType:
         return {
             "valueType": value_type_to_str(self.value_type),
             "dependencies": self.dependencies,
         }
 
 
-class Intermediate(InnerNode):
+class Intermediate(ComputeNode):
     pass
 
 
-class Output(InnerNode):
+class Output(ComputeNode):
     pass
 
 
@@ -74,8 +86,8 @@ DependencyGraphJSONType = TypedDict(
     {
         "schemaVersion": t.Literal[1],
         "inputs": t.Dict[str, InputJSONType],
-        "intermediates": t.Dict[str, InnerNodeJSONType],
-        "outputs": t.Dict[str, InnerNodeJSONType],
+        "intermediates": t.Dict[str, ComputeNodeJSONType],
+        "outputs": t.Dict[str, ComputeNodeJSONType],
     },
 )
 
@@ -96,6 +108,7 @@ class DependencyGraph:
         self.intermediates = _attrs_of_type(cls, Intermediate)
         self.outputs = _attrs_of_type(cls, Output)
         self.compute_nodes = dict(**self.intermediates, **self.outputs)
+        self.all_nodes = dict(**self.inputs, **self.compute_nodes)
 
     def keys(self) -> t.List[str]:
         return list(self.inputs.keys()) + list(self.compute_nodes.keys())

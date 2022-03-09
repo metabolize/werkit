@@ -14,9 +14,16 @@ class StateManager:
                 f"Unknown {'key' if len(unknown_keys) == 1 else 'keys'}: {', '.join(sorted(list(unknown_keys)))}"
             )
 
+    def coerce(self, **kwargs):
+        return {
+            name: self.dependency_graph.all_nodes[name].coerce(name=name, value=value)
+            for name, value in kwargs.items()
+        }
+
     def set(self, **kwargs):
         self._assert_known_keys(kwargs.keys())
-        self.store.update(kwargs)
+        coerced = self.coerce(**kwargs)
+        self.store.update(coerced)
 
     def evaluate(self, targets=None, handle_exceptions=False):
         from artifax import Artifax
@@ -34,7 +41,8 @@ class StateManager:
             afx.set(**self.store)
         afx.build(targets=targets)
         # TODO: `afx.build()` should always return an object.
-        self.store.update(afx._result)
+        coerced = self.coerce(**afx._result)
+        self.store.update(coerced)
 
     def serialize(self, targets=None, handle_exceptions=False):
         self.evaluate(targets=targets)

@@ -1,7 +1,7 @@
 from ._binding import bind_state_manager  # noqa: F401
 from ._dependency_graph import (  # noqa: F401
+    ComputeNode,
     DependencyGraph,
-    InnerNode,
     Input,
     Intermediate,
     Output,

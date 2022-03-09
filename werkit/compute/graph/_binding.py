@@ -1,4 +1,4 @@
-from ._dependency_graph import InnerNode, Input
+from ._dependency_graph import ComputeNode, Input
 from ._state_manager import StateManager
 
 
@@ -11,7 +11,7 @@ def bind_state_manager(attr_name="state_manager"):
 
             def __getattribute__(self, name):
                 attr = object.__getattribute__(self, name)
-                if isinstance(attr, Input) or isinstance(attr, InnerNode):
+                if isinstance(attr, Input) or isinstance(attr, ComputeNode):
                     state_manager = object.__getattribute__(self, attr_name)
                     return state_manager.get(name)
                 else:
