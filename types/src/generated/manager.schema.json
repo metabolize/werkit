@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "WerkitComputeMeta": {
+      "additionalProperties": false,
+      "properties": {
+        "duration_seconds": {
+          "type": "number"
+        },
+        "runtime_info": {},
+        "start_time": {
+          "type": "string"
+        }
+      },
+      "required": ["start_time", "duration_seconds"],
+      "type": "object"
+    },
+    "WerkitErrorOrigin": {
+      "enum": ["compute", "system", "orchestration"],
+      "type": "string"
+    }
+  }
+}

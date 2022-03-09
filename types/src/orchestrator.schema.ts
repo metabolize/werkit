@@ -1,4 +1,4 @@
-import { WerkitOutputMessage } from './werkit-types'
+import { WerkitOutputMessage } from './manager.schema'
 
 export interface OrchestratorInput<
   WorkerInputType,

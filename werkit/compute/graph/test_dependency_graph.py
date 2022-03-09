@@ -41,7 +41,17 @@ def test_dependency_graph_serialization_matches_schema():
     serialized = dependency_graph.as_native()
 
     with open(
-        os.path.join(os.path.dirname(__file__), "generated", "schema.json"), "r"
+        os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "..",
+            "..",
+            "types",
+            "src",
+            "generated",
+            "dependency-graph.schema.json",
+        ),
+        "r",
     ) as f:
         schema = json.load(f)
     resolver = RefResolver.from_schema(schema)
