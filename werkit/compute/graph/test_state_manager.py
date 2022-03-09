@@ -3,7 +3,8 @@ import pytest
 from .testing_examples import (
     MyComputeProcess,
     MyComputeProcessSubclass,
-    MyErroringComputeProcess,
+    MyRaisingComputeProcess,
+    MyWronglyTypedComputeProcess,
 )
 
 
@@ -63,10 +64,23 @@ def test_state_manager_evaluate_with_missing_dependencies():
 
 
 def test_state_manager_evaluate_exceptions():
-    state_manager = MyErroringComputeProcess().state_manager
+    state_manager = MyRaisingComputeProcess().state_manager
     state_manager.set(a=1, b=1)
     # TODO: We want computation to continue and errors to propagate.
     with pytest.raises(ValueError):
+        state_manager.evaluate()
+
+
+def test_state_manager_set_type_mismatch():
+    state_manager = MyComputeProcess().state_manager
+    with pytest.raises(ValueError, match="a should be type int, not bool"):
+        state_manager.set(a=False)
+
+
+def test_state_manager_evaluate_type_mismatch():
+    state_manager = MyWronglyTypedComputeProcess().state_manager
+    state_manager.set(a=1, b=1)
+    with pytest.raises(ValueError, match="s should be type int, not bool"):
         state_manager.evaluate()
 
 

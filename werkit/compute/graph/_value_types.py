@@ -28,12 +28,29 @@ class BaseValue(ABC):
     @classmethod
     def coerce(cls, name: str, value: any) -> BaseValue:
         raise ValueError(
-            f"Value for {name} is {type(value)} which can't be coerced to {cls.__name__}"
+            f"{name} should be coercible to type {cls.__name__}, got {type(value).__name__}"
         )
 
 
 BUILT_IN_VALUE_TYPES = (bool, int, float, numbers.Number, str)
 BuiltInValueType = t.Union[t.Type[bool], t.Type[int], t.Type[float], t.Type[str]]
+
+
+def coerce_value(
+    name: str, built_in_value_type: BuiltInValueType, value: t.Any
+) -> t.Any:
+    if built_in_value_type not in BUILT_IN_VALUE_TYPES:
+        raise ValueError(
+            "Expected built_in_value_type to be a valid built-in value type"
+        )
+    elif type(value) is built_in_value_type:
+        return value
+    else:
+        raise ValueError(
+            f"{name} should be type {built_in_value_type.__name__}, not {type(value).__name__}"
+        )
+
+
 AnyValueType = t.Union[BuiltInValueType, t.Type[BaseValue]]
 
 

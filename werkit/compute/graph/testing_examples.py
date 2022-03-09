@@ -1,21 +1,20 @@
-from numbers import Number
 from . import Input, bind_state_manager, intermediate, output
 
 
 @bind_state_manager()
 class MyComputeProcess:
-    a = Input(value_type=Number)
-    b = Input(value_type=Number)
+    a = Input(value_type=int)
+    b = Input(value_type=int)
 
-    @intermediate(value_type=Number)
+    @intermediate(value_type=int)
     def i(self, a):
         return a
 
-    @intermediate(value_type=Number)
+    @intermediate(value_type=int)
     def j(self, b):
         return b
 
-    @output(value_type=Number)
+    @output(value_type=int)
     def r(self, i, j):
         return i + j
 
@@ -39,11 +38,17 @@ class MyComputeProcessSubclass(MyComputeProcess):
     pass
 
 
-class MyErroringComputeProcess(MyComputeProcess):
-    @output(value_type=Number)
+class MyRaisingComputeProcess(MyComputeProcess):
+    @output(value_type=int)
     def s(self):
         raise ValueError("Whoops")
 
-    @output(value_type=Number)
+    @output(value_type=int)
     def t(self):
         raise ValueError("Whoops")
+
+
+class MyWronglyTypedComputeProcess(MyComputeProcess):
+    @output(value_type=int)
+    def s(self):
+        return False

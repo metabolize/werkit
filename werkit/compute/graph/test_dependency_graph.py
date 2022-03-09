@@ -1,4 +1,3 @@
-from numbers import Number
 from . import DependencyGraph
 from .testing_examples import (
     EXPECTED_INPUTS,
@@ -21,10 +20,10 @@ def test_dependency_graph_dependencies_have_correct_types():
     dependency_graph = DependencyGraph(MyComputeProcess)
 
     for name in EXPECTED_INPUTS:
-        assert dependency_graph.inputs[name].value_type is Number
+        assert dependency_graph.inputs[name].value_type is int
     for name in EXPECTED_INTERMEDIATES:
-        assert dependency_graph.intermediates[name].value_type is Number
-    assert dependency_graph.outputs[EXPECTED_OUTPUT].value_type is Number
+        assert dependency_graph.intermediates[name].value_type is int
+    assert dependency_graph.outputs[EXPECTED_OUTPUT].value_type is int
 
 
 def test_dependency_graph_serializes():

@@ -5,6 +5,7 @@ from typing_extensions import TypedDict
 from ._value_types import (
     AnyValueType,
     BUILT_IN_VALUE_TYPES,
+    coerce_value,
     assert_valid_value_type,
     value_type_to_str,
 )
@@ -17,12 +18,9 @@ class BaseNode:
 
     def coerce(self, name: str, value: any) -> t.Any:
         if self.value_type in BUILT_IN_VALUE_TYPES:
-            if isinstance(value, self.value_type):
-                return value
-            else:
-                raise ValueError(
-                    f"Value for {name} is {type(value)}, expected {self.value_type}"
-                )
+            return coerce_value(
+                name=name, built_in_value_type=self.value_type, value=value
+            )
         else:
             return self.value_type.coerce(name=name, value=value)
 
