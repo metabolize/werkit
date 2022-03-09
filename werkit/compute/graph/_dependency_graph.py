@@ -3,19 +3,27 @@ import inspect
 import numbers
 import typing as t
 from typing_extensions import TypedDict
-from ._built_in_value_type import (
-    AnyValueType,
+from ._built_in_type import (
+    BuiltInValueType,
     coerce_value_to_builtin_type,
-    assert_valid_value_type,
     is_built_in_value_type,
 )
-from ._custom_value_type import CustomValueType
+from ._custom_type import CustomType, JSONType
+
+
+AnyValueType = t.Union[BuiltInValueType, t.Type[CustomType]]
 
 
 class BaseNode:
     def __init__(self, value_type: AnyValueType):
-        assert_valid_value_type(value_type)
-        self.value_type = value_type
+        if is_built_in_value_type(value_type) or (
+            inspect.isclass(value_type) and issubclass(value_type, CustomType)
+        ):
+            self.value_type = value_type
+        else:
+            raise ValueError(
+                "Expected value type to be bool, int, float, str, or a subclass of CustomType"
+            )
 
     @property
     def value_type_is_built_in(self) -> bool:
@@ -35,15 +43,26 @@ class BaseNode:
         else:
             return self.value_type.__name__
 
+    def deserialize(self, value: JSONType) -> t.Any:
+        if self.value_type_is_built_in:
+            return value
+        else:
+            return t.cast(t.Type[CustomType], self.value_type).deserialize(value)
+
     def coerce(self, name: str, value: t.Any) -> t.Any:
         if self.value_type_is_built_in:
             return coerce_value_to_builtin_type(
                 name=name, value_type=self.value_type, value=value
             )
         else:
-            return t.cast(t.Type[CustomValueType], self.value_type).coerce(
-                name=name, value=value
-            )
+            # TODO: Perhaps catch and re-throw to improve the error message.
+            return t.cast(t.Type[CustomType], self.value_type).coerce(value)
+
+    def serialize(self, value: t.Any) -> JSONType:
+        if self.value_type_is_built_in:
+            return value
+        else:
+            return t.cast(t.Type[CustomType], self.value_type).serialize(value)
 
 
 InputJSONType = TypedDict("InputJSONType", {"valueType": str})

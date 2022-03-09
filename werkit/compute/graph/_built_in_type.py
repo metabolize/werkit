@@ -1,8 +1,6 @@
-import inspect
 import numbers
 import typing as t
 from typing_extensions import TypeGuard
-from ._custom_value_type import CustomValueType
 
 
 BuiltInValueType = t.Union[t.Type[bool], t.Type[int], t.Type[float], t.Type[str]]
@@ -25,16 +23,3 @@ def coerce_value_to_builtin_type(
         raise ValueError(
             f"{name} should be type {value_type.__name__}, not {type(value).__name__}"
         )
-
-
-AnyValueType = t.Union[BuiltInValueType, t.Type[CustomValueType]]
-
-
-def assert_valid_value_type(value_type: AnyValueType) -> None:
-    if is_built_in_value_type(value_type) or (
-        inspect.isclass(value_type) and issubclass(value_type, CustomValueType)
-    ):
-        return
-    raise ValueError(
-        "Expected value type to be bool, int, float, str, or a subclass of CustomValueType"
-    )

@@ -3,6 +3,7 @@ import pytest
 from .testing_examples import (
     MyComputeProcess,
     MyComputeProcessSubclass,
+    MyComputeProcessWithCustomType,
     MyRaisingComputeProcess,
     MyWronglyTypedComputeProcess,
 )
@@ -26,6 +27,22 @@ def test_state_manager_set() -> None:
 
     with pytest.raises(KeyError, match=r"Unknown keys: also_bogus, bogus"):
         state_manager.set(bogus=5, also_bogus=5)
+
+
+def test_state_manager_deserialize() -> None:
+    state_manager = MyComputeProcess().state_manager
+
+    state_manager.deserialize(a=3)
+    assert state_manager.store == {"a": 3}
+
+    state_manager.deserialize(a=4, b=5)
+    assert state_manager.store == {"a": 4, "b": 5}
+
+    state_manager.deserialize(i=6)
+    assert state_manager.store == {"a": 4, "b": 5, "i": 6}
+
+    with pytest.raises(KeyError, match=r"Unknown keys: also_bogus, bogus"):
+        state_manager.deserialize(bogus=5, also_bogus=5)
 
 
 def test_state_manager_evaluate() -> None:
@@ -84,7 +101,7 @@ def test_state_manager_evaluate_type_mismatch() -> None:
         state_manager.evaluate()
 
 
-def test_state_manager_serialize() -> None:
+def test_state_manager_serializes() -> None:
     state_manager = MyComputeProcess().state_manager
     state_manager.set(a=1, b=2)
     # TODO: These should be wrapped in the werkit result format.
@@ -97,8 +114,54 @@ def test_state_manager_serialize() -> None:
     assert state_manager.serialize(targets=["i"]) == {"i": 1}
 
 
-def test_state_manager_serialize_exceptions() -> None:
-    pass
+def test_state_manager_serializes_exceptions() -> None:
+    """
+    TODO
+    """
 
 
 # TODO: Provide a way to serialize only the properties which have been computed.
+
+
+def test_state_manager_with_custom_type() -> None:
+    state_manager = MyComputeProcessWithCustomType().state_manager
+    state_manager.set(a=1, b=2)
+    state_manager.evaluate()
+
+    thing = state_manager.store["thing"]
+    assert thing.title == "Example title"
+    assert thing.description == "Example description"
+    assert thing.count == 25
+
+    assert state_manager.store["other_thing"] == (1.52, 2.52, 3.52)
+
+
+def test_state_manager_deserializes_custom_type() -> None:
+    state_manager = MyComputeProcessWithCustomType().state_manager
+
+    state_manager.deserialize(
+        thing={"title": "New title", "description": "New description", "count": 5},
+        other_thing=[3, 4, 5],
+    )
+
+    thing = state_manager.store["thing"]
+    assert thing.title == "New title"
+    assert thing.description == "New description"
+    assert thing.count == 5
+
+    assert state_manager.store["other_thing"] == (3, 4, 5)
+
+
+def test_state_manager_serializes_custom_type() -> None:
+    state_manager = MyComputeProcessWithCustomType().state_manager
+    state_manager.set(a=1, b=2)
+    state_manager.evaluate()
+
+    serialized = state_manager.serialize()
+
+    assert serialized["thing"] == {
+        "title": "Example title",
+        "description": "Example description",
+        "count": 25,
+    }
+    assert serialized["other_thing"] == [1.52, 2.52, 3.52]

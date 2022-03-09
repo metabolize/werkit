@@ -15,6 +15,14 @@ class StateManager:
                 f"Unknown {'key' if len(unknown_keys) == 1 else 'keys'}: {', '.join(sorted(list(unknown_keys)))}"
             )
 
+    def deserialize(self, **kwargs: t.Dict) -> None:
+        self._assert_known_keys(kwargs.keys())
+        deserialized = {
+            name: self.dependency_graph.all_nodes[name].deserialize(value)
+            for name, value in kwargs.items()
+        }
+        self.store.update(deserialized)
+
     def coerce(self, **kwargs: t.Dict) -> t.Dict:
         return {
             name: self.dependency_graph.all_nodes[name].coerce(name=name, value=value)
@@ -47,15 +55,14 @@ class StateManager:
         coerced = self.coerce(**afx._result)
         self.store.update(coerced)
 
-    def serialize(
-        self, targets: t.List[str] = None, handle_exceptions: bool = False
-    ) -> t.Dict:
+    def serialize(self, targets: t.List[str] = None) -> t.Dict:
         self.evaluate(targets=targets)
 
-        if targets is None:
-            return self.store
-        else:
-            return {k: self.store[k] for k in targets}
+        return {
+            name: self.dependency_graph.all_nodes[name].serialize(value)
+            for name, value in self.store.items()
+            if targets is None or name in targets
+        }
 
     def get(self, name: str) -> t.Any:
         self._assert_known_keys([name])
