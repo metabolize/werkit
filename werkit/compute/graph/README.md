@@ -7,18 +7,18 @@ from werkit.compute.graph import bind_state_manager, intermediate, output
 
 @bind_state_manager()
 class MyComputeProcess:
-    a = Input(value_type="Number")
-    b = Input(value_type="Number")
+    a = Input(value_type=int)
+    b = Input(value_type=int)
 
-    @intermediate(value_type="Number")
+    @intermediate(value_type=int)
     def i(self, a):
         return a
 
-    @intermediate(value_type="Number")
+    @intermediate(value_type=int)
     def j(self, b):
         return b
 
-    @output(value_type="Number")
+    @output(value_type=int)
     def r(self, i, j):
         return i + j
 
