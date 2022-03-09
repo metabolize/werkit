@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.23.0
+
+- Add types for compute graph.
+- Export generated JSON Schema to accompany the TypeScript types.
+
+
 ## 0.22.0
 
 Same as 0.21.1.
