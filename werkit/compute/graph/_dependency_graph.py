@@ -4,9 +4,10 @@ import typing as t
 from typing_extensions import TypedDict
 from ._value_types import (
     AnyValueType,
-    BUILT_IN_VALUE_TYPES,
+    BaseValue,
     coerce_value,
     assert_valid_value_type,
+    is_built_in_value_type,
     value_type_to_str,
 )
 
@@ -16,16 +17,22 @@ class BaseNode:
         assert_valid_value_type(value_type)
         self.value_type = value_type
 
-    def coerce(self, name: str, value: any) -> t.Any:
-        if self.value_type in BUILT_IN_VALUE_TYPES:
+    def coerce(self, name: str, value: t.Any) -> t.Any:
+        if is_built_in_value_type(self.value_type):
             return coerce_value(
                 name=name, built_in_value_type=self.value_type, value=value
             )
+        elif issubclass(self.value_type, BaseValue):
+            # TODO: Why is this cast needed? It seems like `issubclass()` should
+            # narrow the type, but it doesn't.
+            return t.cast(t.Type[BaseValue], self.value_type).coerce(
+                name=name, value=value
+            )
         else:
-            return self.value_type.coerce(name=name, value=value)
+            raise ValueError("Node has an invalid value_type. How did this happen?")
 
 
-InputJSONType = TypedDict("Input", {"valueType": str})
+InputJSONType = TypedDict("InputJSONType", {"valueType": str})
 
 
 class Input(BaseNode):
@@ -34,7 +41,7 @@ class Input(BaseNode):
 
 
 ComputeNodeJSONType = TypedDict(
-    "ComputeNode", {"valueType": str, "dependencies": t.List[str]}
+    "ComputeNodeJSONType", {"valueType": str, "dependencies": t.List[str]}
 )
 
 
@@ -80,7 +87,7 @@ def output(value_type: AnyValueType):
 
 
 DependencyGraphJSONType = TypedDict(
-    "DependencyGraph",
+    "DependencyGraphJSONType",
     {
         "schemaVersion": t.Literal[1],
         "inputs": t.Dict[str, InputJSONType],

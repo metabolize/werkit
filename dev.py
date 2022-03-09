@@ -68,6 +68,11 @@ def coverage_report():
 
 
 @cli.command()
+def check_types():
+    execute("mypy", *python_source_files())
+
+
+@cli.command()
 def lint():
     execute("flake8", *python_source_files())
 

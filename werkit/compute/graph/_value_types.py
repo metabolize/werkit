@@ -2,7 +2,8 @@ from __future__ import annotations
 import inspect
 import numbers
 import typing as t
-from abc import ABC, abstractclassmethod, abstractmethod
+from typing_extensions import TypeGuard
+from abc import ABC, abstractmethod
 
 JSONType = t.Union[str, int, float, bool, None, t.Dict[str, t.Any], t.List[t.Any]]
 
@@ -12,34 +13,39 @@ class BaseValue(ABC):
     def to_json(self) -> JSONType:
         pass
 
-    @abstractclassmethod
+    @classmethod
+    @abstractmethod
     def validate_json(cls, json_value: JSONType) -> None:
         pass
 
-    @abstractclassmethod
+    @classmethod
+    @abstractmethod
     def from_valid_json(cls, json_value: JSONType) -> BaseValue:
         pass
 
     @classmethod
     def from_json(cls, json_value: JSONType) -> BaseValue:
-        cls.validate_json(json_value)
+        cls.validate_json(json_value=json_value)
         return cls.from_valid_json(json_value)
 
     @classmethod
-    def coerce(cls, name: str, value: any) -> BaseValue:
+    def coerce(cls, name: str, value: t.Any) -> BaseValue:
         raise ValueError(
             f"{name} should be coercible to type {cls.__name__}, got {type(value).__name__}"
         )
 
 
-BUILT_IN_VALUE_TYPES = (bool, int, float, numbers.Number, str)
 BuiltInValueType = t.Union[t.Type[bool], t.Type[int], t.Type[float], t.Type[str]]
+
+
+def is_built_in_value_type(_type: t.Type) -> TypeGuard[BuiltInValueType]:
+    return _type in (bool, int, float, numbers.Number, str)
 
 
 def coerce_value(
     name: str, built_in_value_type: BuiltInValueType, value: t.Any
 ) -> t.Any:
-    if built_in_value_type not in BUILT_IN_VALUE_TYPES:
+    if not is_built_in_value_type(built_in_value_type):
         raise ValueError(
             "Expected built_in_value_type to be a valid built-in value type"
         )
@@ -55,7 +61,7 @@ AnyValueType = t.Union[BuiltInValueType, t.Type[BaseValue]]
 
 
 def assert_valid_value_type(value_type: AnyValueType) -> None:
-    if value_type in BUILT_IN_VALUE_TYPES or (
+    if is_built_in_value_type(value_type) or (
         inspect.isclass(value_type) and issubclass(value_type, BaseValue)
     ):
         return
