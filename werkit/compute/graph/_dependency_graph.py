@@ -1,15 +1,15 @@
 from __future__ import annotations
 import inspect
+import numbers
 import typing as t
 from typing_extensions import TypedDict
-from ._value_types import (
+from ._built_in_value_type import (
     AnyValueType,
-    BaseValue,
-    coerce_value,
+    coerce_value_to_builtin_type,
     assert_valid_value_type,
     is_built_in_value_type,
-    value_type_to_str,
 )
+from ._custom_value_type import CustomValueType
 
 
 class BaseNode:
@@ -17,19 +17,33 @@ class BaseNode:
         assert_valid_value_type(value_type)
         self.value_type = value_type
 
+    @property
+    def value_type_is_built_in(self) -> bool:
+        return is_built_in_value_type(self.value_type)
+
+    @property
+    def value_type_name(self) -> str:
+        if self.value_type_is_built_in:
+            if self.value_type is bool:
+                return "Boolean"
+            elif self.value_type in (int, float, numbers.Number):
+                return "Number"
+            elif self.value_type is str:
+                return "String"
+            else:
+                raise ValueError("How did we get here?")
+        else:
+            return self.value_type.__name__
+
     def coerce(self, name: str, value: t.Any) -> t.Any:
-        if is_built_in_value_type(self.value_type):
-            return coerce_value(
-                name=name, built_in_value_type=self.value_type, value=value
-            )
-        elif issubclass(self.value_type, BaseValue):
-            # TODO: Why is this cast needed? It seems like `issubclass()` should
-            # narrow the type, but it doesn't.
-            return t.cast(t.Type[BaseValue], self.value_type).coerce(
-                name=name, value=value
+        if self.value_type_is_built_in:
+            return coerce_value_to_builtin_type(
+                name=name, value_type=self.value_type, value=value
             )
         else:
-            raise ValueError("Node has an invalid value_type. How did this happen?")
+            return t.cast(t.Type[CustomValueType], self.value_type).coerce(
+                name=name, value=value
+            )
 
 
 InputJSONType = TypedDict("InputJSONType", {"valueType": str})
@@ -37,7 +51,7 @@ InputJSONType = TypedDict("InputJSONType", {"valueType": str})
 
 class Input(BaseNode):
     def as_native(self) -> InputJSONType:
-        return {"valueType": value_type_to_str(self.value_type)}
+        return {"valueType": self.value_type_name}
 
 
 ComputeNodeJSONType = TypedDict(
@@ -46,20 +60,21 @@ ComputeNodeJSONType = TypedDict(
 
 
 class ComputeNode(BaseNode):
-    def __init__(self, method, value_type: AnyValueType):
+    # TODO: Use a narrower type for `method`.
+    def __init__(self, method: t.Callable, value_type: AnyValueType):
         super().__init__(value_type=value_type)
 
         self.method = method
         self.dependencies = [x for x in inspect.signature(method).parameters.keys()][1:]
 
-    def bind(self, instance: ComputeNode):
+    def bind(self, instance: ComputeNode) -> t.Callable:
         import functools
 
         return functools.partial(self.method, instance)
 
     def as_native(self) -> ComputeNodeJSONType:
         return {
-            "valueType": value_type_to_str(self.value_type),
+            "valueType": self.value_type_name,
             "dependencies": self.dependencies,
         }
 
@@ -96,8 +111,10 @@ DependencyGraphJSONType = TypedDict(
     },
 )
 
+AttrType = t.TypeVar("AttrType")
 
-def _attrs_of_type(obj, _type: t.Type):
+
+def _attrs_of_type(obj: t.Any, _type: t.Type[AttrType]) -> t.Dict[str, AttrType]:
     return {
         name: getattr(obj, name)
         for name in dir(obj)
@@ -106,7 +123,7 @@ def _attrs_of_type(obj, _type: t.Type):
 
 
 class DependencyGraph:
-    def __init__(self, cls):
+    def __init__(self, cls: t.Type):
         assert inspect.isclass(cls)
 
         self.inputs = _attrs_of_type(cls, Input)

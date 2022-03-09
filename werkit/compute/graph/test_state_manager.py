@@ -8,11 +8,11 @@ from .testing_examples import (
 )
 
 
-def test_state_manager_initial_state_is_empty():
+def test_state_manager_initial_state_is_empty() -> None:
     assert MyComputeProcess().state_manager.store == {}
 
 
-def test_state_manager_set():
+def test_state_manager_set() -> None:
     state_manager = MyComputeProcess().state_manager
 
     state_manager.set(a=3)
@@ -28,7 +28,7 @@ def test_state_manager_set():
         state_manager.set(bogus=5, also_bogus=5)
 
 
-def test_state_manager_evaluate():
+def test_state_manager_evaluate() -> None:
     state_manager = MyComputeProcess().state_manager
 
     state_manager.set(a=1, b=2)
@@ -41,19 +41,19 @@ def test_state_manager_evaluate():
     assert state_manager.store == {"a": 1, "i": 1}
 
 
-def test_state_manager_evaluate_on_subclass():
+def test_state_manager_evaluate_on_subclass() -> None:
     state_manager = MyComputeProcessSubclass().state_manager
     state_manager.set(a=1, b=2)
     state_manager.evaluate()
     assert state_manager.store == {"a": 1, "b": 2, "i": 1, "j": 2, "r": 3}
 
 
-def test_state_manager_evaluate_unknown_key():
+def test_state_manager_evaluate_unknown_key() -> None:
     with pytest.raises(KeyError, match=r"Unknown key: bogus"):
         MyComputeProcess().state_manager.evaluate(targets=["bogus"])
 
 
-def test_state_manager_evaluate_with_missing_dependencies():
+def test_state_manager_evaluate_with_missing_dependencies() -> None:
     state_manager = MyComputeProcess().state_manager
     state_manager.set(a=1)
     with pytest.raises(UnresolvedDependencyError):
@@ -63,7 +63,7 @@ def test_state_manager_evaluate_with_missing_dependencies():
         MyComputeProcess().state_manager.evaluate()
 
 
-def test_state_manager_evaluate_exceptions():
+def test_state_manager_evaluate_exceptions() -> None:
     state_manager = MyRaisingComputeProcess().state_manager
     state_manager.set(a=1, b=1)
     # TODO: We want computation to continue and errors to propagate.
@@ -71,20 +71,20 @@ def test_state_manager_evaluate_exceptions():
         state_manager.evaluate()
 
 
-def test_state_manager_set_type_mismatch():
+def test_state_manager_set_type_mismatch() -> None:
     state_manager = MyComputeProcess().state_manager
     with pytest.raises(ValueError, match="a should be type int, not bool"):
         state_manager.set(a=False)
 
 
-def test_state_manager_evaluate_type_mismatch():
+def test_state_manager_evaluate_type_mismatch() -> None:
     state_manager = MyWronglyTypedComputeProcess().state_manager
     state_manager.set(a=1, b=1)
     with pytest.raises(ValueError, match="s should be type int, not bool"):
         state_manager.evaluate()
 
 
-def test_state_manager_serialize():
+def test_state_manager_serialize() -> None:
     state_manager = MyComputeProcess().state_manager
     state_manager.set(a=1, b=2)
     # TODO: These should be wrapped in the werkit result format.
@@ -97,7 +97,7 @@ def test_state_manager_serialize():
     assert state_manager.serialize(targets=["i"]) == {"i": 1}
 
 
-def test_state_manager_serialize_exceptions():
+def test_state_manager_serialize_exceptions() -> None:
     pass
 
 

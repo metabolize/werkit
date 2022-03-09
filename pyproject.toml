@@ -74,3 +74,10 @@ omit = [
     "**/test_*.py",
     "werkit/orchestrator/testing/worker_service/*.py",
 ]
+
+[[tool.mypy.overrides]]
+module = "werkit.compute.graph.*"
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true

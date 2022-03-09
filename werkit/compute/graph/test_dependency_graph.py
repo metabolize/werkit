@@ -8,7 +8,7 @@ from .testing_examples import (
 )
 
 
-def test_dependency_graph_collects_dependencies():
+def test_dependency_graph_collects_dependencies() -> None:
     dependency_graph = DependencyGraph(MyComputeProcess)
 
     assert set(dependency_graph.inputs.keys()) == set(EXPECTED_INPUTS)
@@ -16,7 +16,7 @@ def test_dependency_graph_collects_dependencies():
     assert set(dependency_graph.outputs.keys()) == set([EXPECTED_OUTPUT])
 
 
-def test_dependency_graph_dependencies_have_correct_types():
+def test_dependency_graph_dependencies_have_correct_types() -> None:
     dependency_graph = DependencyGraph(MyComputeProcess)
 
     for name in EXPECTED_INPUTS:
@@ -26,13 +26,13 @@ def test_dependency_graph_dependencies_have_correct_types():
     assert dependency_graph.outputs[EXPECTED_OUTPUT].value_type is int
 
 
-def test_dependency_graph_serializes():
+def test_dependency_graph_serializes() -> None:
     dependency_graph = DependencyGraph(MyComputeProcess)
 
     assert dependency_graph.as_native() == EXPECTED_SERIALIZED_DEPENDENCY_GRAPH
 
 
-def test_dependency_graph_serialization_matches_schema():
+def test_dependency_graph_serialization_matches_schema() -> None:
     import os
     import simplejson as json
     from jsonschema import RefResolver, Draft7Validator

@@ -7,15 +7,15 @@ class MyComputeProcess:
     b = Input(value_type=int)
 
     @intermediate(value_type=int)
-    def i(self, a):
+    def i(self, a: int) -> int:
         return a
 
     @intermediate(value_type=int)
-    def j(self, b):
+    def j(self, b: int) -> int:
         return b
 
     @output(value_type=int)
-    def r(self, i, j):
+    def r(self, i: int, j: int) -> int:
         return i + j
 
 
@@ -40,15 +40,15 @@ class MyComputeProcessSubclass(MyComputeProcess):
 
 class MyRaisingComputeProcess(MyComputeProcess):
     @output(value_type=int)
-    def s(self):
+    def s(self) -> int:
         raise ValueError("Whoops")
 
     @output(value_type=int)
-    def t(self):
+    def t(self) -> int:
         raise ValueError("Whoops")
 
 
 class MyWronglyTypedComputeProcess(MyComputeProcess):
     @output(value_type=int)
-    def s(self):
+    def s(self) -> bool:
         return False

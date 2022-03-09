@@ -1,31 +1,34 @@
+import typing as t
 from ._dependency_graph import DependencyGraph
 
 
 class StateManager:
-    def __init__(self, instance):
+    def __init__(self, instance: t.Any):
         self.instance = instance
         self.dependency_graph = DependencyGraph(instance.__class__)
-        self.store = {}
+        self.store: t.Dict = {}
 
-    def _assert_known_keys(self, keys):
+    def _assert_known_keys(self, keys: t.Iterable[str]) -> None:
         unknown_keys = set(keys) - set(self.dependency_graph.keys())
         if len(unknown_keys):
             raise KeyError(
                 f"Unknown {'key' if len(unknown_keys) == 1 else 'keys'}: {', '.join(sorted(list(unknown_keys)))}"
             )
 
-    def coerce(self, **kwargs):
+    def coerce(self, **kwargs: t.Dict) -> t.Dict:
         return {
             name: self.dependency_graph.all_nodes[name].coerce(name=name, value=value)
             for name, value in kwargs.items()
         }
 
-    def set(self, **kwargs):
+    def set(self, **kwargs: t.Dict) -> None:
         self._assert_known_keys(kwargs.keys())
         coerced = self.coerce(**kwargs)
         self.store.update(coerced)
 
-    def evaluate(self, targets=None, handle_exceptions=False):
+    def evaluate(
+        self, targets: t.List[str] = None, handle_exceptions: bool = False
+    ) -> None:
         from artifax import Artifax
 
         if targets is not None:
@@ -44,7 +47,9 @@ class StateManager:
         coerced = self.coerce(**afx._result)
         self.store.update(coerced)
 
-    def serialize(self, targets=None, handle_exceptions=False):
+    def serialize(
+        self, targets: t.List[str] = None, handle_exceptions: bool = False
+    ) -> t.Dict:
         self.evaluate(targets=targets)
 
         if targets is None:
@@ -52,7 +57,7 @@ class StateManager:
         else:
             return {k: self.store[k] for k in targets}
 
-    def get(self, name):
+    def get(self, name: str) -> t.Any:
         self._assert_known_keys([name])
 
         try:

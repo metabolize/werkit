@@ -2,7 +2,7 @@ import numbers
 import numpy as np
 from polliwog import Polyline
 import vg
-from ._value_types import BaseValue
+from ._built_in_value_type import BaseValue
 
 
 def validate_json_value(json_value, ref):
