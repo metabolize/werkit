@@ -3,10 +3,17 @@ from abc import ABC, abstractmethod
 
 JSONType = t.Union[str, int, float, bool, None, t.Dict[str, t.Any], t.List[t.Any]]
 
-CanonicalNativeType = t.TypeVar("CanonicalNativeType")
+CanonicalType = t.TypeVar("CanonicalType")
 
 
-class CustomType(ABC, t.Generic[CanonicalNativeType]):
+class CustomType(ABC, t.Generic[CanonicalType]):
+    """
+    While the canonical type could be the type class itself, this isn't required
+    or even encouraged. Any existing type can be used as the canonical type,
+    whereas the CustomType is responsible for canonicalization and
+    serialization.
+    """
+
     @classmethod
     def name(cls) -> str:
         """
@@ -59,14 +66,14 @@ class CustomType(ABC, t.Generic[CanonicalNativeType]):
 
     @classmethod
     @abstractmethod
-    def deserialize(cls, json_data: JSONType) -> CanonicalNativeType:
+    def deserialize(cls, json_data: JSONType) -> CanonicalType:
         """
         Convert the JSON representation to the canonical native type.
         """
 
     @classmethod
     @abstractmethod
-    def coerce(cls, value: t.Any) -> CanonicalNativeType:
+    def coerce(cls, value: t.Any) -> CanonicalType:
         """
         Coerce the given value to the canonical native type. Raise an exception
         if it can't be coerced.
@@ -74,7 +81,7 @@ class CustomType(ABC, t.Generic[CanonicalNativeType]):
 
     @classmethod
     @abstractmethod
-    def serialize(self, value: CanonicalNativeType) -> JSONType:
+    def serialize(self, value: CanonicalType) -> JSONType:
         """
         Convert the canonical native type to a JSON representation.
         """
