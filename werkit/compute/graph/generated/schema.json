@@ -1,5 +1,4 @@
 {
-  "$ref": "#/definitions/MyModel",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
     "MyModel": {
@@ -17,6 +16,14 @@
       },
       "required": ["title", "description", "count"],
       "type": "object"
+    },
+    "Vector3": {
+      "items": {
+        "type": "number"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
     }
   }
 }

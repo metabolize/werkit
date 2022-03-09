@@ -66,6 +66,10 @@ class MyModel:
 
 class MyModelType(CustomType[MyModel]):
     @classmethod
+    def name(cls) -> str:
+        return "MyModel"
+
+    @classmethod
     def coerce(cls, value: t.Any) -> MyModel:
         if not isinstance(value, MyModel):
             raise ValueError(f"Can't coerce {type(value).__name__} to {cls.__name}")

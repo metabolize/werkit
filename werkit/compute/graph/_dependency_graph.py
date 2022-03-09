@@ -47,7 +47,9 @@ class BaseNode:
         if self.value_type_is_built_in:
             return value
         else:
-            return t.cast(t.Type[CustomType], self.value_type).deserialize(value)
+            value_type = t.cast(t.Type[CustomType], self.value_type)
+            value_type.validate(value)
+            return value_type.deserialize(value)
 
     def coerce(self, name: str, value: t.Any) -> t.Any:
         if self.value_type_is_built_in:
@@ -62,7 +64,10 @@ class BaseNode:
         if self.value_type_is_built_in:
             return value
         else:
-            return t.cast(t.Type[CustomType], self.value_type).serialize(value)
+            value_type = t.cast(t.Type[CustomType], self.value_type)
+            serialized = value_type.serialize(value)
+            value_type.validate(serialized)
+            return serialized
 
 
 InputJSONType = TypedDict("InputJSONType", {"valueType": str})

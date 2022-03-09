@@ -1,4 +1,5 @@
 from artifax.exceptions import UnresolvedDependencyError
+from jsonschema.exceptions import ValidationError
 import pytest
 from .testing_examples import (
     MyComputeProcess,
@@ -150,6 +151,9 @@ def test_state_manager_deserializes_custom_type() -> None:
     assert thing.count == 5
 
     assert state_manager.store["other_thing"] == (3, 4, 5)
+
+    with pytest.raises(ValidationError, match="{'bogus': 123} is not of type 'array'"):
+        state_manager.deserialize(other_thing={"bogus": 123})
 
 
 def test_state_manager_serializes_custom_type() -> None:
