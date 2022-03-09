@@ -46,7 +46,7 @@ class CustomType(ABC, t.Generic[CanonicalNativeType]):
 
         try:
             validator = cls._validator
-        except:
+        except AttributeError:
             with open(cls.schema_path(), "r") as f:
                 schema = json.load(f)
 
