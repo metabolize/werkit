@@ -1,4 +1,130 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {}
+  "definitions": {
+    "AnyOrchestatorWorkerInput": {
+      "$ref": "#/definitions/OrchestratedWorkerInput%3Cany%3E"
+    },
+    "AnyOrchestratorOutput": {
+      "$ref": "#/definitions/OrchestratorOutput%3Cany%2Cany%3E"
+    },
+    "OrchestratedWorkerInput<any>": {
+      "properties": {
+        "itemKey": {
+          "type": "string"
+        }
+      },
+      "required": ["itemKey"],
+      "type": "object"
+    },
+    "OrchestratorOutput<any,any>": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "duration_seconds": {
+                "type": "number"
+              },
+              "error": {
+                "type": "null"
+              },
+              "error_origin": {
+                "type": "null"
+              },
+              "message_key": {},
+              "orchestrationStartTimestamp": {
+                "type": "number"
+              },
+              "result": {},
+              "runtime_info": {},
+              "start_time": {
+                "type": "string"
+              },
+              "success": {
+                "const": true,
+                "type": "boolean"
+              },
+              "workerRoundtripSeconds": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "duration_seconds",
+              "error",
+              "error_origin",
+              "message_key",
+              "result",
+              "start_time",
+              "success"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "duration_seconds": {
+                "type": "number"
+              },
+              "error": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "error_origin": {
+                "$ref": "#/definitions/WerkitErrorOrigin"
+              },
+              "message_key": {},
+              "orchestrationStartTimestamp": {
+                "type": "number"
+              },
+              "result": {
+                "type": "null"
+              },
+              "runtime_info": {},
+              "start_time": {
+                "type": "string"
+              },
+              "success": {
+                "const": false,
+                "type": "boolean"
+              },
+              "workerRoundtripSeconds": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "duration_seconds",
+              "error",
+              "error_origin",
+              "message_key",
+              "result",
+              "start_time",
+              "success"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "type": "object"
+    },
+    "WerkitComputeMeta": {
+      "additionalProperties": false,
+      "properties": {
+        "duration_seconds": {
+          "type": "number"
+        },
+        "runtime_info": {},
+        "start_time": {
+          "type": "string"
+        }
+      },
+      "required": ["start_time", "duration_seconds"],
+      "type": "object"
+    },
+    "WerkitErrorOrigin": {
+      "enum": ["compute", "system", "orchestration"],
+      "type": "string"
+    }
+  }
 }

@@ -20,3 +20,6 @@ export type OrchestratorOutput<WorkerOutputType, MessageKeyType> = Record<
 export type OrchestratedWorkerInput<WorkerInputType> = {
   itemKey: string
 } & WorkerInputType
+
+export type AnyOrchestratorOutput = OrchestratorOutput<any, any>
+export type AnyOrchestatorWorkerInput = OrchestratedWorkerInput<any>
