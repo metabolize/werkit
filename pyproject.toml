@@ -38,10 +38,11 @@ artifax = {version = "0.3", optional = true}
 [tool.poetry.extras]
 aws_lambda_build = ["executor"]
 client = ["boto3"]
+compute_graph = ["artifax"]
+# compute_graph = ["artifax", "pathos", "exos"]
 lambda_common = ["harrison"]
 cli = ["click"]
 rds_graphile_worker = ["rds-graphile-worker-client"]
-compute_graph = ["artifax", "pathos", "exos"]
 
 [tool.poetry.dev-dependencies]
 black = "21.11b1"
@@ -52,11 +53,11 @@ executor = "23.2"
 flake8 = "4.0.1"
 flake8-import-order = "0.18.1"
 freezegun = "1.1.0"
+mypy = "^0.931"
 pytest = "6.2.5"
 pytest-cov = "3.0.0"
 python-dotenv = ">=0.17.1<0.18"
 twine = "^3.4.2"
-mypy = "^0.931"
 types-freezegun = "^1.1.6"
 types-simplejson = "^3.17.3"
 
