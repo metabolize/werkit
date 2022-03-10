@@ -23,6 +23,8 @@ boto3 = {version = "1.18.55", optional = true}
 click = {version = "^8.0.3", optional = true}
 executor = {version = ">=21.0", optional = true}
 harrison = {version = "^2.0", optional = true}
+# Pin to 0.18.0 to work around a Poetry install problem with 0.18.1 on OS X 10.15.7.
+pyrsistent = {version = "0.18.0", optional = true}
 rds-graphile-worker-client = {version = "^0.1.1", optional = true}
 semver = "3.0.0.dev3"
 simplejson = "^3.17.5"
