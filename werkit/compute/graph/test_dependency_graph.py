@@ -56,7 +56,7 @@ def test_dependency_graph_serialization_matches_schema() -> None:
         schema = json.load(f)
     resolver = RefResolver.from_schema(schema)
     validator = Draft7Validator(
-        {"$ref": "#/definitions/DependencyGraphWithBuiltinTypes"}, resolver=resolver
+        {"$ref": "#/definitions/DependencyGraphWithBuiltInTypes"}, resolver=resolver
     )
 
     validator.validate(serialized)

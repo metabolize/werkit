@@ -16,5 +16,5 @@ export interface DependencyGraph<ValueType extends BuiltInValueType> {
   outputs: { [k: string]: ComputeNode<ValueType> }
 }
 
-export type DependencyGraphWithBuiltinTypes = DependencyGraph<BuiltInValueType>
+export type DependencyGraphWithBuiltInTypes = DependencyGraph<BuiltInValueType>
 export type AnyDependencyGraph = DependencyGraph<any>

@@ -96,7 +96,7 @@
       "required": ["schemaVersion", "inputs", "intermediates", "outputs"],
       "type": "object"
     },
-    "DependencyGraphWithBuiltinTypes": {
+    "DependencyGraphWithBuiltInTypes": {
       "$ref": "#/definitions/DependencyGraph%3CBuiltInValueType%3E"
     },
     "Input<BuiltInValueType>": {
