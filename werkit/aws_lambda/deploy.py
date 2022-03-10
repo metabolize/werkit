@@ -7,7 +7,7 @@ DEFAULT_RUNTIME = "python3.7"
 
 
 def needs_s3_upload(path_to_zipfile):
-    return os.path.getsize(path_to_zipfile) > 50 * 2 ** 20
+    return os.path.getsize(path_to_zipfile) > 50 * 2**20
 
 
 def _create_or_update(
