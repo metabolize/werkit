@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
-    "AnyDependencyGraph": {
+    "DependencyGraphWithAnyTypes": {
       "$ref": "#/definitions/DependencyGraph%3Cany%3E"
     },
     "BuiltInValueType": {

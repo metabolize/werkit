@@ -17,4 +17,4 @@ export interface DependencyGraph<ValueType extends BuiltInValueType> {
 }
 
 export type DependencyGraphWithBuiltInTypes = DependencyGraph<BuiltInValueType>
-export type AnyDependencyGraph = DependencyGraph<any>
+export type DependencyGraphWithAnyTypes = DependencyGraph<any>
