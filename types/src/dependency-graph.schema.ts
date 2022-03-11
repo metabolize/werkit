@@ -1,4 +1,4 @@
-export type BuiltInValueType = 'Boolean' | 'Number' | 'String'
+export type BuiltInValueType = 'boolean' | 'number' | 'string'
 
 // When defining custom types, callers can extend BuiltInValueType:
 // export type ValueType = BuiltInValueType | 'MyThing' | 'MyOtherThing'

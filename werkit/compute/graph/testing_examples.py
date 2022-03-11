@@ -26,12 +26,12 @@ EXPECTED_OUTPUT = "r"
 
 EXPECTED_SERIALIZED_DEPENDENCY_GRAPH = {
     "schemaVersion": 1,
-    "inputs": {"a": {"valueType": "Number"}, "b": {"valueType": "Number"}},
+    "inputs": {"a": {"valueType": "number"}, "b": {"valueType": "number"}},
     "intermediates": {
-        "i": {"valueType": "Number", "dependencies": ["a"]},
-        "j": {"valueType": "Number", "dependencies": ["b"]},
+        "i": {"valueType": "number", "dependencies": ["a"]},
+        "j": {"valueType": "number", "dependencies": ["b"]},
     },
-    "outputs": {"r": {"valueType": "Number", "dependencies": ["i", "j"]}},
+    "outputs": {"r": {"valueType": "number", "dependencies": ["i", "j"]}},
 }
 
 
