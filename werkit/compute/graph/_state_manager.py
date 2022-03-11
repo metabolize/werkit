@@ -59,7 +59,7 @@ class StateManager:
         self.evaluate(targets=targets)
 
         return {
-            name: self.dependency_graph.all_nodes[name].serialize(value)
+            name: self.dependency_graph.all_nodes[name].serialize_value(value)
             for name, value in self.store.items()
             if targets is None or name in targets
         }

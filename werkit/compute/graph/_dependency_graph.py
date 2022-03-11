@@ -62,7 +62,7 @@ class BaseNode:
             # TODO: Perhaps catch and re-throw to improve the error message.
             return t.cast(t.Type[CustomType], self.value_type).coerce(value)
 
-    def serialize(self, value: t.Any) -> JSONType:
+    def serialize_value(self, value: t.Any) -> JSONType:
         if self.value_type_is_built_in:
             return value
         else:

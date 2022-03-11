@@ -69,7 +69,7 @@ def coverage_report():
 
 @cli.command()
 def check_types():
-    execute("mypy", *python_source_files())
+    execute("mypy", "--package", "werkit", "--show-error-codes")
 
 
 @cli.command()
