@@ -29,7 +29,7 @@ def test_dependency_graph_dependencies_have_correct_types() -> None:
 def test_dependency_graph_serializes() -> None:
     dependency_graph = DependencyGraph(MyComputeProcess)
 
-    assert dependency_graph.as_native() == EXPECTED_SERIALIZED_DEPENDENCY_GRAPH
+    assert dependency_graph.serialize() == EXPECTED_SERIALIZED_DEPENDENCY_GRAPH
 
 
 def test_dependency_graph_serialization_matches_schema() -> None:
@@ -38,7 +38,7 @@ def test_dependency_graph_serialization_matches_schema() -> None:
     from jsonschema import RefResolver, Draft7Validator
 
     dependency_graph = DependencyGraph(MyComputeProcess)
-    serialized = dependency_graph.as_native()
+    serialized = dependency_graph.serialize()
 
     with open(
         os.path.join(

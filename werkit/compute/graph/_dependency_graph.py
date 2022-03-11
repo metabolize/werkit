@@ -54,7 +54,9 @@ class BaseNode:
     def coerce(self, name: str, value: t.Any) -> t.Any:
         if self.value_type_is_built_in:
             return coerce_value_to_builtin_type(
-                name=name, value_type=self.value_type, value=value
+                name=name,
+                value_type=t.cast(BuiltInValueType, self.value_type),
+                value=value,
             )
         else:
             # TODO: Perhaps catch and re-throw to improve the error message.
@@ -74,7 +76,7 @@ InputJSONType = TypedDict("InputJSONType", {"valueType": str})
 
 
 class Input(BaseNode):
-    def as_native(self) -> InputJSONType:
+    def serialize(self) -> InputJSONType:
         return {"valueType": self.value_type_name}
 
 
@@ -96,7 +98,7 @@ class ComputeNode(BaseNode):
 
         return functools.partial(self.method, instance)
 
-    def as_native(self) -> ComputeNodeJSONType:
+    def serialize(self) -> ComputeNodeJSONType:
         return {
             "valueType": self.value_type_name,
             "dependencies": self.dependencies,
@@ -159,10 +161,10 @@ class DependencyGraph:
     def keys(self) -> t.List[str]:
         return list(self.inputs.keys()) + list(self.compute_nodes.keys())
 
-    def as_native(self) -> DependencyGraphJSONType:
+    def serialize(self) -> DependencyGraphJSONType:
         return {
             "schemaVersion": 1,
-            "inputs": {k: v.as_native() for k, v in self.inputs.items()},
-            "intermediates": {k: v.as_native() for k, v in self.intermediates.items()},
-            "outputs": {k: v.as_native() for k, v in self.outputs.items()},
+            "inputs": {k: v.serialize() for k, v in self.inputs.items()},
+            "intermediates": {k: v.serialize() for k, v in self.intermediates.items()},
+            "outputs": {k: v.serialize() for k, v in self.outputs.items()},
         }

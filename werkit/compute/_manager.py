@@ -55,8 +55,8 @@ class Manager:
         ) as manager:
             result = perform_computation()
             # If needed, convert result to JSON-serializable objects.
-            as_native = transform(result)
-            manager.result = as_native
+            serialized = transform(result)
+            manager.result = serialized
         return manager.output_message
     """
 

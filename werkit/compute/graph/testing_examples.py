@@ -72,7 +72,7 @@ class MyModelType(CustomType[MyModel]):
     @classmethod
     def coerce(cls, value: t.Any) -> MyModel:
         if not isinstance(value, MyModel):
-            raise ValueError(f"Can't coerce {type(value).__name__} to {cls.__name}")
+            raise ValueError(f"Can't coerce {type(value).__name__} to {cls.__name__}")
         return value
 
     @classmethod
@@ -85,6 +85,7 @@ class MyModelType(CustomType[MyModel]):
 
     @classmethod
     def deserialize(self, json_data: JSONType) -> MyModel:
+        json_data = t.cast(dict, json_data)
         return MyModel(**json_data)
 
 
@@ -94,7 +95,7 @@ class Vector3(CustomType[tuple]):
     @classmethod
     def coerce(cls, value: t.Any) -> tuple:
         if not isinstance(value, tuple):
-            raise ValueError(f"Can't coerce {type(value).__name__} to {cls.__name}")
+            raise ValueError(f"Can't coerce {type(value).__name__} to {cls.__name__}")
         elif not len(value) == 3:
             raise ValueError("Excepted tuple to have length 3")
         return tuple(round(coord, cls.DECIMALS) for coord in value)
@@ -105,6 +106,7 @@ class Vector3(CustomType[tuple]):
 
     @classmethod
     def deserialize(self, json_data: JSONType) -> tuple:
+        json_data = t.cast(list, json_data)
         return tuple(json_data)
 
 
