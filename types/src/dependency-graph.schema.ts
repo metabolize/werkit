@@ -1,5 +1,9 @@
 export type BuiltInValueType = 'Boolean' | 'Number' | 'String'
 
+// When defining custom types, callers can extend BuiltInValueType:
+// export type ValueType = BuiltInValueType | 'MyThing' | 'MyOtherThing'
+// export typy MyDependencyGrapy = DependencyGraph<ValueType>
+
 export interface Input<ValueType extends BuiltInValueType> {
   valueType: ValueType
 }
