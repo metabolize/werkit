@@ -2,14 +2,15 @@
   "name": "werkit",
   "version": "0.22.0",
   "description": "TypeScript types for Werkit, a toolkit for encapsulating Python-based computation into deployable and distributable tasks",
-  "main": "index.ts",
+  "main": "src",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "check-package-version": "if [ $(cd .. && poetry version --short) = $(node -e \"console.log(require('./package.json').version)\") ]; then exit 0; else echo 'Package versions are not in sync'; exit 1; fi;",
     "prepublishOnly": "npm run check-package-version"
   },
   "files": [
-    "*.ts"
+    "src/*.ts",
+    "src/generated/*.json"
   ],
   "author": "Metabolize",
   "license": "MIT",

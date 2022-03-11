@@ -10,7 +10,7 @@ InferredFunctionEnvironment = namedtuple(
 )
 
 
-def infer_function_environment_from_ci_environment():
+def infer_function_environment_from_ci_environment() -> InferredFunctionEnvironment:
     import os
     import re
     from semver import Version
@@ -34,7 +34,7 @@ def infer_function_environment_from_ci_environment():
     )
 
 
-def infer_commit_from_ci_environment(function_name):
+def infer_commit_from_ci_environment(function_name: str) -> InferredFunctionEnvironment:
     import os
 
     sha1 = os.environ["CIRCLE_SHA1"]

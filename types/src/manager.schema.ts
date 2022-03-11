@@ -31,3 +31,5 @@ export interface WerkitErrorOutputMessage<MessageKeyType>
 export type WerkitOutputMessage<ResultType, MessageKeyType> =
   | WerkitSuccessOutputMessage<ResultType, MessageKeyType>
   | WerkitErrorOutputMessage<MessageKeyType>
+
+export type AnyWerkitOutputMessage = WerkitOutputMessage<any, any>

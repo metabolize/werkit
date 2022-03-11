@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 import pytest
 from werkit.aws_lambda.build import create_zipfile_from_dir
 from werkit.aws_lambda.deploy import perform_create
-from werkit.compute import Schema
 from werkit.orchestrator.deploy import deploy_orchestrator
 
 from ..orchestrator_lambda.handler import schema
@@ -112,10 +111,10 @@ def test_integration_success(tmpdir):
         assert isinstance(result, object)
         assert all([r["success"] is True for r in result.values()])
         assert {k: r["result"] for k, r in result.items()} == {
-            "first": 2 ** 1,
-            "second": 2 ** 2,
-            "tenth": 2 ** 10,
-            "twentieth": 2 ** 20,
+            "first": 2**1,
+            "second": 2**2,
+            "tenth": 2**10,
+            "twentieth": 2**20,
         }
     finally:
         client = boto3.client("lambda")

@@ -12,7 +12,10 @@ def python_source_files():
     import glob
 
     return (
-        glob.glob("*.py") + glob.glob("werkit/*.py") + glob.glob("werkit/**/*.py")
+        glob.glob("*.py")
+        + glob.glob("werkit/*.py")
+        + glob.glob("werkit/**/*.py")
+        + glob.glob("werkit/**/**/*.py")
     )  # + ["doc/"]
 
 
@@ -35,6 +38,8 @@ def install():
         "lambda_common",
         "--extras",
         "rds_graphile_worker",
+        "--extras",
+        "compute_graph",
     )
 
 
@@ -60,6 +65,11 @@ def coverage(slow):
 def coverage_report():
     execute("coverage html")
     execute("open htmlcov/index.html")
+
+
+@cli.command()
+def check_types():
+    execute("mypy", "--package", "werkit", "--show-error-codes")
 
 
 @cli.command()

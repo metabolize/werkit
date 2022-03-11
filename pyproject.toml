@@ -30,10 +30,17 @@ rds-graphile-worker-client = {version = "^0.1.1", optional = true}
 semver = "3.0.0.dev3"
 simplejson = "^3.17.5"
 jsonschema = "^4.1.2"
+artifax = {version = "0.3", optional = true}
+# artifax = {git = "https://github.com/curvewise-forks/artifax.git", rev = "2e496525a04185525cfedbb3a9375101ec7faec1", optional = true}
+# Temporarily declare artifax dependencies until we publish an artifax fork.
+# pathos = {version = "*", optional = true}
+# exos = {version = "*", optional = true}
 
 [tool.poetry.extras]
 aws_lambda_build = ["executor"]
 client = ["boto3"]
+compute_graph = ["artifax"]
+# compute_graph = ["artifax", "pathos", "exos"]
 lambda_common = ["harrison"]
 cli = ["click"]
 rds_graphile_worker = ["rds-graphile-worker-client"]
@@ -46,10 +53,13 @@ executor = "23.2"
 flake8 = "4.0.1"
 flake8-import-order = "0.18.1"
 freezegun = "1.2.0"
+mypy = "0.931"
 pytest = "7.0.1"
 pytest-cov = "3.0.0"
 python-dotenv = ">=0.17.1<0.18"
 twine = "^3.4.2"
+types-freezegun = "^1.1.6"
+types-simplejson = "^3.17.3"
 
 [build-system]
 # Lint requires setuptools.
@@ -65,3 +75,10 @@ omit = [
     "**/test_*.py",
     "werkit/orchestrator/testing/worker_service/*.py",
 ]
+
+[[tool.mypy.overrides]]
+module = "werkit.compute.graph.*"
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
