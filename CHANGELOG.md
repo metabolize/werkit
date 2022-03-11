@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.23.0
+
+- Add compute graph functionality in `werkit.compute.graph`.
+
+
 ## 0.22.0
 
 - Updates for AWS Lambda state functionality.
