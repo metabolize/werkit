@@ -33,11 +33,11 @@ class BaseNode:
     def value_type_name(self) -> str:
         if self.value_type_is_built_in:
             if self.value_type is bool:
-                return "Boolean"
+                return "boolean"
             elif self.value_type in (int, float, numbers.Number):
-                return "Number"
+                return "number"
             elif self.value_type is str:
-                return "String"
+                return "string"
             else:
                 raise ValueError("How did we get here?")
         else:

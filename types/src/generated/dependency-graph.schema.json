@@ -1,11 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
-    "DependencyGraphWithAnyTypes": {
-      "$ref": "#/definitions/DependencyGraph%3Cany%3E"
-    },
     "BuiltInValueType": {
-      "enum": ["Boolean", "Number", "String"],
+      "enum": ["boolean", "number", "string"],
       "type": "string"
     },
     "ComputeNode<BuiltInValueType>": {
@@ -95,6 +92,9 @@
       },
       "required": ["schemaVersion", "inputs", "intermediates", "outputs"],
       "type": "object"
+    },
+    "DependencyGraphWithAnyTypes": {
+      "$ref": "#/definitions/DependencyGraph%3Cany%3E"
     },
     "DependencyGraphWithBuiltInTypes": {
       "$ref": "#/definitions/DependencyGraph%3CBuiltInValueType%3E"
