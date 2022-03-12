@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.23.1
+
+- Capitalization fix for previous.
+
 ## 0.23.0
 
 - Add compute graph functionality in `werkit.compute.graph`.

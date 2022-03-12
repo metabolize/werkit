@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.23.1
+
+- Capitalization fix for previous.
+
+
 ## 0.23.0
 
 - Add types for compute graph.
