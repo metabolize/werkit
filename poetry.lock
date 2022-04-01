@@ -1,6 +1,6 @@
 [[package]]
 name = "artifax"
-version = "0.3"
+version = "0.4"
 description = "python package for building artifacts from a computational graph"
 category = "main"
 optional = true
@@ -954,12 +954,12 @@ rds_graphile_worker = ["rds-graphile-worker-client"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "8e46ccd70f39fcea27aee284ff8d9bf87e2ef45dbe69e2e3827611fc715ff390"
+content-hash = "e0b40f1ac6e7128c53ad14c7a5c7a60225fa5b1d35eb3f716e609d0988f529cf"
 
 [metadata.files]
 artifax = [
-    {file = "artifax-0.3-py3-none-any.whl", hash = "sha256:8b4cbf768dd9f6e91a93334009d34c71d41e728ac271f9090f96bf2505b3df4e"},
-    {file = "artifax-0.3.tar.gz", hash = "sha256:b7d045f2bccc20f77faa6bc2d8e282a2e5cfe20d94dc6d990e3ba3ac877588cf"},
+    {file = "artifax-0.4-py3-none-any.whl", hash = "sha256:d48ba5964770d990dafdc73250f52ae75162692ec832a8ee923cc480108b0b1f"},
+    {file = "artifax-0.4.tar.gz", hash = "sha256:aeedcbbe287c25239e49f5ec63e9da450801cd892caef62dc2d4e9a4d3d1a8b0"},
 ]
 atomicwrites = [
     {file = "atomicwrites-1.4.0-py2.py3-none-any.whl", hash = "sha256:6d1784dea7c0c8d4a5172b6c620f40b6e4cbfdf96d783691f2e1302a7b88e197"},
