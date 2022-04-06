@@ -30,7 +30,7 @@ rds-graphile-worker-client = {version = "^0.1.1", optional = true}
 semver = "3.0.0.dev3"
 simplejson = "^3.17.5"
 jsonschema = "^4.1.2"
-artifax = {version = "0.3", optional = true}
+artifax = {version = "0.4", optional = true}
 # artifax = {git = "https://github.com/curvewise-forks/artifax.git", rev = "2e496525a04185525cfedbb3a9375101ec7faec1", optional = true}
 # Temporarily declare artifax dependencies until we publish an artifax fork.
 # pathos = {version = "*", optional = true}
