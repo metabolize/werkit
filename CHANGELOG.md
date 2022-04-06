@@ -1,8 +1,14 @@
 # Changelog
 
+## 0.24.0
+
+- Bump artifax dependency to 0.4.
+
+
 ## 0.23.1
 
 - Capitalization fix for previous.
+
 
 ## 0.23.0
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.24.0
+
+- Same as 0.23.1.
+
+
 ## 0.23.1
 
 - Capitalization fix for previous.
