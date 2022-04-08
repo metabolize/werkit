@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "werkit"
-version = "0.24.0"
+version = "0.25.0"
 description = "Toolkit for encapsulating Python-based computation into deployable and distributable tasks"
 authors = ["Paul Melnikow <github@paulmelnikow.com>", "Metabolize"]
 license = "MIT"

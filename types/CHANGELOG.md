@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.25.0
+
+- DependencyGraph: Correctly accommodate custom types using generic.
+
+
 ## 0.24.0
 
 - Same as 0.23.1.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.25.0
+
+Same as 0.24.0.
+
+
 ## 0.24.0
 
 - Bump artifax dependency to 0.4.
