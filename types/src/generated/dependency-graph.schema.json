@@ -21,7 +21,7 @@
       "required": ["valueType", "dependencies"],
       "type": "object"
     },
-    "ComputeNode<any>": {
+    "ComputeNode<string>": {
       "additionalProperties": false,
       "properties": {
         "dependencies": {
@@ -30,7 +30,9 @@
           },
           "type": "array"
         },
-        "valueType": {}
+        "valueType": {
+          "type": "string"
+        }
       },
       "required": ["valueType", "dependencies"],
       "type": "object"
@@ -64,24 +66,24 @@
       "required": ["schemaVersion", "inputs", "intermediates", "outputs"],
       "type": "object"
     },
-    "DependencyGraph<any>": {
+    "DependencyGraph<string>": {
       "additionalProperties": false,
       "properties": {
         "inputs": {
           "additionalProperties": {
-            "$ref": "#/definitions/Input%3Cany%3E"
+            "$ref": "#/definitions/Input%3Cstring%3E"
           },
           "type": "object"
         },
         "intermediates": {
           "additionalProperties": {
-            "$ref": "#/definitions/ComputeNode%3Cany%3E"
+            "$ref": "#/definitions/ComputeNode%3Cstring%3E"
           },
           "type": "object"
         },
         "outputs": {
           "additionalProperties": {
-            "$ref": "#/definitions/ComputeNode%3Cany%3E"
+            "$ref": "#/definitions/ComputeNode%3Cstring%3E"
           },
           "type": "object"
         },
@@ -94,7 +96,7 @@
       "type": "object"
     },
     "DependencyGraphWithAnyTypes": {
-      "$ref": "#/definitions/DependencyGraph%3Cany%3E"
+      "$ref": "#/definitions/DependencyGraph%3Cstring%3E"
     },
     "DependencyGraphWithBuiltInTypes": {
       "$ref": "#/definitions/DependencyGraph%3CBuiltInValueType%3E"
@@ -109,10 +111,12 @@
       "required": ["valueType"],
       "type": "object"
     },
-    "Input<any>": {
+    "Input<string>": {
       "additionalProperties": false,
       "properties": {
-        "valueType": {}
+        "valueType": {
+          "type": "string"
+        }
       },
       "required": ["valueType"],
       "type": "object"
