@@ -65,9 +65,7 @@ class StateManager:
         }
 
     def serialize_computed_node(self, name: str, computed_node: t.Any) -> dict:
-        return self.dependency_graph.all_nodes[name].serialize_value(
-            computed_node
-        )
+        return self.dependency_graph.all_nodes[name].serialize_value(computed_node)
 
     def get(self, name: str) -> t.Any:
         self._assert_known_keys([name])
