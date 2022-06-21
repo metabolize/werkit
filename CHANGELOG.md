@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.25.1
+
+- StateManager: Prevent exception when invoking `evaluate()` with an empty list.
+
+
 ## 0.25.0
 
 Same as 0.24.0.
