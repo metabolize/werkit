@@ -40,7 +40,12 @@ class StateManager:
         from artifax import Artifax
 
         if targets is not None:
-            self._assert_known_keys(targets)
+            if len(targets) == 0:
+                # TODO: afx.build(targets=[]) raises an exception. This seems
+                # like a bug in Artifax.
+                return
+            else:
+                self._assert_known_keys(targets)
 
         afx = Artifax(
             {

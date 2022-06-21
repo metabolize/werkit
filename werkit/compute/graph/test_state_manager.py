@@ -89,6 +89,14 @@ def test_state_manager_evaluate_exceptions() -> None:
         state_manager.evaluate()
 
 
+def test_state_manager_evaluate_empty_list() -> None:
+    state_manager = MyComputeProcess().state_manager
+
+    state_manager.set(a=1, b=2)
+    state_manager.evaluate(targets=[])
+    assert state_manager.store == {"a": 1, "b": 2}
+
+
 def test_state_manager_set_type_mismatch() -> None:
     state_manager = MyComputeProcess().state_manager
     with pytest.raises(ValueError, match="a should be type int, not bool"):
