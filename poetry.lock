@@ -881,7 +881,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "types-freezegun"
-version = "1.1.8"
+version = "1.1.10"
 description = "Typing stubs for freezegun"
 category = "dev"
 optional = false
@@ -955,7 +955,7 @@ rds_graphile_worker = ["rds-graphile-worker-client"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "088cbc623038beb0c025114580c2b160a55f47941378d4fab20091c0f0fa5b6c"
+content-hash = "c3558f61df4d3344d5a6df960e50ff50768e754b950d38e5f718e455d0607ee1"
 
 [metadata.files]
 artifax = [
@@ -1528,8 +1528,8 @@ typed-ast = [
     {file = "typed_ast-1.5.2.tar.gz", hash = "sha256:525a2d4088e70a9f75b08b3f87a51acc9cde640e19cc523c7e41aa355564ae27"},
 ]
 types-freezegun = [
-    {file = "types-freezegun-1.1.8.tar.gz", hash = "sha256:f4bb08c54aa46816c77a1b5c7a2a54f5393c3ce58e7d4002e67f9081b411e921"},
-    {file = "types_freezegun-1.1.8-py3-none-any.whl", hash = "sha256:59dd99a6d168bdb5bf884fda6daebd68c35bc86383df183cf182abc6dfcbb7b7"},
+    {file = "types-freezegun-1.1.10.tar.gz", hash = "sha256:cb3a2d2eee950eacbaac0673ab50499823365ceb8c655babb1544a41446409ec"},
+    {file = "types_freezegun-1.1.10-py3-none-any.whl", hash = "sha256:fadebe72213e0674036153366205038e1f95c8ca96deb4ef9b71ddc15413543e"},
 ]
 types-simplejson = [
     {file = "types-simplejson-3.17.4.tar.gz", hash = "sha256:1e8f95eb9590dfa424f0a569153009d748853c13721d11d73915de87b3b90428"},
