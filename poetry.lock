@@ -362,8 +362,8 @@ optional = false
 python-versions = ">=3.7"
 
 [package.extras]
-test = ["pytest", "pytest-trio", "pytest-asyncio (>=0.17)", "testpath", "trio", "async-timeout"]
-trio = ["trio", "async-generator"]
+trio = ["async-generator", "trio"]
+test = ["async-timeout", "trio", "testpath", "pytest-asyncio (>=0.17)", "pytest-trio", "pytest"]
 
 [[package]]
 name = "jmespath"
@@ -524,8 +524,8 @@ python-versions = ">=3.6"
 importlib-metadata = {version = ">=0.12", markers = "python_version < \"3.8\""}
 
 [package.extras]
-dev = ["pre-commit", "tox"]
-testing = ["pytest", "pytest-benchmark"]
+testing = ["pytest-benchmark", "pytest"]
+dev = ["tox", "pre-commit"]
 
 [[package]]
 name = "pox"
@@ -676,7 +676,7 @@ coverage = {version = ">=5.2.1", extras = ["toml"]}
 pytest = ">=4.6"
 
 [package.extras]
-testing = ["fields", "hunter", "process-tests", "six", "pytest-xdist", "virtualenv"]
+testing = ["virtualenv", "pytest-xdist", "six", "process-tests", "hunter", "fields"]
 
 [[package]]
 name = "python-dateutil"
@@ -889,7 +889,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-simplejson"
-version = "3.17.4"
+version = "3.17.7"
 description = "Typing stubs for simplejson"
 category = "dev"
 optional = false
@@ -955,7 +955,7 @@ rds_graphile_worker = ["rds-graphile-worker-client"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "088cbc623038beb0c025114580c2b160a55f47941378d4fab20091c0f0fa5b6c"
+content-hash = "1bb0de75cf1e1534a7f908a3465f7824da9c674a94c0c4f453ce238ea71b19bf"
 
 [metadata.files]
 artifax = [
@@ -1532,8 +1532,8 @@ types-freezegun = [
     {file = "types_freezegun-1.1.8-py3-none-any.whl", hash = "sha256:59dd99a6d168bdb5bf884fda6daebd68c35bc86383df183cf182abc6dfcbb7b7"},
 ]
 types-simplejson = [
-    {file = "types-simplejson-3.17.4.tar.gz", hash = "sha256:1e8f95eb9590dfa424f0a569153009d748853c13721d11d73915de87b3b90428"},
-    {file = "types_simplejson-3.17.4-py3-none-any.whl", hash = "sha256:febfb65d05d4439afe0b03f7e8301ee3b53abc6a981b81576c87c11b011d94dc"},
+    {file = "types-simplejson-3.17.7.tar.gz", hash = "sha256:801cfa251ef54b707f16256546f84f4e29156177875838c8f33e2c1527f62b47"},
+    {file = "types_simplejson-3.17.7-py3-none-any.whl", hash = "sha256:d0efa5696274973030c39a336674a21e16cf2838a85aef3181d4d9f511b2eeef"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.1.1-py3-none-any.whl", hash = "sha256:21c85e0fe4b9a155d0799430b0ad741cdce7e359660ccbd8b530613e8df88ce2"},
