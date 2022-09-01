@@ -46,7 +46,7 @@ cli = ["click"]
 rds_graphile_worker = ["rds-graphile-worker-client"]
 
 [tool.poetry.dev-dependencies]
-black = "22.1.0"
+black = "22.8.0"
 click = "8.0.3"
 coverage = "6.3.2"
 executor = "23.2"
