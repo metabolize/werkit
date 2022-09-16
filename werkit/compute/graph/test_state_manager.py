@@ -113,14 +113,24 @@ def test_state_manager_evaluate_type_mismatch() -> None:
 def test_state_manager_serializes() -> None:
     state_manager = MyComputeProcess().state_manager
     state_manager.set(a=1, b=2)
+    state_manager.evaluate()
     # TODO: These should be wrapped in the werkit result format.
     assert state_manager.serialize() == {"a": 1, "b": 2, "i": 1, "j": 2, "r": 3}
-    assert state_manager.serialize(targets=["r"]) == {"r": 3}
+    assert state_manager.serialize(targets=["i", "j", "r"]) == {"i": 1, "j": 2, "r": 3}
 
     state_manager = MyComputeProcess().state_manager
-    state_manager.set(a=1)
+    state_manager.set(a=1, b=2)
     # TODO: These should be wrapped in the werkit result format.
-    assert state_manager.serialize(targets=["i"]) == {"i": 1}
+    assert state_manager.serialize() == {"a": 1, "b": 2}
+
+
+def test_state_manager_raises_errors_on_not_yet_computed_keys() -> None:
+    state_manager = MyComputeProcess().state_manager
+    state_manager.set(a=1)
+    with pytest.raises(ValueError, match=r"Key has not been computed: i"):
+        state_manager.serialize(targets=["i"])
+    with pytest.raises(ValueError, match=r"Keys have not been computed: i, r"):
+        state_manager.serialize(targets=["i", "r"])
 
 
 def test_state_manager_serializes_exceptions() -> None:

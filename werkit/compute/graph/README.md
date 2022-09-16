@@ -35,11 +35,11 @@ compute_process.state_manager.evaluate(targets=["r"], handle_exceptions=False)
 print(compute_process.r)
 print(compute_process.i)
 
-# Serialize all output properties, automatically evaluating if needed.
+# Serialize already-computed computed properties.
 serialized = compute_process.state_manager.serialize(handle_exceptions=True)
 
-# Serialize specified properties, automatically evaluating if needed.
-serialized = compute_process.serialize(targets=["i", "j", "r"], handle_exceptions=True)
+# Serialize specified already-computed properties.
+serialized = compute_process.state_manager.serialize(targets=["r"], handle_exceptions=True)
 ```
 
 ## TODO
