@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.26.0
+
+- StateManager: Serialize no longer triggers evaluation.
+
+
 ## 0.25.1
 
 - StateManager: Prevent exception when invoking `evaluate()` with an empty list.
