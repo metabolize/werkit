@@ -18,10 +18,11 @@ def prepare_zip_file(build_dir, path_to_orchestrator_zip):
     zip_dir = os.path.join(build_dir, "zip")
     exported_requirements = os.path.join(build_dir, "requirements.txt")
     export_poetry_requirements(
-        output_file=exported_requirements, extras=["lambda_common"],
+        output_file=exported_requirements,
+        extras=["lambda_common"],
         # This test needs `with_hashes=False` to pass.
         # https://app.circleci.com/pipelines/github/metabolize/werkit/1763/workflows/05f23d1c-8e61-47c5-8c3b-a89fed1a752c/jobs/5181
-        with_hashes=False
+        with_hashes=False,
     )
 
     create_venv_with_dependencies(
