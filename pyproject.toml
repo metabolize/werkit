@@ -46,20 +46,20 @@ cli = ["click"]
 rds_graphile_worker = ["rds-graphile-worker-client"]
 
 [tool.poetry.dev-dependencies]
-black = "22.1.0"
+black = "22.8.0"
 click = "8.0.3"
-coverage = "6.3.2"
+coverage = "6.4.4"
 executor = "23.2"
-flake8 = "4.0.1"
+flake8 = "5.0.4"
 flake8-import-order = "0.18.1"
-freezegun = "1.2.0"
-mypy = "0.940"
+freezegun = "1.2.2"
+mypy = "0.971"
 pytest = "7.1.2"
 pytest-cov = "3.0.0"
 python-dotenv = ">=0.17.1<0.18"
-twine = "^3.4.2"
-types-freezegun = "^1.1.6"
-types-simplejson = "^3.17.3"
+twine = "4.0.1"
+types-freezegun = "1.1.10"
+types-simplejson = "3.17.7"
 
 [build-system]
 # Lint requires setuptools.
