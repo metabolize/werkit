@@ -127,9 +127,9 @@ def test_state_manager_serializes() -> None:
 def test_state_manager_raises_errors_on_not_yet_computed_keys() -> None:
     state_manager = MyComputeProcess().state_manager
     state_manager.set(a=1)
-    with pytest.raises(ValueError, match=r"Key has not been computed: i"):
+    with pytest.raises(ValueError, match=r"Key has not been evaluated: i"):
         state_manager.serialize(targets=["i"])
-    with pytest.raises(ValueError, match=r"Keys have not been computed: i, r"):
+    with pytest.raises(ValueError, match=r"Keys have not been evaluated: i, r"):
         state_manager.serialize(targets=["i", "r"])
 
 
@@ -137,9 +137,6 @@ def test_state_manager_serializes_exceptions() -> None:
     """
     TODO
     """
-
-
-# TODO: Provide a way to serialize only the properties which have been computed.
 
 
 def test_state_manager_with_custom_type() -> None:

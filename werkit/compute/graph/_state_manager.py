@@ -65,7 +65,7 @@ class StateManager:
             self._assert_known_keys(targets)
             missing_keys = set(targets) - set(self.store.keys())
             if missing_keys:
-                preamble = f"{'Key has' if len(missing_keys) == 1 else 'Keys have'} not been computed"
+                preamble = f"{'Key has' if len(missing_keys) == 1 else 'Keys have'} not been evaluated"
                 raise ValueError(f"{preamble}: {', '.join(sorted(list(missing_keys)))}")
         return {
             name: self.dependency_graph.all_nodes[name].serialize_value(value)
