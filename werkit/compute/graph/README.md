@@ -35,11 +35,11 @@ compute_process.state_manager.evaluate(targets=["r"], handle_exceptions=False)
 print(compute_process.r)
 print(compute_process.i)
 
-# Serialize all output properties, automatically evaluating if needed.
+# Serialize the evaluated properties.
 serialized = compute_process.state_manager.serialize(handle_exceptions=True)
 
-# Serialize specified properties, automatically evaluating if needed.
-serialized = compute_process.serialize(targets=["i", "j", "r"], handle_exceptions=True)
+# Serialize a specified subset of the evaluated properties.
+serialized = compute_process.state_manager.serialize(targets=["r"], handle_exceptions=True)
 ```
 
 ## TODO
@@ -47,7 +47,7 @@ serialized = compute_process.serialize(targets=["i", "j", "r"], handle_exception
 1. ~~JSON Schema for compute graph~~
 2. ~~Ship compute graph types in werkit npm package~~
 3. ~~Type checking results~~
-4. Provide a way to serialize only the properties which have been computed
+4. ~~Provide a way to serialize only the properties which have been computed~~
 5. Error propagation
 6. Serializing results vs errors
 7. Proper handling of getattr bindings when computation raises an AttributeError
