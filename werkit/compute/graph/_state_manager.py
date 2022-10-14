@@ -2,6 +2,18 @@ import typing as t
 from ._dependency_graph import DependencyGraph
 
 
+def postprocess(post):
+    def decorator(func):
+        import functools
+
+        def wrapper(*args, **kwargs):
+            return post(func(*args, **kwargs))
+
+        return functools.wraps(func)(wrapper)
+
+    return decorator
+
+
 class StateManager:
     def __init__(self, instance: t.Any):
         self.instance = instance
@@ -37,6 +49,7 @@ class StateManager:
     def evaluate(
         self, targets: t.List[str] = None, handle_exceptions: bool = False
     ) -> None:
+        import functools
         from artifax import Artifax
 
         if targets is not None:
@@ -47,10 +60,19 @@ class StateManager:
             else:
                 self._assert_known_keys(targets)
 
+        def wrap_node(name, node):
+            wrapped = node.bind(self.instance)
+
+            def wrapper(*args):
+                return wrapped(*args)
+
+            functools.update_wrapper(wrapper, wrapped)
+            return wrapper
+
         afx = Artifax(
             {
-                name: self.dependency_graph.compute_nodes[name].bind(self.instance)
-                for name in self.dependency_graph.compute_nodes.keys()
+                name: wrap_node(name, node)
+                for name, node in self.dependency_graph.compute_nodes.items()
             }
         )
         if self.store:
