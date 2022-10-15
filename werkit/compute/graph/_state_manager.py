@@ -2,18 +2,6 @@ import typing as t
 from ._dependency_graph import DependencyGraph
 
 
-def postprocess(post):
-    def decorator(func):
-        import functools
-
-        def wrapper(*args, **kwargs):
-            return post(func(*args, **kwargs))
-
-        return functools.wraps(func)(wrapper)
-
-    return decorator
-
-
 class StateManager:
     def __init__(self, instance: t.Any):
         self.instance = instance
@@ -62,25 +50,18 @@ class StateManager:
 
         def wrap_node(name, node):
             wrapped = node.bind(self.instance)
+            f = functools.partial(node.coerce, self.instance, name)
+            functools.update_wrapper(f, wrapped)
+            return f
 
-            def wrapper(*args):
-                return wrapped(*args)
-
-            functools.update_wrapper(wrapper, wrapped)
-            return wrapper
-
-        afx = Artifax(
-            {
-                name: wrap_node(name, node)
-                for name, node in self.dependency_graph.compute_nodes.items()
-            }
-        )
+        afx = Artifax({
+            name: wrap_node(name, node)
+            for name, node in self.dependency_graph.compute_nodes.items()
+        })
         if self.store:
             afx.set(**self.store)
         afx.build(targets=targets)
-        # TODO: `afx.build()` should always return an object.
-        coerced = self.coerce(**afx._result)
-        self.store.update(coerced)
+        return afx._result
 
     def serialize(self, targets: t.List[str] = None) -> t.Dict:
         if targets is not None:
