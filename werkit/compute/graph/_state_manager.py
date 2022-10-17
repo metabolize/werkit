@@ -50,18 +50,24 @@ class StateManager:
 
         def wrap_node(name, node):
             wrapped = node.bind(self.instance)
-            f = functools.partial(node.coerce, self.instance, name)
-            functools.update_wrapper(f, wrapped)
-            return f
 
-        afx = Artifax({
-            name: wrap_node(name, node)
-            for name, node in self.dependency_graph.compute_nodes.items()
-        })
+            def wrapper(*args):
+                value = wrapped(*args)
+                return node.coerce(name, value)
+
+            functools.update_wrapper(wrapper, wrapped)
+            return wrapper
+
+        afx = Artifax(
+            {
+                name: wrap_node(name, node)
+                for name, node in self.dependency_graph.compute_nodes.items()
+            }
+        )
         if self.store:
             afx.set(**self.store)
         afx.build(targets=targets)
-        return afx._result
+        self.store.update(**afx._result)
 
     def serialize(self, targets: t.List[str] = None) -> t.Dict:
         if targets is not None:
