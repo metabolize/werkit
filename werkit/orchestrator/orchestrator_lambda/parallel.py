@@ -6,7 +6,7 @@ from botocore.exceptions import ClientError
 from harrison import Timer
 
 
-# lambda_client = boto3.client("lambda")
+lambda_client = boto3.client("lambda")
 event_loop = asyncio.get_event_loop()
 
 

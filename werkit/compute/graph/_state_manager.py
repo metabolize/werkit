@@ -67,6 +67,7 @@ class StateManager:
         if self.store:
             afx.set(**self.store)
         afx.build(targets=targets)
+        # TODO: `afx.build()` should always return an object.
         self.store.update(**afx._result)
 
     def serialize(self, targets: t.List[str] = None) -> t.Dict:
