@@ -454,11 +454,11 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "more-itertools"
-version = "8.14.0"
+version = "9.0.0"
 description = "More routines for operating on iterables, beyond itertools"
 category = "dev"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.7"
 
 [[package]]
 name = "multiprocess"
@@ -1002,14 +1002,14 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "flake8 
 aws_lambda_build = ["executor"]
 cli = ["click"]
 client = ["boto3"]
-compute_graph = ["artifax"]
+compute_graph = ["artifax", "pathos", "exos"]
 lambda_common = ["harrison"]
 rds_graphile_worker = ["rds-graphile-worker-client"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "aaf884fe4bfbd23aef71b804e55d74210bb2d42d3fdb08c5c44243af05c3d7d8"
+content-hash = "d0998997017e987c7b257110277f751dc3f348322f39e4d3914a2f8750d300a2"
 
 [metadata.files]
 artifax = []
