@@ -25,7 +25,9 @@ class StateManager:
 
     def normalize(self, **kwargs: t.Dict) -> t.Dict:
         return {
-            name: self.dependency_graph.all_nodes[name].normalize(name=name, value=value)
+            name: self.dependency_graph.all_nodes[name].normalize(
+                name=name, value=value
+            )
             for name, value in kwargs.items()
         }
 
