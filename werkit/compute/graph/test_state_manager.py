@@ -149,11 +149,11 @@ def test_state_manager_with_custom_type() -> None:
     assert thing.description == "Example description"
     assert thing.count == 25
 
-    # Due to rounding in coerce(), other_thing should be rounded.
+    # Due to rounding in normalize(), other_thing should be rounded.
     assert state_manager.store["other_thing"] == (1.52, 2.52, 3.52)
 
 
-def test_state_manager_propagates_coerced_value() -> None:
+def test_state_manager_propagates_normalized_value() -> None:
     state_manager = MyComputeProcessWithCustomType().state_manager
     state_manager.set(a=1, b=2)
     state_manager.evaluate()

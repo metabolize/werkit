@@ -51,7 +51,7 @@ class BaseNode:
             value_type.validate(value)
             return value_type.deserialize(value)
 
-    def coerce(self, name: str, value: t.Any) -> t.Any:
+    def normalize(self, name: str, value: t.Any) -> t.Any:
         if self.value_type_is_built_in:
             return coerce_value_to_builtin_type(
                 name=name,
@@ -60,7 +60,7 @@ class BaseNode:
             )
         else:
             # TODO: Perhaps catch and re-throw to improve the error message.
-            return t.cast(t.Type[CustomType], self.value_type).coerce(value)
+            return t.cast(t.Type[CustomType], self.value_type).normalize(value)
 
     def serialize_value(self, value: t.Any) -> JSONType:
         if self.value_type_is_built_in:

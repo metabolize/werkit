@@ -73,10 +73,10 @@ class CustomType(ABC, t.Generic[CanonicalType]):
 
     @classmethod
     @abstractmethod
-    def coerce(cls, value: t.Any) -> CanonicalType:
+    def normalize(cls, value: t.Any) -> CanonicalType:
         """
         Coerce the given value to the canonical native type. Raise an exception
-        if it can't be coerced.
+        if it can't be normalized.
         """
 
     @classmethod

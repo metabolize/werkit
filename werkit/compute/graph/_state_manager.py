@@ -23,16 +23,16 @@ class StateManager:
         }
         self.store.update(deserialized)
 
-    def coerce(self, **kwargs: t.Dict) -> t.Dict:
+    def normalize(self, **kwargs: t.Dict) -> t.Dict:
         return {
-            name: self.dependency_graph.all_nodes[name].coerce(name=name, value=value)
+            name: self.dependency_graph.all_nodes[name].normalize(name=name, value=value)
             for name, value in kwargs.items()
         }
 
     def set(self, **kwargs: t.Dict) -> None:
         self._assert_known_keys(kwargs.keys())
-        coerced = self.coerce(**kwargs)
-        self.store.update(coerced)
+        normalized = self.normalize(**kwargs)
+        self.store.update(normalized)
 
     def evaluate(
         self, targets: t.List[str] = None, handle_exceptions: bool = False
@@ -53,7 +53,7 @@ class StateManager:
 
             def wrapper(*args):
                 value = wrapped(*args)
-                return node.coerce(name, value)
+                return node.normalize(name, value)
 
             functools.update_wrapper(wrapper, wrapped)
             return wrapper
