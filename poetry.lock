@@ -13,8 +13,8 @@ dev = ["pylint"]
 [package.source]
 type = "git"
 url = "https://github.com/curvewise-forks/artifax.git"
-reference = "b233f451ce9abf76545414707ffbf3fb4c0229fa"
-resolved_reference = "b233f451ce9abf76545414707ffbf3fb4c0229fa"
+reference = "3cd288a1698a798c0e488eba31e8e9ce3f075e1c"
+resolved_reference = "3cd288a1698a798c0e488eba31e8e9ce3f075e1c"
 
 [[package]]
 name = "atomicwrites"
@@ -1009,7 +1009,7 @@ rds_graphile_worker = ["rds-graphile-worker-client"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "decf90d1933ae333e8b96cb95bb2f2ca0dcd78dbebce3c7a12b67789cb5c9889"
+content-hash = "31538cc14e879812a9a3798aaa80b3e51cded9ab8aade8a17abcb824a73c7145"
 
 [metadata.files]
 artifax = []

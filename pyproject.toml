@@ -31,7 +31,7 @@ semver = "3.0.0.dev3"
 simplejson = "^3.17.5"
 jsonschema = "^4.1.2"
 # artifax = {version = "0.4", optional = true}
-artifax = {git = "https://github.com/curvewise-forks/artifax.git", rev = "b233f451ce9abf76545414707ffbf3fb4c0229fa", optional = true}
+artifax = {git = "https://github.com/curvewise-forks/artifax.git", rev = "3cd288a1698a798c0e488eba31e8e9ce3f075e1c", optional = true}
 # Temporarily declare artifax dependencies until we publish an artifax fork.
 pathos = {version = "*", optional = true}
 exos = {version = "*", optional = true}
