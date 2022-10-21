@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.27.0
+
+- StateManager: Pass intermediates using normalized values, rename coerce to normalize
+
+
 ## 0.26.0
 
 - StateManager: Serialize no longer triggers evaluation.
