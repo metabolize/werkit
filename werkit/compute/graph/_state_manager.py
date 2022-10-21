@@ -23,20 +23,23 @@ class StateManager:
         }
         self.store.update(deserialized)
 
-    def coerce(self, **kwargs: t.Dict) -> t.Dict:
+    def normalize(self, **kwargs: t.Dict) -> t.Dict:
         return {
-            name: self.dependency_graph.all_nodes[name].coerce(name=name, value=value)
+            name: self.dependency_graph.all_nodes[name].normalize(
+                name=name, value=value
+            )
             for name, value in kwargs.items()
         }
 
     def set(self, **kwargs: t.Dict) -> None:
         self._assert_known_keys(kwargs.keys())
-        coerced = self.coerce(**kwargs)
-        self.store.update(coerced)
+        normalized = self.normalize(**kwargs)
+        self.store.update(normalized)
 
     def evaluate(
         self, targets: t.List[str] = None, handle_exceptions: bool = False
     ) -> None:
+        import functools
         from artifax import Artifax
 
         if targets is not None:
@@ -47,18 +50,27 @@ class StateManager:
             else:
                 self._assert_known_keys(targets)
 
+        def wrap_node(name, node):
+            wrapped = node.bind(self.instance)
+
+            def wrapper(*args):
+                value = wrapped(*args)
+                return node.normalize(name, value)
+
+            functools.update_wrapper(wrapper, wrapped)
+            return wrapper
+
         afx = Artifax(
             {
-                name: self.dependency_graph.compute_nodes[name].bind(self.instance)
-                for name in self.dependency_graph.compute_nodes.keys()
+                name: wrap_node(name, node)
+                for name, node in self.dependency_graph.compute_nodes.items()
             }
         )
         if self.store:
             afx.set(**self.store)
         afx.build(targets=targets)
         # TODO: `afx.build()` should always return an object.
-        coerced = self.coerce(**afx._result)
-        self.store.update(coerced)
+        self.store.update(**afx._result)
 
     def serialize(self, targets: t.List[str] = None) -> t.Dict:
         if targets is not None:

@@ -70,9 +70,11 @@ class MyModelType(CustomType[MyModel]):
         return "MyModel"
 
     @classmethod
-    def coerce(cls, value: t.Any) -> MyModel:
+    def normalize(cls, value: t.Any) -> MyModel:
         if not isinstance(value, MyModel):
-            raise ValueError(f"Can't coerce {type(value).__name__} to {cls.__name__}")
+            raise ValueError(
+                f"Can't normalize {type(value).__name__} to {cls.__name__}"
+            )
         return value
 
     @classmethod
@@ -93,9 +95,11 @@ class Vector3(CustomType[tuple]):
     DECIMALS = 2
 
     @classmethod
-    def coerce(cls, value: t.Any) -> tuple:
+    def normalize(cls, value: t.Any) -> tuple:
         if not isinstance(value, tuple):
-            raise ValueError(f"Can't coerce {type(value).__name__} to {cls.__name__}")
+            raise ValueError(
+                f"Can't normalize {type(value).__name__} to {cls.__name__}"
+            )
         elif not len(value) == 3:
             raise ValueError("Excepted tuple to have length 3")
         return tuple(round(coord, cls.DECIMALS) for coord in value)
@@ -120,3 +124,7 @@ class MyComputeProcessWithCustomType(MyComputeProcess):
     @output(value_type=Vector3)
     def other_thing(self) -> tuple:
         return (1.5151, 2.5151, 3.5151)
+
+    @output(value_type=str)
+    def further_derived_thing(self, other_thing) -> str:
+        return str(other_thing)
