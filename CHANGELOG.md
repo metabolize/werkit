@@ -2,7 +2,8 @@
 
 ## 0.27.0
 
-- StateManager: Pass intermediates using normalized values, rename coerce to normalize
+- ComputeGraph: Rename `coerce()` to `normalize()`
+- StateManager: Pass intermediates using normalized values
 
 
 ## 0.26.0
