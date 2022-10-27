@@ -73,7 +73,7 @@ class StateManager:
             self.store.update(**afx.build(targets=targets))
         else:
             values = afx.build(targets=targets)
-            self.store.update(**zip(targets, values))
+            self.store.update(**dict(zip(targets, values)))
 
     def serialize(self, targets: t.List[str] = None) -> t.Dict:
         if targets is not None:
