@@ -4,6 +4,7 @@
 
 - ComputeGraph: Rename `coerce()` to `normalize()`
 - StateManager: Pass intermediates using normalized values
+- Bump artifax dependency to 0.5.
 
 
 ## 0.26.0
