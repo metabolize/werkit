@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.27.0
+
+- ComputeGraph: Rename `coerce()` to `normalize()`
+- StateManager: Pass intermediates using normalized values
+- Bump boto3 dependency to 1.20.32 to match the AWS Lambda preinstalled
+  version
+- Bump artifax dependency to 0.5.
+
+
 ## 0.26.0
 
 - StateManager: Serialize no longer triggers evaluation.
