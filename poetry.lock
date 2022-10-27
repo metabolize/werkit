@@ -951,7 +951,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-simplejson"
-version = "3.17.7"
+version = "3.17.7.1"
 description = "Typing stubs for simplejson"
 category = "dev"
 optional = false
@@ -1017,7 +1017,7 @@ rds-graphile-worker = ["rds-graphile-worker-client"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "1a21288f662c2f9aba516d3377ded4633cdab269d8a323a432454cfc2ed16d67"
+content-hash = "aa56cca28824abbebec5f8b8891d08925791690d48667c6379ec8dff18cf0582"
 
 [metadata.files]
 artifax = [
@@ -1640,8 +1640,8 @@ types-freezegun = [
     {file = "types_freezegun-1.1.10-py3-none-any.whl", hash = "sha256:fadebe72213e0674036153366205038e1f95c8ca96deb4ef9b71ddc15413543e"},
 ]
 types-simplejson = [
-    {file = "types-simplejson-3.17.7.tar.gz", hash = "sha256:801cfa251ef54b707f16256546f84f4e29156177875838c8f33e2c1527f62b47"},
-    {file = "types_simplejson-3.17.7-py3-none-any.whl", hash = "sha256:d0efa5696274973030c39a336674a21e16cf2838a85aef3181d4d9f511b2eeef"},
+    {file = "types-simplejson-3.17.7.1.tar.gz", hash = "sha256:cf490006a775972f15b9524f4838f8557d4609d68e4d4a214b33f0a87830cc19"},
+    {file = "types_simplejson-3.17.7.1-py3-none-any.whl", hash = "sha256:5860a7d88e966f678408489bfb3c5fbf814350afc290292817e6af11c5ba200a"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.4.0-py3-none-any.whl", hash = "sha256:16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e"},
