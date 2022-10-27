@@ -30,11 +30,11 @@ rds-graphile-worker-client = {version = "^0.1.1", optional = true}
 semver = "3.0.0.dev3"
 simplejson = "^3.17.5"
 jsonschema = "^4.1.2"
-# artifax = {version = "0.4", optional = true}
-artifax = {git = "https://github.com/curvewise-forks/artifax.git", rev = "3cd288a1698a798c0e488eba31e8e9ce3f075e1c", optional = true}
+artifax = {version = "0.5", optional = true}
+# artifax = {git = "https://github.com/curvewise-forks/artifax.git", rev = "3cd288a1698a798c0e488eba31e8e9ce3f075e1c", optional = true}
 # Temporarily declare artifax dependencies until we publish an artifax fork.
-pathos = {version = "*", optional = true}
-exos = {version = "*", optional = true}
+# pathos = {version = "*", optional = true}
+# exos = {version = "*", optional = true}
 
 [tool.poetry.extras]
 aws_lambda_build = ["executor"]
@@ -56,7 +56,7 @@ freezegun = "1.2.2"
 mypy = "0.971"
 pytest = "7.1.2"
 pytest-cov = "3.0.0"
-python-dotenv = ">=0.17.1<0.18"
+python-dotenv = ">=0.17.1,<0.18"
 twine = "4.0.1"
 types-freezegun = "1.1.10"
 types-simplejson = "3.17.7"
