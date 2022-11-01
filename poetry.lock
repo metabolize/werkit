@@ -681,11 +681,11 @@ python-versions = "*"
 
 [[package]]
 name = "pyrsistent"
-version = "0.18.0"
+version = "0.19.1"
 description = "Persistent/Functional/Immutable data structures"
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 
 [[package]]
 name = "pytest"
@@ -1011,7 +1011,7 @@ rds-graphile-worker = ["rds-graphile-worker-client"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "dc43d11797a739f285c1ca13f2ccf3974de2c7c7e16a4943db3e609c9ff6d333"
+content-hash = "3fc7c511b6fb3059911a8c64b1a3d3c8c3bfb4a9d8c2e06e28b2057c0d8cf292"
 
 [metadata.files]
 artifax = [
@@ -1442,27 +1442,28 @@ pyreadline3 = [
     {file = "pyreadline3-3.4.1.tar.gz", hash = "sha256:6f3d1f7b8a31ba32b73917cefc1f28cc660562f39aea8646d30bd6eff21f7bae"},
 ]
 pyrsistent = [
-    {file = "pyrsistent-0.18.0-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:f4c8cabb46ff8e5d61f56a037974228e978f26bfefce4f61a4b1ac0ba7a2ab72"},
-    {file = "pyrsistent-0.18.0-cp36-cp36m-manylinux1_i686.whl", hash = "sha256:da6e5e818d18459fa46fac0a4a4e543507fe1110e808101277c5a2b5bab0cd2d"},
-    {file = "pyrsistent-0.18.0-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:5e4395bbf841693eaebaa5bb5c8f5cdbb1d139e07c975c682ec4e4f8126e03d2"},
-    {file = "pyrsistent-0.18.0-cp36-cp36m-win32.whl", hash = "sha256:527be2bfa8dc80f6f8ddd65242ba476a6c4fb4e3aedbf281dfbac1b1ed4165b1"},
-    {file = "pyrsistent-0.18.0-cp36-cp36m-win_amd64.whl", hash = "sha256:2aaf19dc8ce517a8653746d98e962ef480ff34b6bc563fc067be6401ffb457c7"},
-    {file = "pyrsistent-0.18.0-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:58a70d93fb79dc585b21f9d72487b929a6fe58da0754fa4cb9f279bb92369396"},
-    {file = "pyrsistent-0.18.0-cp37-cp37m-manylinux1_i686.whl", hash = "sha256:4916c10896721e472ee12c95cdc2891ce5890898d2f9907b1b4ae0f53588b710"},
-    {file = "pyrsistent-0.18.0-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:73ff61b1411e3fb0ba144b8f08d6749749775fe89688093e1efef9839d2dcc35"},
-    {file = "pyrsistent-0.18.0-cp37-cp37m-win32.whl", hash = "sha256:b29b869cf58412ca5738d23691e96d8aff535e17390128a1a52717c9a109da4f"},
-    {file = "pyrsistent-0.18.0-cp37-cp37m-win_amd64.whl", hash = "sha256:097b96f129dd36a8c9e33594e7ebb151b1515eb52cceb08474c10a5479e799f2"},
-    {file = "pyrsistent-0.18.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:772e94c2c6864f2cd2ffbe58bb3bdefbe2a32afa0acb1a77e472aac831f83427"},
-    {file = "pyrsistent-0.18.0-cp38-cp38-manylinux1_i686.whl", hash = "sha256:c1a9ff320fa699337e05edcaae79ef8c2880b52720bc031b219e5b5008ebbdef"},
-    {file = "pyrsistent-0.18.0-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:cd3caef37a415fd0dae6148a1b6957a8c5f275a62cca02e18474608cb263640c"},
-    {file = "pyrsistent-0.18.0-cp38-cp38-win32.whl", hash = "sha256:e79d94ca58fcafef6395f6352383fa1a76922268fa02caa2272fff501c2fdc78"},
-    {file = "pyrsistent-0.18.0-cp38-cp38-win_amd64.whl", hash = "sha256:a0c772d791c38bbc77be659af29bb14c38ced151433592e326361610250c605b"},
-    {file = "pyrsistent-0.18.0-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:d5ec194c9c573aafaceebf05fc400656722793dac57f254cd4741f3c27ae57b4"},
-    {file = "pyrsistent-0.18.0-cp39-cp39-manylinux1_i686.whl", hash = "sha256:6b5eed00e597b5b5773b4ca30bd48a5774ef1e96f2a45d105db5b4ebb4bca680"},
-    {file = "pyrsistent-0.18.0-cp39-cp39-manylinux1_x86_64.whl", hash = "sha256:48578680353f41dca1ca3dc48629fb77dfc745128b56fc01096b2530c13fd426"},
-    {file = "pyrsistent-0.18.0-cp39-cp39-win32.whl", hash = "sha256:f3ef98d7b76da5eb19c37fda834d50262ff9167c65658d1d8f974d2e4d90676b"},
-    {file = "pyrsistent-0.18.0-cp39-cp39-win_amd64.whl", hash = "sha256:404e1f1d254d314d55adb8d87f4f465c8693d6f902f67eb6ef5b4526dc58e6ea"},
-    {file = "pyrsistent-0.18.0.tar.gz", hash = "sha256:773c781216f8c2900b42a7b638d5b517bb134ae1acbebe4d1e8f1f41ea60eb4b"},
+    {file = "pyrsistent-0.19.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:8a34a2a8b220247658f7ced871197c390b3a6371d796a5869ab1c62abe0be527"},
+    {file = "pyrsistent-0.19.1-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:73b2db09fe15b6e444c0bd566a125a385ca6493456224ce8b367d734f079f576"},
+    {file = "pyrsistent-0.19.1-cp310-cp310-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:4c58bd93c4d502f52938fccdbe6c9d70df3a585c6b39d900fab5f76b604282aa"},
+    {file = "pyrsistent-0.19.1-cp310-cp310-win32.whl", hash = "sha256:bc33fc20ddfd89b86b7710142963490d8c4ee8307ed6cc5e189a58fa72390eb9"},
+    {file = "pyrsistent-0.19.1-cp310-cp310-win_amd64.whl", hash = "sha256:06579d46d8ad69529b28f88711191a7fe7103c92d04a9f338dc754f71b92efa0"},
+    {file = "pyrsistent-0.19.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:1d0620474d509172e1c50b79d5626bfe1899f174bf650186a50c6ce31289ff52"},
+    {file = "pyrsistent-0.19.1-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:945297fc344fef4d540135180ce7babeb2291d124698cc6282f3eac624aa5e82"},
+    {file = "pyrsistent-0.19.1-cp37-cp37m-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:d16ac5ab3d9db78fed40c884d67079524e4cf8276639211ad9e6fa73e727727e"},
+    {file = "pyrsistent-0.19.1-cp37-cp37m-win32.whl", hash = "sha256:327f99800d04a9abcf580daecfd6dd4bfdb4a7e61c71bf2cd1189ef1ca44bade"},
+    {file = "pyrsistent-0.19.1-cp37-cp37m-win_amd64.whl", hash = "sha256:39f15ad754384e744ac8b00805913bfa66c41131faaa3e4c45c4af0731f3e8f6"},
+    {file = "pyrsistent-0.19.1-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:73d4ec2997716af3c8f28f7e3d3a565d273a598982d2fe95639e07ce4db5da45"},
+    {file = "pyrsistent-0.19.1-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:62a41037387ae849a493cd945e22b34d167a843d57f75b07dbfad6d96cef485c"},
+    {file = "pyrsistent-0.19.1-cp38-cp38-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:6df99c3578dc4eb33f3eb26bc28277ab40a720b71649d940bff9c1f704377772"},
+    {file = "pyrsistent-0.19.1-cp38-cp38-win32.whl", hash = "sha256:aaa869d9199d7d4c70a57678aff21654cc179c0c32bcfde87f1d65d0ff47e520"},
+    {file = "pyrsistent-0.19.1-cp38-cp38-win_amd64.whl", hash = "sha256:2032d971711643049b4f2c3ca5155a855d507d73bad26dac8d4349e5c5dd6758"},
+    {file = "pyrsistent-0.19.1-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:6ef7430e45c5fa0bb6c361cada4a08ed9c184b5ed086815a85c3bc8c5054566b"},
+    {file = "pyrsistent-0.19.1-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:73e3e2fd9da009d558050697cc22ad689f89a14a2ef2e67304628a913e59c947"},
+    {file = "pyrsistent-0.19.1-cp39-cp39-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:2c641111c3f110379bb9001dbb26b34eb8cafab3d0fa855dc161c391461a4aab"},
+    {file = "pyrsistent-0.19.1-cp39-cp39-win32.whl", hash = "sha256:62b704f18526a8fc243152de8f3f40ae39c5172baff10f50c0c5d5331d6f2342"},
+    {file = "pyrsistent-0.19.1-cp39-cp39-win_amd64.whl", hash = "sha256:890f577aec554f142e01daf890221d10e4f93a9b1107998d631d3f075b55e8f8"},
+    {file = "pyrsistent-0.19.1-py3-none-any.whl", hash = "sha256:8bc23e9ddcb523c3ffb4d712aa0bd5bc67b34ff4e2b23fb557012171bdb4013a"},
+    {file = "pyrsistent-0.19.1.tar.gz", hash = "sha256:cfe6d8b293d123255fd3b475b5f4e851eb5cbaee2064c8933aa27344381744ae"},
 ]
 pytest = [
     {file = "pytest-7.2.0-py3-none-any.whl", hash = "sha256:892f933d339f068883b6fd5a459f03d85bfcb355e4981e146d2c7616c21fef71"},
