@@ -945,7 +945,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-simplejson"
-version = "3.17.7.1"
+version = "3.18.0.0"
 description = "Typing stubs for simplejson"
 category = "dev"
 optional = false
@@ -1011,7 +1011,7 @@ rds-graphile-worker = ["rds-graphile-worker-client"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "dc43d11797a739f285c1ca13f2ccf3974de2c7c7e16a4943db3e609c9ff6d333"
+content-hash = "9bbdea24ad2b01a585fbbaefbebef22a35a638c3adbd09166d10e8b4bc45da54"
 
 [metadata.files]
 artifax = [
@@ -1404,6 +1404,8 @@ property-manager = [
 psycopg2 = [
     {file = "psycopg2-2.9.5-cp310-cp310-win32.whl", hash = "sha256:d3ef67e630b0de0779c42912fe2cbae3805ebaba30cda27fea2a3de650a9414f"},
     {file = "psycopg2-2.9.5-cp310-cp310-win_amd64.whl", hash = "sha256:4cb9936316d88bfab614666eb9e32995e794ed0f8f6b3b718666c22819c1d7ee"},
+    {file = "psycopg2-2.9.5-cp311-cp311-win32.whl", hash = "sha256:093e3894d2d3c592ab0945d9eba9d139c139664dcf83a1c440b8a7aa9bb21955"},
+    {file = "psycopg2-2.9.5-cp311-cp311-win_amd64.whl", hash = "sha256:920bf418000dd17669d2904472efeab2b20546efd0548139618f8fa305d1d7ad"},
     {file = "psycopg2-2.9.5-cp36-cp36m-win32.whl", hash = "sha256:b9ac1b0d8ecc49e05e4e182694f418d27f3aedcfca854ebd6c05bb1cffa10d6d"},
     {file = "psycopg2-2.9.5-cp36-cp36m-win_amd64.whl", hash = "sha256:fc04dd5189b90d825509caa510f20d1d504761e78b8dfb95a0ede180f71d50e5"},
     {file = "psycopg2-2.9.5-cp37-cp37m-win32.whl", hash = "sha256:922cc5f0b98a5f2b1ff481f5551b95cd04580fd6f0c72d9b22e6c0145a4840e0"},
@@ -1630,8 +1632,8 @@ types-freezegun = [
     {file = "types_freezegun-1.1.10-py3-none-any.whl", hash = "sha256:fadebe72213e0674036153366205038e1f95c8ca96deb4ef9b71ddc15413543e"},
 ]
 types-simplejson = [
-    {file = "types-simplejson-3.17.7.1.tar.gz", hash = "sha256:cf490006a775972f15b9524f4838f8557d4609d68e4d4a214b33f0a87830cc19"},
-    {file = "types_simplejson-3.17.7.1-py3-none-any.whl", hash = "sha256:5860a7d88e966f678408489bfb3c5fbf814350afc290292817e6af11c5ba200a"},
+    {file = "types-simplejson-3.18.0.0.tar.gz", hash = "sha256:857adb13190abd65d0d103be965152e79a6842c5663e01e8681bde1895713f52"},
+    {file = "types_simplejson-3.18.0.0-py3-none-any.whl", hash = "sha256:f8a8428f753574fa3b7eb290756776f0fb6b4ad9cae72bf8c0c9534eeda6398c"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.4.0-py3-none-any.whl", hash = "sha256:16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e"},
