@@ -173,11 +173,10 @@ class Manager:
         if type in [KeyboardInterrupt, SystemExit]:
             raise value
         elif value:
-            if self.verbose:
-                print(
-                    "Errored in {}".format(format_time(self.duration_seconds)),
-                    file=sys.stderr,
-                )
+            print(
+                "Errored in {}".format(format_time(self.duration_seconds)),
+                file=sys.stderr,
+            )
             return self._note_compute_exception(value)
 
         # In case of success, make sure the `result` setter has been invoked
