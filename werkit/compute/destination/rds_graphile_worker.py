@@ -8,19 +8,22 @@ from werkit.compute import Destination
 _graphile_worker_client = None
 
 
-def get_graphile_worker_client():
+def get_graphile_worker_client(debug=False):
     import os
     from rds_graphile_worker_client import RdsGraphileWorkerClient
 
     global _graphile_worker_client
     if not _graphile_worker_client:  # pragma: no cover
-        _graphile_worker_client = RdsGraphileWorkerClient(
-            aws_region=os.environ["AWS_REGION"],
-            pg_username=os.environ["RDS_GRAPHILE_WORKER_PG_USERNAME"],
-            pg_hostname=os.environ["RDS_GRAPHILE_WORKER_PG_HOSTNAME"],
-            pg_port=os.environ["RDS_GRAPHILE_WORKER_PG_PORT"],
-            pg_dbname=os.environ["RDS_GRAPHILE_WORKER_PG_DBNAME"],
-        )
+        config_kwargs = {
+            "aws_region": os.environ["AWS_REGION"],
+            "pg_username": os.environ["RDS_GRAPHILE_WORKER_PG_USERNAME"],
+            "pg_hostname": os.environ["RDS_GRAPHILE_WORKER_PG_HOSTNAME"],
+            "pg_port": os.environ["RDS_GRAPHILE_WORKER_PG_PORT"],
+            "pg_dbname": os.environ["RDS_GRAPHILE_WORKER_PG_DBNAME"],
+        }
+        if debug:
+            print(f"config_kwargs: {config_kwargs}")
+        _graphile_worker_client = RdsGraphileWorkerClient(**config_kwargs)
 
     return _graphile_worker_client
 
@@ -34,7 +37,7 @@ class RdsGraphileWorkerDestination(Destination):
     # cachedproperty.
     @property
     def queue_client(self):
-        return get_graphile_worker_client()
+        return get_graphile_worker_client(debug=self.debug)
 
     def debug_queue_message(self):  # pragma: no cover
         cursor = self.queue_client.conn.cursor()
