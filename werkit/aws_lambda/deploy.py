@@ -147,6 +147,22 @@ def perform_update_code(
     client = boto3.client("lambda", region_name=aws_region)
 
     def update(code_arguments):
+        # this waiter is needed to work around an issue in
+        # JWT_RSA_AWS_CUSTOM_AUTHORIZER lambda specifically, where calling the
+        # subsequent update_function_code would generate the following error:
+
+        # botocore.errorfactory.ResourceConflictException: An error occurred
+        # (ResourceConflictException) when calling the UpdateFunctionCode
+        # operation: The operation cannot be performed at this time. An update
+        # is in progress for resource:
+        # arn:aws:lambda:us-east-1:312760052655:function:jwt-rsa-aws-custom-authorizer-curvewise
+        client.get_waiter("function_updated").wait(
+            FunctionName=function_name,
+            WaiterConfig={
+                "Delay": 1,
+                "MaxAttempts": wait_until_updated_timeout_seconds,
+            },
+        )
         client.update_function_code(FunctionName=function_name, **code_arguments)
 
     _create_or_update(
