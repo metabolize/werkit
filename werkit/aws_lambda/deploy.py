@@ -154,8 +154,9 @@ def perform_update_code(
         # botocore.errorfactory.ResourceConflictException: An error occurred
         # (ResourceConflictException) when calling the UpdateFunctionCode
         # operation: The operation cannot be performed at this time. An update
-        # is in progress for resource:
-        # arn:aws:lambda:us-east-1:312760052655:function:jwt-rsa-aws-custom-authorizer-curvewise
+        # is in progress for resource: ...
+
+        # it doesn't seeme to hurt any of the other lambdas
         client.get_waiter("function_updated").wait(
             FunctionName=function_name,
             WaiterConfig={
