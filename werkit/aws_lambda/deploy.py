@@ -148,7 +148,7 @@ def perform_update_code(
 
     def update(code_arguments):
         # this waiter is needed to work around an issue in
-        # JWT_RSA_AWS_CUSTOM_AUTHORIZER lambda specifically, where calling the
+        # certain lambdas, where calling the
         # subsequent update_function_code would generate the following error:
 
         # botocore.errorfactory.ResourceConflictException: An error occurred
