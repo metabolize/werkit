@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.28.0
+
+- Replace `werkit.aws_lambda.build.find_site_packages_dir()` with
+  `site_packages_for_venv()` and fix for Python 3.9+
+- Improve RdsDestination debugging
+- Update semver dependency to 3.0.0.dev4
+
 ## 0.27.0
 
 - ComputeGraph: Rename `coerce()` to `normalize()`
