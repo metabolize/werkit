@@ -7,7 +7,7 @@ from werkit.aws_lambda.build import create_zipfile_from_dir
 from werkit.aws_lambda.deploy import perform_create
 from werkit.orchestrator.deploy import deploy_orchestrator
 
-from ..orchestrator_lambda.handler import schema
+from ..orchestrator_lambda.schema import SCHEMA
 
 
 load_dotenv()

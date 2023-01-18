@@ -3,8 +3,9 @@ import concurrent
 import os
 from botocore.exceptions import ClientError
 
-from werkit.compute import Manager, Schema
+from werkit.compute import Manager
 from .parallel import parallel_map_on_lambda
+from .schema import SCHEMA
 from ...compute._serialization import serialize_exception
 
 LAMBDA_WORKER_FUNCTION_NAME = "LAMBDA_WORKER_FUNCTION_NAME"
@@ -16,13 +17,6 @@ env_worker_lambda_timeout = (
     if LAMBDA_WORKER_TIMEOUT in os.environ
     else None
 )
-
-schema = Schema.load_relative_to_file(
-    __file__,
-    ["generated", "schema.json"],
-    output_ref="#/definitions/AnyOutput",
-)
-
 
 def transform_result(message_key, result, start_time):
     if (
@@ -64,7 +58,7 @@ def handler(
     timeout=env_worker_lambda_timeout or 120,
 ):
     print("input_message", event)
-    with Manager(input_message=event, schema=schema) as manager:
+    with Manager(input_message=event, schema=SCHEMA) as manager:
         if not worker_lambda_function_name:
             raise Exception(
                 f"Environment variable {LAMBDA_WORKER_FUNCTION_NAME} must be defined, "
