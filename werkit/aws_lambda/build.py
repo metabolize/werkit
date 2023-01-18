@@ -47,12 +47,12 @@ def create_venv_with_dependencies(
         execute(*args, environment=environment)
 
 
-def find_site_packages_dir(venv_dir):
+def site_packages_for_venv(venv_dir):
     python = os.path.join(venv_dir, "bin", "python")
     return execute(
         python,
         "-c",
-        "\"import sysconfig; print(sysconfig.get_paths()['purelib']\"",
+        'import sysconfig; print(sysconfig.get_paths()["purelib"])',
         capture=True,
     )
 
@@ -70,7 +70,7 @@ def collect_zipfile_contents(
         raise ValueError(f"venv_dir should already be populated: {venv_dir}")
 
     # Copy dependencies from venv.
-    site_packages_dir = find_site_packages_dir(venv_dir)
+    site_packages_dir = site_packages_for_venv(venv_dir)
     pif(f"Copying dependencies from {site_packages_dir} to {target_dir}")
     shutil.copytree(site_packages_dir, target_dir)
 
