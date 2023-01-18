@@ -86,7 +86,7 @@ def invoke_orchestrator(orchestrator_function_name):
         "commonInput": {"base": 2},
     }
     # Confidence check.
-    schema.input_message.validate(message)
+    SCHEMA.input_message.validate(message)
     response = boto3.client("lambda").invoke(
         FunctionName=orchestrator_function_name,
         Payload=json.dumps(message),
@@ -104,7 +104,7 @@ def test_integration_success(tmpdir):
         data = invoke_orchestrator(orchestrator_function_name)
         print(data)
 
-        schema.output_message.validate(data)
+        SCHEMA.output_message.validate(data)
 
         result = data["result"]
         print(result)
@@ -132,7 +132,7 @@ def test_integration_unhandled_exception(tmpdir):
         data = invoke_orchestrator(orchestrator_function_name)
         print(data)
 
-        schema.output_message.validate(data)
+        SCHEMA.output_message.validate(data)
 
         result = data["result"]
         assert set(result.keys()) == set(["first", "second", "tenth", "twentieth"])
@@ -162,7 +162,7 @@ def test_integration_timeout_failure(tmpdir):
         data = invoke_orchestrator(orchestrator_function_name)
         print(data)
 
-        schema.output_message.validate(data)
+        SCHEMA.output_message.validate(data)
 
         result = data["result"]
         assert set(result.keys()) == set(["first", "second", "tenth", "twentieth"])

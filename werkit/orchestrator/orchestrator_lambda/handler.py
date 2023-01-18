@@ -18,6 +18,7 @@ env_worker_lambda_timeout = (
     else None
 )
 
+
 def transform_result(message_key, result, start_time):
     if (
         isinstance(result, ClientError)
