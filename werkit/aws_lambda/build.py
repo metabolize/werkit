@@ -49,7 +49,12 @@ def create_venv_with_dependencies(
 
 def find_site_packages_dir(venv_dir):
     python = os.path.join(venv_dir, "bin", "python")
-    return execute(python, "-c" '\'import sysconfig; print(sysconfig.get_paths()["purelib"])', capture=True)
+    return execute(
+        python,
+        "-c",
+        "\"import sysconfig; print(sysconfig.get_paths()['purelib']\"",
+        capture=True,
+    )
 
 
 def collect_zipfile_contents(
