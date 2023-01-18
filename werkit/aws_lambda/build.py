@@ -1,7 +1,6 @@
 import os
 import shutil
 import sys
-import sysconfig
 import venv
 import zipfile
 from executor import execute
@@ -48,6 +47,18 @@ def create_venv_with_dependencies(
         execute(*args, environment=environment)
 
 
+def find_site_packages_dir(venv_dir):
+    for candidate_result in [
+        os.path.join(venv_dir, "lib64", "python3.8", "site-packages"),
+        os.path.join(venv_dir, "lib", "python3.8", "site-packages"),
+        os.path.join(venv_dir, "lib64", "python3.7", "site-packages"),
+        os.path.join(venv_dir, "lib", "python3.7", "site-packages"),
+    ]:
+        if os.path.exists(candidate_result):
+            return candidate_result
+    raise ValueError(f"Unable to locate site-packages folder in {venv_dir}")
+
+
 def collect_zipfile_contents(
     target_dir, venv_dir, src_files=[], src_dirs=[], lib_files=[], verbose=False
 ):
@@ -61,7 +72,7 @@ def collect_zipfile_contents(
         raise ValueError(f"venv_dir should already be populated: {venv_dir}")
 
     # Copy dependencies from venv.
-    site_packages_dir = sysconfig.get_paths()["purelib"]
+    site_packages_dir = find_site_packages_dir(venv_dir)
     pif(f"Copying dependencies from {site_packages_dir} to {target_dir}")
     shutil.copytree(site_packages_dir, target_dir)
 
