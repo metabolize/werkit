@@ -866,11 +866,11 @@ jeepney = ">=0.6"
 
 [[package]]
 name = "semver"
-version = "3.0.0.dev3"
-description = "Python helper for Semantic Versioning (http://semver.org)"
+version = "3.0.0.dev4"
+description = "Python helper for Semantic Versioning (https://semver.org)"
 category = "main"
 optional = false
-python-versions = ">=3.6.*"
+python-versions = ">=3.7.*"
 
 [[package]]
 name = "setuptools"
@@ -1012,7 +1012,7 @@ rds-graphile-worker = ["rds-graphile-worker-client"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "45f00ab465ffa2474a8273196ab8984c9702cf4a42470bc462099c22f63daf3e"
+content-hash = "ae204691a6fa5db89cbd231e37a2a5c72e8e7db837025cc03794fc3b304fd8e5"
 
 [metadata.files]
 artifax = [
@@ -1526,8 +1526,8 @@ secretstorage = [
     {file = "SecretStorage-3.3.3.tar.gz", hash = "sha256:2403533ef369eca6d2ba81718576c5e0f564d5cca1b58f73a8b23e7d4eeebd77"},
 ]
 semver = [
-    {file = "semver-3.0.0.dev3-py3-none-any.whl", hash = "sha256:10651d0dacffdce7a2f0658e58894b138f52c2a080f7d69aa999810ebfc1f97d"},
-    {file = "semver-3.0.0.dev3.tar.gz", hash = "sha256:7175229bdcf96a6702b077e30226f041ce112057146ae81e84b51df08a8a75cf"},
+    {file = "semver-3.0.0.dev4-py3-none-any.whl", hash = "sha256:5a47cea48ac895de2524528e1585c7d7b2775369a37dd51764db197898ff6609"},
+    {file = "semver-3.0.0.dev4.tar.gz", hash = "sha256:c21ec24e51c4b2ff92e9e51c1d9c93b93fbdedaa3f99268ae2c879256ef391f5"},
 ]
 setuptools = [
     {file = "setuptools-65.6.3-py3-none-any.whl", hash = "sha256:57f6f22bde4e042978bcd50176fdb381d7c21a9efa4041202288d3737a0c6a54"},
