@@ -1,4 +1,3 @@
-import os
 from .build import create_venv_with_dependencies, site_packages_for_venv
 
 
