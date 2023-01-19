@@ -1,7 +1,7 @@
 import asyncio
-# import concurrent
-# import os
-# from botocore.exceptions import ClientError
+import concurrent
+import os
+from botocore.exceptions import ClientError
 
 # from werkit.compute import Manager
 # from .parallel import parallel_map_on_lambda
