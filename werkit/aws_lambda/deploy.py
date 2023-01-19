@@ -3,7 +3,11 @@ import sys
 import boto3
 from ..s3 import temp_file_on_s3
 
-DEFAULT_RUNTIME = "python3.7"
+
+def default_runtime():
+    import sys
+
+    return f"python{sys.version_info.major}.{sys.version_info.minor}"
 
 
 def needs_s3_upload(path_to_zipfile):
@@ -76,7 +80,7 @@ def perform_create(
     s3_path_to_zipfile=None,
     timeout=None,
     memory_size=None,
-    runtime=DEFAULT_RUNTIME,
+    runtime=None,
     env_vars={},
     s3_code_bucket=None,
     verbose=False,
@@ -100,7 +104,7 @@ def perform_create(
 
         client.create_function(
             FunctionName=function_name,
-            Runtime=runtime,
+            Runtime=runtime or default_runtime(),
             Role=role,
             Handler=handler,
             Environment={"Variables": env_vars},

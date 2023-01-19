@@ -1,6 +1,11 @@
 import numbers
 import typing as t
-from typing_extensions import TypeGuard
+
+try:
+    from typing import TypeGuard
+except ImportError:
+    # TODO: Remove when Python 3.7 is dropped.
+    from typing_extensions import TypeGuard
 
 
 BuiltInValueType = t.Union[t.Type[bool], t.Type[int], t.Type[float], t.Type[str]]
