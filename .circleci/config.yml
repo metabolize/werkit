@@ -7,10 +7,6 @@ with_python: &with_python
   docker:
     - image: cimg/python:3.9
 
-with_python37: &with_python37
-  docker:
-    - image: cimg/python:3.7
-
 install_poetry: &install_poetry
   run:
     name: Install Poetry
@@ -52,7 +48,8 @@ jobs:
           command: ./dev.py coverage
 
   main37:
-    <<: *with_python37
+    docker:
+      - image: cimg/python:3.7
 
     steps:
       - checkout
