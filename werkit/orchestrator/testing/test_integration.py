@@ -1,4 +1,5 @@
 import os
+import sys
 import uuid
 import boto3
 from dotenv import load_dotenv
@@ -168,12 +169,12 @@ def test_integration_timeout_failure(tmpdir):
         assert set(result.keys()) == set(["first", "second", "tenth", "twentieth"])
         assert all([r["success"] is False for r in result.values()])
         assert all([r["error_origin"] == "orchestration" for r in result.values()])
-        assert all(
-            [
-                r["error"][-1] == "concurrent.futures._base.TimeoutError\n"
-                for r in result.values()
-            ]
-        )
+
+        if sys.version_info == (3, 7):
+            expected_exception = "concurrent.futures._base.TimeoutError\n"
+        else:
+            expected_exception = "asyncio.exceptions.TimeoutError\n"
+        assert all([r["error"][-1] == expected_exception for r in result.values()])
     finally:
         client = boto3.client("lambda")
         client.delete_function(FunctionName=worker_function_name)
