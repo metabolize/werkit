@@ -1,4 +1,5 @@
 import os
+import sys
 import uuid
 import boto3
 from dotenv import load_dotenv
@@ -13,6 +14,7 @@ from ..orchestrator_lambda.schema import SCHEMA
 load_dotenv()
 
 AWS_REGION = "us-east-1"
+RUNTIME = f"python{sys.version_info.major}.{sys.version_info.minor}"
 
 
 def role():
@@ -52,6 +54,7 @@ def create_test_functions(
         function_name=worker_function_name,
         role=role(),
         timeout=10,
+        runtime=RUNTIME,
         env_vars=env_vars,
     )
 
@@ -61,6 +64,7 @@ def create_test_functions(
         path_to_orchestrator_zip=str(tmpdir / "orchestrator.zip"),
         orchestrator_function_name=orchestrator_function_name,
         role=role(),
+        runtime=RUNTIME,
         worker_function_name=worker_function_name,
         worker_timeout=worker_timeout,
     )
