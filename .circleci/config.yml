@@ -5,6 +5,10 @@ orbs:
 
 with_python: &with_python
   docker:
+    - image: cimg/python:3.9
+
+with_python37: &with_python37
+  docker:
     - image: cimg/python:3.7
 
 install_poetry: &install_poetry
@@ -28,6 +32,27 @@ show_versions: &show_versions
 jobs:
   main:
     <<: *with_python
+
+    steps:
+      - checkout
+
+      - *install_poetry
+      - run:
+          name: Install python dependencies
+          command: |
+            poetry install \
+              --no-ansi --no-interaction \
+              --extras client \
+              --extras lambda_common \
+              --extras compute_graph
+      - *show_versions
+
+      - run:
+          name: Run tests
+          command: ./dev.py coverage
+
+  main37:
+    <<: *with_python37
 
     steps:
       - checkout
