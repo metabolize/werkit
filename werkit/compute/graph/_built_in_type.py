@@ -1,5 +1,6 @@
 import numbers
 import typing as t
+
 try:
     from typing import TypeGuard
 except ImportError:
