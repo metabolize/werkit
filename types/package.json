@@ -1,6 +1,6 @@
 {
   "name": "werkit",
-  "version": "0.28.0",
+  "version": "0.29.0",
   "description": "TypeScript types for Werkit, a toolkit for encapsulating Python-based computation into deployable and distributable tasks",
   "main": "src",
   "scripts": {
