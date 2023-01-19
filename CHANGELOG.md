@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.29.0
+
+- Default Lambda runtime to the currently running Python major and minor
+  version
+- ComputeGraph: Fix Python 3.9 without typing_extensions
+- Test in Python 3.9
+
 ## 0.28.0
 
 - Replace `werkit.aws_lambda.build.find_site_packages_dir()` with
