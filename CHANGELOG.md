@@ -2,8 +2,8 @@
 
 ## 0.29.0
 
-- Default Lambda runtime to the currently running Python major and minor
-  version
+- When creating new lambdas, default the runtime to the currently running Python
+  major and minor version
 - ComputeGraph: Fix Python 3.9 without typing_extensions
 - Test in Python 3.9
 
