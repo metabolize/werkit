@@ -1,5 +1,4 @@
 import os
-import sys
 import uuid
 import boto3
 from dotenv import load_dotenv
