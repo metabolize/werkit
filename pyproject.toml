@@ -6,9 +6,8 @@ authors = ["Paul Melnikow <github@paulmelnikow.com>", "Metabolize"]
 license = "MIT"
 include = ["CHANGELOG.md"]
 exclude = ["**/test_*.py"]
-homepage = "https://werkit.readthedocs.io/en/stable/"
+homepage = "https://github.com/metabolize/werkit"
 repository = "https://github.com/metabolize/werkit"
-documentation = "https://ounce.readthedocs.io/en/werkit/"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
