@@ -131,6 +131,8 @@ workflows:
     jobs:
       - main:
           context: "Metabolize OSS AWS"
+      - main37:
+          context: "Metabolize OSS AWS"
       - lint
       - format
 
@@ -143,6 +145,8 @@ workflows:
               only: main
     jobs:
       - main:
+          context: "Metabolize OSS AWS"
+      - main37:
           context: "Metabolize OSS AWS"
       - lint
       - format
