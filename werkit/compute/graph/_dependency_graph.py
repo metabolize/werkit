@@ -2,7 +2,10 @@ from __future__ import annotations
 import inspect
 import numbers
 import typing as t
-from typing_extensions import Literal, TypedDict
+try:
+    from typing import Literal, TypedDict
+except ImportError:
+    from typing_extensions import Literal, TypedDict
 from ._built_in_type import (
     BuiltInValueType,
     coerce_value_to_builtin_type,
