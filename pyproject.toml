@@ -7,7 +7,7 @@ license = "MIT"
 include = ["CHANGELOG.md"]
 exclude = ["**/test_*.py"]
 homepage = "https://werkit.readthedocs.io/en/stable/"
-repository = "https://github.com/lace/werkit"
+repository = "https://github.com/metabolize/werkit"
 documentation = "https://ounce.readthedocs.io/en/werkit/"
 classifiers = [
     "Development Status :: 3 - Alpha",
