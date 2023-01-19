@@ -170,7 +170,7 @@ def test_integration_timeout_failure(tmpdir):
         assert all([r["success"] is False for r in result.values()])
         assert all([r["error_origin"] == "orchestration" for r in result.values()])
 
-        if sys.version_info == (3, 7):
+        if sys.version_info[0:2] == (3, 7):
             expected_exception = "concurrent.futures._base.TimeoutError\n"
         else:
             expected_exception = "asyncio.exceptions.TimeoutError\n"
