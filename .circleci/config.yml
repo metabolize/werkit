@@ -47,6 +47,12 @@ jobs:
           name: Run tests
           command: ./dev.py coverage
 
+      - run:
+          name: Run tests without typing_extensions
+          command: |
+            pip uninstall typing-extensions
+            ./dev.py coverage
+
   main37:
     docker:
       - image: cimg/python:3.7
