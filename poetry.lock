@@ -387,6 +387,8 @@ files = [
     {file = "cryptography-39.0.1-cp36-abi3-win32.whl", hash = "sha256:fe913f20024eb2cb2f323e42a64bdf2911bb9738a15dba7d3cce48151034e3a8"},
     {file = "cryptography-39.0.1-cp36-abi3-win_amd64.whl", hash = "sha256:ced4e447ae29ca194449a3f1ce132ded8fcab06971ef5f618605aacaa612beac"},
     {file = "cryptography-39.0.1-pp38-pypy38_pp73-macosx_10_12_x86_64.whl", hash = "sha256:807ce09d4434881ca3a7594733669bd834f5b2c6d5c7e36f8c00f691887042ad"},
+    {file = "cryptography-39.0.1-pp38-pypy38_pp73-manylinux_2_28_aarch64.whl", hash = "sha256:c5caeb8188c24888c90b5108a441c106f7faa4c4c075a2bcae438c6e8ca73cef"},
+    {file = "cryptography-39.0.1-pp38-pypy38_pp73-manylinux_2_28_x86_64.whl", hash = "sha256:4789d1e3e257965e960232345002262ede4d094d1a19f4d3b52e48d4d8f3b885"},
     {file = "cryptography-39.0.1-pp38-pypy38_pp73-win_amd64.whl", hash = "sha256:96f1157a7c08b5b189b16b47bc9db2332269d6680a196341bf30046330d15388"},
     {file = "cryptography-39.0.1-pp39-pypy39_pp73-macosx_10_12_x86_64.whl", hash = "sha256:e422abdec8b5fa8462aa016786680720d78bdce7a30c652b7fadf83a4ba35336"},
     {file = "cryptography-39.0.1-pp39-pypy39_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.manylinux_2_24_aarch64.whl", hash = "sha256:b0afd054cd42f3d213bf82c629efb1ee5f22eba35bf0eec88ea9ea7304f511a2"},
@@ -1560,14 +1562,14 @@ files = [
 
 [[package]]
 name = "types-simplejson"
-version = "3.18.0.0"
+version = "3.18.0.1"
 description = "Typing stubs for simplejson"
 category = "dev"
 optional = false
 python-versions = "*"
 files = [
-    {file = "types-simplejson-3.18.0.0.tar.gz", hash = "sha256:857adb13190abd65d0d103be965152e79a6842c5663e01e8681bde1895713f52"},
-    {file = "types_simplejson-3.18.0.0-py3-none-any.whl", hash = "sha256:f8a8428f753574fa3b7eb290756776f0fb6b4ad9cae72bf8c0c9534eeda6398c"},
+    {file = "types-simplejson-3.18.0.1.tar.gz", hash = "sha256:6e0dc74dc7aaecbf94665dd187ab713a1d83bb3cc2dcdbc321e455a15b828db0"},
+    {file = "types_simplejson-3.18.0.1-py3-none-any.whl", hash = "sha256:9219d128def4b0488409a4fa6eed96c2208da25bfbd65ee67bb2f81e76ba63f3"},
 ]
 
 [[package]]
@@ -1650,4 +1652,4 @@ rds-graphile-worker = ["rds-graphile-worker-client"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.7,<4"
-content-hash = "705558b6dbc53f0ade31a50f34231eba00ca5727e7ec4cd6ae0a0b815be8a4e1"
+content-hash = "4616179b22b3637de116f67325b054a9e1f50f0dc6d086ca6c5d99263b778c2a"
