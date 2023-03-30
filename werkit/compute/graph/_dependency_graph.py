@@ -6,7 +6,7 @@ import typing as t
 try:
     from typing import Literal, TypedDict
 except ImportError:
-    # TODO: Remove when Python 3.7 is dropped.
+    # TODO: Remove when Python 3.9 is dropped.
     from typing_extensions import Literal, TypedDict
 from ._built_in_type import (
     BuiltInValueType,
