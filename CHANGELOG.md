@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.29.1
+
+- ComputeGraph: Fix Python 3.9 without typing_extensions, again
+
 ## 0.29.0
 
 - When creating new lambdas, default the runtime to the currently running Python
