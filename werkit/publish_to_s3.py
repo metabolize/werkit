@@ -52,7 +52,6 @@ def publish_file_to_s3(key, filename, bucket_name, verbose):
 
 
 def perform_publish(environment, verbose, bucket_name, with_manifest):
-
     function_name = environment.function_name
     version = environment.version
     sha1 = environment.sha1
