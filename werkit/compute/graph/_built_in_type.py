@@ -4,7 +4,7 @@ import typing as t
 try:
     from typing import TypeGuard
 except ImportError:
-    # TODO: Remove when Python 3.7 is dropped.
+    # TODO: Remove when Python 3.9 is dropped.
     from typing_extensions import TypeGuard
 
 
