@@ -29,7 +29,7 @@ def install():
     execute(
         "poetry",
         "install",
-        "--remove-untracked",
+        "--sync",
         "--extras",
         "aws_lambda_build",
         "--extras",
