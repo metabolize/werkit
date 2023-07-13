@@ -4,7 +4,7 @@ import {
   DependencyGraph,
   DependencyGraphWithBuiltInTypes,
 } from './dependency-graph.schema'
-import { generateComputeNodeTypes } from './generate-compute-node-interfaces'
+import { generateComputeNodeInterfaces } from './generate-compute-node-interfaces'
 
 const DEPENDENCY_GRAPH_WITH_BUILT_IN_TYPES: DependencyGraphWithBuiltInTypes = {
   schemaVersion: 1,
@@ -72,9 +72,9 @@ export interface OutputNodes {
 
 describe('`generateComputeNodeTypes()`', () => {
   context('given a dependency graph using built-in types', () => {
-    it('generates the expected types', () => {
+    it('generates the expected interfaces', () => {
       expect(
-        generateComputeNodeTypes({
+        generateComputeNodeInterfaces({
           dependencyGraph: DEPENDENCY_GRAPH_WITH_BUILT_IN_TYPES,
         })
       ).to.equal(INTERFACE_FOR_DEPENDENCY_GRAPH_WITH_BUILT_IN_TYPES)
@@ -82,9 +82,9 @@ describe('`generateComputeNodeTypes()`', () => {
   })
 
   context('given a dependency graph using a custom type', () => {
-    it('generates the expected types', () => {
+    it('generates the expected interfaces', () => {
       expect(
-        generateComputeNodeTypes({
+        generateComputeNodeInterfaces({
           dependencyGraph: DEPENDENCY_GRAPH_WITH_CUSTOM_TYPE,
           imports: "import { MyModel } from '../models'",
         })

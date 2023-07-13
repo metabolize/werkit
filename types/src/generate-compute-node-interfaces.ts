@@ -4,7 +4,7 @@ const INPUT_NODES_NAME = 'InputNodes'
 const INTERMEDIATE_NODES_NAME = 'IntermediateNodes'
 const OUTPUT_NODES_NAME = 'OutputNodes'
 
-export function generateComputeNodeTypes<ValueType extends string>({
+export function generateComputeNodeInterfaces<ValueType extends string>({
   dependencyGraph,
   imports,
 }: {
