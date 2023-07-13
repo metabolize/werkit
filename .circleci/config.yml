@@ -58,11 +58,10 @@ jobs:
       - run:
           name: Install Node dependencies
           when: always
-          working_directory: types
           command: npm ci
 
       - run:
-          name: Check TypeScript format
+          name: Run tests in types/
           when: always
           working_directory: types
           command: npm test
