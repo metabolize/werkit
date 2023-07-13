@@ -26,7 +26,7 @@ show_versions: &show_versions
 
 
 jobs:
-  main:
+  test:
     <<: *with_python
 
     steps:
@@ -53,7 +53,21 @@ jobs:
             pip uninstall typing-extensions
             ./dev.py coverage
 
-  main37:
+      - node/install
+
+      - run:
+          name: Install Node dependencies
+          when: always
+          working_directory: types
+          command: npm ci
+
+      - run:
+          name: Check TypeScript format
+          when: always
+          working_directory: types
+          command: npm test
+
+  test-py37:
     docker:
       - image: cimg/python:3.7
 
@@ -132,9 +146,9 @@ workflows:
 
   on-commit:
     jobs:
-      - main:
+      - test:
           context: "Metabolize OSS AWS"
-      - main37:
+      - test-py37:
           context: "Metabolize OSS AWS"
       - lint
       - format
@@ -147,9 +161,9 @@ workflows:
             branches:
               only: main
     jobs:
-      - main:
+      - test:
           context: "Metabolize OSS AWS"
-      - main37:
+      - test-py37:
           context: "Metabolize OSS AWS"
       - lint
       - format
