@@ -2,7 +2,8 @@
   "name": "werkit",
   "version": "0.30.0",
   "description": "TypeScript types for Werkit, a toolkit for encapsulating Python-based computation into deployable and distributable tasks",
-  "main": "src",
+  "main": "dist",
+  "types": "dist",
   "scripts": {
     "prebuild": "del dist",
     "build": "tsc",
