@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.30.1
+
+Same as 0.29.1.
+
 ## 0.30.0
 
 Same as 0.29.1.
