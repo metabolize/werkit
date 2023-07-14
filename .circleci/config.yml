@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@4.1.0
+  node: circleci/node@5.1.0
 
 with_python: &with_python
   docker:
@@ -24,7 +24,6 @@ show_versions: &show_versions
     name: Show versions
     command: poetry show
 
-
 jobs:
   test:
     <<: *with_python
@@ -42,7 +41,6 @@ jobs:
               --extras lambda_common \
               --extras compute_graph
       - *show_versions
-
       - run:
           name: Run tests
           command: ./dev.py coverage
@@ -53,7 +51,8 @@ jobs:
             pip uninstall typing-extensions
             ./dev.py coverage
 
-      - node/install
+      - node/install:
+          node-version: '16.13'
 
       - run:
           name: Install Node dependencies
@@ -83,7 +82,6 @@ jobs:
               --extras lambda_common \
               --extras compute_graph
       - *show_versions
-
       - run:
           name: Run tests
           command: ./dev.py coverage
@@ -146,23 +144,23 @@ workflows:
   on-commit:
     jobs:
       - test:
-          context: "Metabolize OSS AWS"
+          context: 'Metabolize OSS AWS'
       - test-py37:
-          context: "Metabolize OSS AWS"
+          context: 'Metabolize OSS AWS'
       - lint
       - format
 
   daily:
     triggers:
       - schedule:
-          cron: "0 17 * * *"
+          cron: '0 17 * * *'
           filters:
             branches:
               only: main
     jobs:
       - test:
-          context: "Metabolize OSS AWS"
+          context: 'Metabolize OSS AWS'
       - test-py37:
-          context: "Metabolize OSS AWS"
+          context: 'Metabolize OSS AWS'
       - lint
       - format

@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "description": "Werkit TypeScript dev depenencies",
   "scripts": {
-    "format": "prettier --check \"**/*.ts\"",
-    "format:fix": "prettier --write \"**/*.ts\"",
+    "format": "prettier --check \"**/*.@(ts|yml)\"",
+    "format:fix": "prettier --write \"**/*.@(ts|yml)\"",
     "schema:update": "1schema update"
   },
   "author": "Metabolize",
