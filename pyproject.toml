@@ -49,7 +49,7 @@ rds_graphile_worker = ["rds-graphile-worker-client"]
 [tool.poetry.dev-dependencies]
 black = "23.3.0"
 click = "8.0.3"
-coverage = "7.2.5"
+coverage = "7.2.7"
 executor = "23.2"
 flake8 = "5.0.4"
 flake8-import-order = "0.18.2"
