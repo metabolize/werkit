@@ -1,40 +1,39 @@
 # Changelog
 
+## 0.30.0
+
+- Add `generateComputeNodeInterfaces()`
+- Add Lambda helpers `createFunction()` and `deleteFunction()`.
+- Add S3 helpers `tempFileOnS3()` and `tempFileOnS3FromString()`.
+
 ## 0.27.0
 
 Same as 0.26.0.
-
 
 ## 0.26.0
 
 Same as 0.26.0.
 
-
 ## 0.25.0
 
 Same as 0.25.0.
-
 
 ## 0.25.0
 
 - DependencyGraph: Correctly accommodate custom types using generic.
 
-
 ## 0.24.0
 
 - Same as 0.23.1.
-
 
 ## 0.23.1
 
 - Capitalization fix for previous.
 
-
 ## 0.23.0
 
 - Add types for compute graph.
 - Export generated JSON Schema to accompany the TypeScript types.
-
 
 ## 0.22.0
 

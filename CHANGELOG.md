@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.30.0
+
+Same as 0.29.1.
+
 ## 0.29.1
 
 - ComputeGraph: Fix Python 3.9 without typing_extensions, again
