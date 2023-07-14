@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.30.1
+
+- Fix importing of published package.
+
 ## 0.30.0
 
 - Add `generateComputeNodeInterfaces()`
