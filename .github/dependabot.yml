@@ -1,20 +1,20 @@
 version: 2
 updates:
-- package-ecosystem: pip
-  directory: "/"
-  schedule:
-    interval: monthly
-  open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: pytest
-    versions:
-    - 6.2.1
-    - 6.2.2
-  - dependency-name: boto3
-    versions:
-    - 1.16.47
-- package-ecosystem: npm
-  directory: "/types"
-  schedule:
-    interval: daily
-  open-pull-requests-limit: 10
+  - package-ecosystem: pip
+    directory: '/'
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: pytest
+        versions:
+          - 6.2.1
+          - 6.2.2
+      - dependency-name: boto3
+        versions:
+          - 1.16.47
+  - package-ecosystem: npm
+    directory: '/types'
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
