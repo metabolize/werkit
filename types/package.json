@@ -12,6 +12,7 @@
     "check-package-version": "if [ $(cd .. && poetry version --short) = $(node -e \"console.log(require('./package.json').version)\") ]; then exit 0; else echo 'Package versions are not in sync'; exit 1; fi;",
     "prepublishOnly": "npm run check-package-version"
   },
+  "type": "module",
   "files": [
     "dist"
   ],
