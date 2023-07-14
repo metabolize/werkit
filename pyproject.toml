@@ -27,7 +27,7 @@ harrison = {version = "^2.0", optional = true}
 # https://github.com/tobgu/pyrsistent/issues/241
 pyrsistent = {version = "0.18.0", optional = true}
 rds-graphile-worker-client = {version = "^0.1.1", optional = true}
-semver = "3.0.0.dev4"
+semver = "3.0.0"
 simplejson = "^3.17.5"
 jsonschema = "^4.1.2"
 artifax = {version = "0.5", optional = true}
@@ -49,13 +49,13 @@ rds_graphile_worker = ["rds-graphile-worker-client"]
 [tool.poetry.dev-dependencies]
 black = "23.3.0"
 click = "8.0.3"
-coverage = "7.2.2"
+coverage = "7.2.7"
 executor = "23.2"
 flake8 = "5.0.4"
 flake8-import-order = "0.18.2"
 freezegun = "1.2.2"
-mypy = "1.1.1"
-pytest = "7.2.2"
+mypy = "1.2.0"
+pytest = "7.3.1"
 pytest-cov = "4.0.0"
 python-dotenv = "0.21.1"
 twine = "4.0.2"
