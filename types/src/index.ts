@@ -1,4 +1,5 @@
 export * from './dependency-graph.schema'
+export { generateComputeNodeInterfaces as generateComputeNodeTypes } from './generate-compute-node-interfaces'
 export * from './manager.schema'
 export * from './orchestrator.schema'
 
