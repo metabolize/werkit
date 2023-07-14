@@ -60,7 +60,7 @@ pytest-cov = "4.0.0"
 python-dotenv = "0.21.1"
 twine = "4.0.2"
 types-freezegun = "1.1.10"
-types-simplejson = "3.18.0.3"
+types-simplejson = "3.19.0.1"
 
 [build-system]
 # Lint requires setuptools.
