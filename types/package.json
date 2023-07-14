@@ -4,13 +4,16 @@
   "description": "TypeScript types for Werkit, a toolkit for encapsulating Python-based computation into deployable and distributable tasks",
   "main": "src",
   "scripts": {
+    "prebuild": "del dist",
+    "build": "tsc",
+    "prepare": "npm run build",
     "test": "ts-mocha \"src/*.test.ts\" \"src/**/*.test.ts\"",
+    "check-types": "tsc --noEmit",
     "check-package-version": "if [ $(cd .. && poetry version --short) = $(node -e \"console.log(require('./package.json').version)\") ]; then exit 0; else echo 'Package versions are not in sync'; exit 1; fi;",
     "prepublishOnly": "npm run check-package-version"
   },
   "files": [
-    "src/*.ts",
-    "src/generated/*.json"
+    "dist"
   ],
   "author": "Metabolize",
   "license": "MIT",
@@ -20,11 +23,27 @@
     "computation",
     "compute"
   ],
+  "dependencies": {
+    "@metabolize/uuid-to-hex": "^2.0.0",
+    "uuid": "^9.0.0"
+  },
+  "optionalDependencies": {
+    "aws-sdk": "2.x"
+  },
   "devDependencies": {
-    "@types/mocha": "9.1.0",
+    "@types/chai-as-promised": "7.1.5",
     "@types/chai": "4.3.5",
+    "@types/chai-string": "1.4.2",
+    "@types/mocha": "9.1.0",
+    "@types/node": "20.4.2",
+    "@types/uuid": "9.0.2",
+    "aws-sdk": "2.1415.0",
     "chai": "4.3.7",
+    "chai-as-promised": "7.1.1",
+    "chai-string": "1.5.0",
+    "del-cli": "5.0.0",
     "mocha": "9.2.2",
+    "tmp-promise": "3.0.3",
     "ts-mocha": "9.0.2"
   }
 }
