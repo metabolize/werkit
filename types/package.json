@@ -7,7 +7,7 @@
     "prebuild": "del dist",
     "build": "tsc",
     "prepare": "npm run build",
-    "test": "ts-mocha \"src/*.test.ts\" \"src/**/*.test.ts\"",
+    "test": "mocha \"src/*.test.ts\" \"src/**/*.test.ts\"",
     "check-types": "tsc --noEmit",
     "check-package-version": "if [ $(cd .. && poetry version --short) = $(node -e \"console.log(require('./package.json').version)\") ]; then exit 0; else echo 'Package versions are not in sync'; exit 1; fi;",
     "prepublishOnly": "npm run check-package-version"
@@ -43,7 +43,12 @@
     "chai-string": "1.5.0",
     "del-cli": "5.0.0",
     "mocha": "9.2.2",
-    "tmp-promise": "3.0.3",
-    "ts-mocha": "9.0.2"
+    "tmp-promise": "3.0.3"
+  },
+  "mocha": {
+    "extension": [
+      "ts"
+    ],
+    "loader": "ts-node/esm"
   }
 }
