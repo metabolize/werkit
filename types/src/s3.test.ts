@@ -1,5 +1,6 @@
 import AWS from 'aws-sdk'
 import chai, { expect } from 'chai'
+import dotenv from 'dotenv'
 import { promises as fs } from 'fs'
 import path from 'path'
 import tmp, { DirectoryResult } from 'tmp-promise'
@@ -9,6 +10,8 @@ import { uuidHex } from './uuid-hex'
 
 chai.use(require('chai-as-promised'))
 chai.use(require('chai-string'))
+
+dotenv.config({ path: path.join(__dirname, '..', '..', '.env') })
 
 const EXAMPLE_FILENAME = 'example.txt'
 const EXAMPLE_CONTENTS = `
