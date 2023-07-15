@@ -118,15 +118,15 @@ class Output(ComputeNode):
     pass
 
 
-def intermediate(value_type: AnyValueType):
-    def decorator(method):
+def intermediate(value_type: AnyValueType) -> t.Callable[[t.Callable], Intermediate]:
+    def decorator(method: t.Callable[..., t.Any]) -> Intermediate:
         return Intermediate(method, value_type)
 
     return decorator
 
 
-def output(value_type: AnyValueType):
-    def decorator(method):
+def output(value_type: AnyValueType) -> t.Callable[[t.Callable], Output]:
+    def decorator(method: t.Callable[..., t.Any]) -> Output:
         return Output(method, value_type)
 
     return decorator

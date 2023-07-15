@@ -3,7 +3,7 @@ from ._dependency_graph import ComputeNode, Input
 from ._state_manager import StateManager
 
 
-def bind_state_manager(attr_name="state_manager"):
+def bind_state_manager(attr_name: str = "state_manager"):
     def decorator(cls):
         class Bound(cls):
             def __init__(self, *args, **kwargs):

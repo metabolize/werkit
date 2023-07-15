@@ -1,4 +1,5 @@
 import os
+import typing as t
 from werkit.aws_lambda.build import (
     collect_zipfile_contents,
     create_venv_with_dependencies,
@@ -7,8 +8,11 @@ from werkit.aws_lambda.build import (
 )
 from werkit.aws_lambda.deploy import perform_create, perform_update_code
 
+if t.TYPE_CHECKING:
+    from mypy_boto3_s3.literals import RegionName
 
-def prepare_zip_file(build_dir, path_to_orchestrator_zip):
+
+def prepare_zip_file(build_dir: str, path_to_orchestrator_zip: str) -> None:
     if os.path.isdir(build_dir):
         raise ValueError(f"build_dir should not exist: {build_dir}")
 
@@ -35,17 +39,17 @@ def prepare_zip_file(build_dir, path_to_orchestrator_zip):
 
 
 def deploy_orchestrator(
-    aws_region,
-    build_dir,
-    path_to_orchestrator_zip,
-    orchestrator_function_name,
-    role,
-    worker_function_name,
-    worker_timeout,
-    s3_code_bucket=None,
-    orchestrator_timeout=600,
-    verbose=False,
-):
+    aws_region: "RegionName",
+    build_dir: str,
+    path_to_orchestrator_zip: str,
+    orchestrator_function_name: str,
+    role: str,
+    worker_function_name: str,
+    worker_timeout: t.Optional[int] = None,
+    s3_code_bucket: t.Optional[str] = None,
+    orchestrator_timeout: int = 600,
+    verbose: bool = False,
+) -> None:
     prepare_zip_file(build_dir, path_to_orchestrator_zip)
     env_vars = {"LAMBDA_WORKER_FUNCTION_NAME": worker_function_name}
     if worker_timeout:
@@ -66,13 +70,13 @@ def deploy_orchestrator(
 
 
 def update_orchestrator_code(
-    aws_region,
-    build_dir,
-    path_to_orchestrator_zip,
-    orchestrator_function_name,
-    s3_code_bucket=None,
-    verbose=False,
-):
+    aws_region: "RegionName",
+    build_dir: str,
+    path_to_orchestrator_zip: str,
+    orchestrator_function_name: str,
+    s3_code_bucket: t.Optional[str] = None,
+    verbose: bool = False,
+) -> None:
     prepare_zip_file(build_dir, path_to_orchestrator_zip)
 
     perform_update_code(

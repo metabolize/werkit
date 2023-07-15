@@ -24,7 +24,7 @@ def infer_function_environment_from_ci_environment() -> InferredFunctionEnvironm
             f'Malformed tag: {tag} (expected e.g. "my-lambda-function@1.2.3")'
         )
     function_name, version = match.groups()
-    if not Version.isvalid(version):
+    if not Version.is_valid(version):
         raise ValueError(f"Version in tag {version} is not valid semver")
 
     return InferredFunctionEnvironment(

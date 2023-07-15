@@ -1,7 +1,14 @@
 import datetime
 import sys
+from types import TracebackType
+import typing as t
+from ._destination import Destination
 from ._formatting import format_time
 from ._serialization import serialize_exception, serialize_result
+from ._schema import Schema
+
+if t.TYPE_CHECKING:
+    from typing_extensions import Self
 
 
 class Manager:
@@ -62,13 +69,13 @@ class Manager:
 
     def __init__(
         self,
-        input_message,
-        schema,
-        destination=None,
-        runtime_info=None,
-        handle_exceptions=True,
-        verbose=False,
-        time_precision=2,
+        input_message: dict[str, t.Any],
+        schema: Schema,
+        destination: t.Optional[Destination] = None,
+        runtime_info: t.Any = None,
+        handle_exceptions: bool = True,
+        verbose: bool = False,
+        time_precision: int = 2,
     ):
         # Import late to avoid circular import.
         from werkit.compute import Destination, Schema
@@ -92,20 +99,20 @@ class Manager:
         self.input_message = input_message
 
     @property
-    def message_key(self):
+    def message_key(self) -> t.Any:
         try:
             return self.input_message["message_key"]
         except (KeyError, TypeError):
             raise ValueError("Input message is missing `message_key` property")
 
     @property
-    def duration_seconds(self):
+    def duration_seconds(self) -> float:
         return round(
             (datetime.datetime.now() - self.start_time).total_seconds(),
             self.time_precision,
         )
 
-    def __enter__(self):
+    def __enter__(self) -> "Self":
         self.start_time = datetime.datetime.now()
         try:
             self.schema.input_message.validate(self.input_message)
@@ -115,15 +122,15 @@ class Manager:
         return self
 
     @property
-    def result(self):
+    def result(self) -> t.Any:
         return self._result
 
     @result.setter
-    def result(self, value):
+    def result(self, value: t.Any) -> None:
         self.schema.output.validate(value)
         self._result = value
 
-    def serialize_result(self, result):
+    def serialize_result(self, result: t.Any) -> dict[str, t.Any]:
         return serialize_result(
             message_key=self.message_key,
             serializable_result=result,
@@ -132,7 +139,7 @@ class Manager:
             runtime_info=self.runtime_info,
         )
 
-    def _note_compute_success(self, result):
+    def _note_compute_success(self, result: t.Any) -> None:
         self.output_message = self.serialize_result(result)
         self.schema.output_message.validate(self.output_message)
         if self.destination:
@@ -140,7 +147,7 @@ class Manager:
                 message_key=self.message_key, output_message=self.output_message
             )
 
-    def serialize_exception(self, exception):
+    def serialize_exception(self, exception: BaseException) -> dict[str, t.Any]:
         return serialize_exception(
             message_key=self.message_key,
             exception=exception,
@@ -150,7 +157,7 @@ class Manager:
             runtime_info=self.runtime_info,
         )
 
-    def _note_compute_exception(self, exception):
+    def _note_compute_exception(self, exception: BaseException) -> bool:
         """
         Return a value suitable for returning from `__exit__`.
         """
@@ -169,8 +176,14 @@ class Manager:
         else:
             return False
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(
+        self,
+        type: t.Optional[t.Type[BaseException]],
+        value: t.Optional[BaseException],
+        traceback: t.Optional[TracebackType],
+    ) -> t.Optional[bool]:
         if type in [KeyboardInterrupt, SystemExit]:
+            assert isinstance(value, BaseException)
             raise value
         elif value:
             if self.verbose:
@@ -196,3 +209,5 @@ class Manager:
                 "Completed in {}".format(format_time(self.duration_seconds)),
                 file=sys.stderr,
             )
+
+        return None

@@ -1,6 +1,8 @@
 import asyncio
 import concurrent
+import datetime
 import os
+import typing as t
 from botocore.exceptions import ClientError
 
 from werkit.compute import Manager
@@ -19,7 +21,9 @@ env_worker_lambda_timeout = (
 )
 
 
-def transform_result(message_key, result, start_time):
+def transform_result(
+    message_key: t.Any, result: t.Any, start_time: datetime.datetime
+) -> dict[str, t.Any]:
     if (
         isinstance(result, ClientError)
         or isinstance(result, asyncio.TimeoutError)

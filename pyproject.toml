@@ -48,6 +48,7 @@ rds_graphile_worker = ["rds-graphile-worker-client"]
 
 [tool.poetry.dev-dependencies]
 black = "23.3.0"
+boto3-stubs = {version = "1.26.90", extras = ["s3", "lambda"]}
 click = "8.0.3"
 coverage = "7.2.7"
 executor = "23.2"
@@ -59,7 +60,9 @@ pytest = "7.3.1"
 pytest-cov = "4.0.0"
 python-dotenv = "0.21.1"
 twine = "4.0.2"
+types-boto3 = "1.0.2"
 types-freezegun = "1.1.10"
+types-jsonschema = "4.17.0.9"
 types-simplejson = "3.18.0.3"
 
 [build-system]
@@ -78,8 +81,20 @@ omit = [
 ]
 
 [[tool.mypy.overrides]]
-module = "werkit.compute.graph.*"
+module = "werkit.*"
 disallow_untyped_calls = true
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
 disallow_untyped_decorators = true
+
+[[tool.mypy.overrides]]
+module = 'harrison.*'
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = 'artifax.*'
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = 'rds_graphile_worker_client.*'
+ignore_missing_imports = true

@@ -2,7 +2,7 @@
 import os
 
 
-def set_path():
+def set_path() -> None:
     import sys
 
     sys.path.insert(
@@ -24,7 +24,7 @@ from werkit.publish_to_s3 import (  # noqa: E402
 
 
 @click.group()
-def cli():
+def cli() -> None:
     pass
 
 
@@ -37,7 +37,7 @@ def cli():
     default=False,
     is_flag=True,
 )
-def infer_and_publish(verbose, bucket_name, with_manifest):
+def infer_and_publish(verbose: bool, bucket_name: str, with_manifest: bool) -> None:
     environment = infer_function_environment_from_ci_environment()
     perform_publish(
         environment=environment,
@@ -57,7 +57,9 @@ def infer_and_publish(verbose, bucket_name, with_manifest):
     default=False,
     is_flag=True,
 )
-def publish_using_sha1(verbose, function_name, bucket_name, with_manifest):
+def publish_using_sha1(
+    verbose: bool, function_name: str, bucket_name: str, with_manifest: bool
+) -> None:
     environment = infer_commit_from_ci_environment(function_name)
     perform_publish(
         environment=environment,

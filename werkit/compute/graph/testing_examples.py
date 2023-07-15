@@ -126,5 +126,5 @@ class MyComputeProcessWithCustomType(MyComputeProcess):
         return (1.5151, 2.5151, 3.5151)
 
     @output(value_type=str)
-    def further_derived_thing(self, other_thing) -> str:
+    def further_derived_thing(self, other_thing: tuple) -> str:
         return str(other_thing)

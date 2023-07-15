@@ -1,18 +1,22 @@
 import os
 import sys
+import typing as t
 import uuid
+from collections.abc import Iterator
 from contextlib import contextmanager
 
 
 @contextmanager
-def temp_file_on_s3(local_path, bucket, key=None, verbose=False):
+def temp_file_on_s3(
+    local_path: str, bucket: str, key: t.Optional[str] = None, verbose: bool = False
+) -> t.Iterator[str]:
     """
     Copy the given path to S3. Delete the object from S3 when the block
     exits.
     """
     import boto3
 
-    def pif(x):
+    def pif(x: str) -> None:
         if verbose:
             print(x, file=sys.stderr)
 
@@ -33,17 +37,50 @@ def temp_file_on_s3(local_path, bucket, key=None, verbose=False):
         s3_client.delete_object(Bucket=bucket, Key=key)
 
 
+@t.overload
 @contextmanager
 def temp_file_on_s3_from_string(
-    contents, bucket, key=None, extension=None, verbose=False, ret_etag=False
-):
+    contents: str,
+    bucket: str,
+    key: t.Optional[str] = None,
+    extension: t.Optional[str] = None,
+    verbose: bool = False,
+    *,
+    ret_etag: t.Literal[True],
+) -> Iterator[tuple[str, str]]:
+    ...
+
+
+@t.overload
+@contextmanager
+def temp_file_on_s3_from_string(
+    contents: str,
+    bucket: str,
+    key: t.Optional[str] = None,
+    extension: t.Optional[str] = None,
+    verbose: bool = False,
+    *,
+    ret_etag: t.Literal[False] = False,
+) -> Iterator[str]:
+    ...
+
+
+@contextmanager
+def temp_file_on_s3_from_string(
+    contents: str,
+    bucket: str,
+    key: t.Optional[str] = None,
+    extension: t.Optional[str] = None,
+    verbose: bool = False,
+    ret_etag: bool = False,
+) -> t.Union[Iterator[str], Iterator[tuple[str, str]]]:
     """
     Write the given contents to S3. Delete the object from S3 when the block
     exits.
     """
     import boto3
 
-    def pif(x):
+    def pif(x: str) -> None:
         if verbose:
             print(x, file=sys.stderr)
 

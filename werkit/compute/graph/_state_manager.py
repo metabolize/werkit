@@ -1,5 +1,5 @@
 import typing as t
-from ._dependency_graph import DependencyGraph
+from ._dependency_graph import ComputeNode, DependencyGraph
 
 
 class StateManager:
@@ -37,7 +37,7 @@ class StateManager:
         self.store.update(normalized)
 
     def evaluate(
-        self, targets: t.List[str] = None, handle_exceptions: bool = False
+        self, targets: t.Optional[t.List[str]] = None, handle_exceptions: bool = False
     ) -> None:
         import functools
         from artifax import Artifax
@@ -50,10 +50,10 @@ class StateManager:
             else:
                 self._assert_known_keys(targets)
 
-        def wrap_node(name, node):
+        def wrap_node(name: str, node: ComputeNode) -> t.Callable:
             wrapped = node.bind(self.instance)
 
-            def wrapper(*args):
+            def wrapper(*args: list[t.Any]) -> t.Any:
                 value = wrapped(*args)
                 return node.normalize(name, value)
 
@@ -75,7 +75,7 @@ class StateManager:
             values = afx.build(targets=targets)
             self.store.update(**dict(zip(targets, values)))
 
-    def serialize(self, targets: t.List[str] = None) -> t.Dict:
+    def serialize(self, targets: t.Optional[t.List[str]] = None) -> t.Dict:
         if targets is not None:
             self._assert_known_keys(targets)
             missing_keys = set(targets) - set(self.store.keys())

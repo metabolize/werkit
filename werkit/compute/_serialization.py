@@ -1,6 +1,14 @@
+import datetime
+import typing as t
+
+
 def serialize_result(
-    message_key, serializable_result, start_time, duration_seconds, runtime_info=None
-):
+    message_key: t.Any,
+    serializable_result: t.Any,
+    start_time: datetime.datetime,
+    duration_seconds: float,
+    runtime_info: t.Any = None,
+) -> dict[str, t.Any]:
     """
     Wrap the computation result in the `werkit.Manager` result schema.
 
@@ -22,14 +30,17 @@ def serialize_result(
     }
 
 
+ErrorOrigin = t.Literal["compute", "system", "orchestration"]
+
+
 def serialize_exception(
-    message_key,
-    exception,
-    error_origin,
-    start_time,
-    duration_seconds=-1,
-    runtime_info=None,
-):
+    message_key: t.Any,
+    exception: BaseException,
+    error_origin: ErrorOrigin,
+    start_time: datetime.datetime,
+    duration_seconds: float = -1,
+    runtime_info: t.Any = None,
+) -> dict[str, t.Any]:
     """
     Wrap an exception in the `werkit.Manager` result schema.
 

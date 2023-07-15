@@ -1,15 +1,23 @@
 import os
+import typing as t
+
+from .common.cli_common import InferredFunctionEnvironment
 
 
-def local_path_for_built_lambda(function_name):
+def local_path_for_built_lambda(function_name: str) -> str:
     return os.path.join("lambdas", f"{function_name}.zip")
 
 
-def local_path_for_manifest(function_name):
+def local_path_for_manifest(function_name: str) -> str:
     return os.path.join("lambdas", f"{function_name}.manifest.json")
 
 
-def _get_s3_key_base(function_name, version, sha1, with_manifest):
+def _get_s3_key_base(
+    function_name: str,
+    version: t.Optional[str],
+    sha1: t.Optional[str],
+    with_manifest: bool,
+) -> str:
     if version:
         return f"{function_name}/tags/{version}"
     else:
@@ -17,23 +25,33 @@ def _get_s3_key_base(function_name, version, sha1, with_manifest):
 
 
 def s3_key_for_built_lambda(
-    function_name, version=None, sha1=None, with_manifest=False
-):
+    function_name: str,
+    version: t.Optional[str] = None,
+    sha1: t.Optional[str] = None,
+    with_manifest: bool = False,
+) -> str:
     return f"{_get_s3_key_base(function_name, version, sha1, with_manifest)}.zip"
 
 
-def s3_key_for_manifest(function_name, version=None, sha1=None, with_manifest=False):
+def s3_key_for_manifest(
+    function_name: str,
+    version: t.Optional[str] = None,
+    sha1: t.Optional[str] = None,
+    with_manifest: bool = False,
+) -> str:
     return (
         f"{_get_s3_key_base(function_name, version, sha1, with_manifest)}.manifest.json"
     )
 
 
-def publish_file_to_s3(key, filename, bucket_name, verbose):
+def publish_file_to_s3(
+    key: str, filename: str, bucket_name: str, verbose: bool
+) -> None:
     import boto3
 
     client = boto3.client("s3")
 
-    def exists():
+    def exists() -> bool:
         try:
             client.head_object(Bucket=bucket_name, Key=key)
         except client.exceptions.ClientError as e:
@@ -51,7 +69,12 @@ def publish_file_to_s3(key, filename, bucket_name, verbose):
     )
 
 
-def perform_publish(environment, verbose, bucket_name, with_manifest):
+def perform_publish(
+    environment: InferredFunctionEnvironment,
+    verbose: bool,
+    bucket_name: str,
+    with_manifest: bool,
+) -> None:
     function_name = environment.function_name
     version = environment.version
     sha1 = environment.sha1
