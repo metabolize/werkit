@@ -1,12 +1,16 @@
 # Changelog
 
+## 0.30.2
+
+- Fix compatibility with updated semver dependency.
+
 ## 0.30.1
 
-Same as 0.29.1.
+Same as 0.30.0.
 
 ## 0.30.0
 
-Same as 0.29.1.
+- Upgrade semver dependency.
 
 ## 0.29.1
 
