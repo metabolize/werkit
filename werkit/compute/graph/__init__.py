@@ -1,4 +1,4 @@
-from ._binding import bind_state_manager, DefaultStateManagerProtocol  # noqa: F401
+from ._binding import DefaultStateManagerProtocol, bind_state_manager   # noqa: F401
 from ._built_in_type import (  # noqa: F401
     BuiltInValueType,
 )

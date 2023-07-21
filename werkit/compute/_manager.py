@@ -1,11 +1,11 @@
 import datetime
 import sys
-from types import TracebackType
 import typing as t
+from types import TracebackType
 from ._destination import Destination
 from ._formatting import format_time
-from ._serialization import serialize_exception, serialize_result
 from ._schema import Schema
+from ._serialization import serialize_exception, serialize_result
 
 if t.TYPE_CHECKING:
     from typing_extensions import Self

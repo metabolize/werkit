@@ -74,7 +74,7 @@ def test_state_manager_evaluate() -> None:
 
 def test_state_manager_evaluate_on_subclass() -> None:
     state_manager = t.cast(
-        DefaultStateManagerProtocol, MyComputeProcess()
+        DefaultStateManagerProtocol, MyComputeProcessSubclass()
     ).state_manager
     state_manager.set(a=1, b=2)
     state_manager.evaluate()

@@ -1,5 +1,5 @@
-from abc import ABC, abstractmethod
 import typing as t
+from abc import ABC, abstractmethod
 
 
 class Destination(ABC):

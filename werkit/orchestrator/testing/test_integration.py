@@ -1,8 +1,8 @@
 import os
-from pathlib import Path
 import sys
 import typing as t
 import uuid
+from pathlib import Path
 import boto3
 from dotenv import load_dotenv
 import pytest

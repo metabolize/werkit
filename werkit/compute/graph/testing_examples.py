@@ -1,7 +1,6 @@
 import typing as t
 from . import (
     CustomType,
-    DefaultStateManagerProtocol,
     Input,
     JSONType,
     bind_state_manager,

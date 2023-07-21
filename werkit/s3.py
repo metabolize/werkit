@@ -2,7 +2,6 @@ import os
 import sys
 import typing as t
 import uuid
-from collections.abc import Iterator
 from contextlib import AbstractContextManager, contextmanager
 
 

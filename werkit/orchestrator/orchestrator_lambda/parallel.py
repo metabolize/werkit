@@ -1,8 +1,8 @@
 import asyncio
-from concurrent.futures import ThreadPoolExecutor
 import datetime
 import json
 import typing as t
+from concurrent.futures import ThreadPoolExecutor
 import boto3
 from botocore.exceptions import ClientError
 from harrison import Timer
