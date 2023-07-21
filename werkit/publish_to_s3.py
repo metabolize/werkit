@@ -69,6 +69,11 @@ def publish_file_to_s3(
     )
 
 
+class PublishCommonKwargs(t.TypedDict):
+    bucket_name: str
+    verbose: bool
+
+
 def perform_publish(
     environment: InferredFunctionEnvironment,
     verbose: bool,
@@ -81,7 +86,7 @@ def perform_publish(
 
     assert (version is not None) != (sha1 is not None)
 
-    common_kwargs = dict(
+    common_kwargs: PublishCommonKwargs = dict(
         bucket_name=bucket_name,
         verbose=verbose,
     )

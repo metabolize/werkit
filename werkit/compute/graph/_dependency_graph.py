@@ -1,13 +1,14 @@
 from __future__ import annotations
 import inspect
 import numbers
+import sys
 import typing as t
 
-try:
+if sys.version_info >= (3, 8):
     from typing import Literal, TypedDict
-except ImportError:
-    # TODO: Remove when Python 3.9 is dropped.
+else:
     from typing_extensions import Literal, TypedDict
+
 from ._built_in_type import (
     BuiltInValueType,
     coerce_value_to_builtin_type,

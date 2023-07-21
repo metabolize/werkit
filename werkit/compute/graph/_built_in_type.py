@@ -1,9 +1,10 @@
 import numbers
+import sys
 import typing as t
 
-try:
+if sys.version_info >= (3, 10):
     from typing import TypeGuard
-except ImportError:
+else:
     # TODO: Remove when Python 3.9 is dropped.
     from typing_extensions import TypeGuard
 

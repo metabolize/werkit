@@ -1,22 +1,27 @@
 import asyncio
+from concurrent.futures import ThreadPoolExecutor
 import datetime
 import json
+import typing as t
 import boto3
 from botocore.exceptions import ClientError
 from harrison import Timer
 
+if t.TYPE_CHECKING:
+    from mypy_boto3_lambda.client import LambdaClient
+    from mypy_boto3_lambda.type_defs import InvocationResponseTypeDef
 
-lambda_client = boto3.client("lambda")
+lambda_client: "LambdaClient" = boto3.client("lambda")
 event_loop = asyncio.get_event_loop()
 
 
 async def call_worker_service(
-    worker_lambda_function_name,
-    _input,
-    event_loop=event_loop,
-    executor=None,
-):
-    def invoke_lambda():
+    worker_lambda_function_name: str,
+    _input: dict[str, t.Any],
+    event_loop: asyncio.AbstractEventLoop = event_loop,
+    executor: t.Optional[ThreadPoolExecutor] = None,
+) -> t.Any:
+    def invoke_lambda() -> "InvocationResponseTypeDef":
         return lambda_client.invoke(
             FunctionName=worker_lambda_function_name, Payload=json.dumps(_input)
         )
@@ -35,12 +40,12 @@ async def call_worker_service(
 # Generalize this function and move it outside this `orchestrator_lambda`
 # module.
 async def wait_for(
-    _input,
-    timeout,
-    worker_lambda_function_name,
-    event_loop=event_loop,
-    executor=None,
-):
+    _input: dict[str, t.Any],
+    timeout: int,
+    worker_lambda_function_name: str,
+    event_loop: asyncio.AbstractEventLoop = event_loop,
+    executor: t.Optional[ThreadPoolExecutor] = None,
+) -> t.Any:
     try:
         return await asyncio.wait_for(
             call_worker_service(
@@ -60,15 +65,15 @@ async def wait_for(
 
 
 async def parallel_map_on_lambda(
-    message_key,
-    item_property_name,
-    item_collection,
-    common_input,
-    worker_lambda_function_name,
-    timeout,
-    event_loop=event_loop,
-    executor=None,
-):
+    message_key: t.Any,
+    item_property_name: str,
+    item_collection: dict[str, dict[str, t.Any]],
+    common_input: dict[str, t.Any],
+    worker_lambda_function_name: str,
+    timeout: int,
+    event_loop: asyncio.AbstractEventLoop = event_loop,
+    executor: t.Optional[ThreadPoolExecutor] = None,
+) -> list[t.Any]:
     coroutines = [
         wait_for(
             _input={

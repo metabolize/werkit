@@ -1,6 +1,9 @@
 import typing as t
 from abc import ABC, abstractmethod
 
+if t.TYPE_CHECKING:
+    from jsonschema import Draft7Validator
+
 JSONType = t.Union[str, int, float, bool, None, t.Dict[str, t.Any], t.List[t.Any]]
 
 CanonicalType = t.TypeVar("CanonicalType")
@@ -13,6 +16,8 @@ class CustomType(ABC, t.Generic[CanonicalType]):
     whereas the CustomType is responsible for canonicalization and
     serialization.
     """
+
+    _validator: t.Optional["Draft7Validator"]
 
     @classmethod
     def name(cls) -> str:
@@ -52,7 +57,7 @@ class CustomType(ABC, t.Generic[CanonicalType]):
         from jsonschema import Draft7Validator, RefResolver
 
         try:
-            validator = cls._validator
+            validator = t.cast(Draft7Validator, cls._validator)
         except AttributeError:
             with open(cls.schema_path(), "r") as f:
                 schema = json.load(f)

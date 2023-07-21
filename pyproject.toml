@@ -98,3 +98,7 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = 'rds_graphile_worker_client.*'
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = 'executor.*'
+ignore_missing_imports = true

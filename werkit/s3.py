@@ -3,7 +3,7 @@ import sys
 import typing as t
 import uuid
 from collections.abc import Iterator
-from contextlib import contextmanager
+from contextlib import AbstractContextManager, contextmanager
 
 
 @contextmanager
@@ -38,42 +38,52 @@ def temp_file_on_s3(
 
 
 @t.overload
-@contextmanager
 def temp_file_on_s3_from_string(
     contents: str,
     bucket: str,
+    ret_etag: t.Literal[True],
     key: t.Optional[str] = None,
     extension: t.Optional[str] = None,
     verbose: bool = False,
-    *,
-    ret_etag: t.Literal[True],
-) -> Iterator[tuple[str, str]]:
+) -> AbstractContextManager[tuple[str, str]]:
     ...
 
 
 @t.overload
-@contextmanager
 def temp_file_on_s3_from_string(
     contents: str,
     bucket: str,
+    ret_etag: t.Literal[False],
     key: t.Optional[str] = None,
     extension: t.Optional[str] = None,
     verbose: bool = False,
-    *,
-    ret_etag: t.Literal[False] = False,
-) -> Iterator[str]:
+) -> AbstractContextManager[str]:
     ...
 
 
-@contextmanager
+@t.overload
 def temp_file_on_s3_from_string(
     contents: str,
     bucket: str,
+    ret_etag: bool = False,
     key: t.Optional[str] = None,
     extension: t.Optional[str] = None,
     verbose: bool = False,
+) -> AbstractContextManager[str]:
+    ...
+
+
+# @t.overload doesn't work properly with @contextmanager
+# https://github.com/python/mypy/issues/14652
+@contextmanager  # type: ignore[arg-type]
+def temp_file_on_s3_from_string(  # type: ignore[misc]
+    contents: str,
+    bucket: str,
     ret_etag: bool = False,
-) -> t.Union[Iterator[str], Iterator[tuple[str, str]]]:
+    key: t.Optional[str] = None,
+    extension: t.Optional[str] = None,
+    verbose: bool = False,
+) -> t.Union[AbstractContextManager[str], AbstractContextManager[tuple[str, str]]]:
     """
     Write the given contents to S3. Delete the object from S3 when the block
     exits.

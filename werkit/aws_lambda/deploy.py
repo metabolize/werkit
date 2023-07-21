@@ -7,6 +7,7 @@ from ..s3 import temp_file_on_s3
 if t.TYPE_CHECKING:
     from mypy_boto3_s3.literals import RegionName
     from mypy_boto3_lambda.literals import RuntimeType
+    from mypy_boto3_lambda.type_defs import FunctionCodeTypeDef
 
 
 def default_runtime() -> "RuntimeType":
@@ -25,7 +26,7 @@ def _create_or_update(
     local_path_to_zipfile: t.Optional[str],
     s3_path_to_zipfile: t.Optional[str],
     message: str,
-    create_or_update_fn,
+    create_or_update_fn: t.Callable[["FunctionCodeTypeDef"], None],
     verbose: bool = False,
     s3_code_bucket: t.Optional[str] = None,
     force_upload_to_s3_code_bucket: bool = False,
@@ -34,34 +35,31 @@ def _create_or_update(
     Create or update a lambda function with the given zipfile. If the zipfile is larger
     than 50 MB, you must specify an `s3_code_bucket`.
     """
-    if s3_path_to_zipfile and not s3_code_bucket:
+    if bool(local_path_to_zipfile) == bool(s3_path_to_zipfile):
         raise ValueError(
-            "When `s3_path_to_zipfile` is provided, `s3_code_bucket` is required"
+            "Either `local_path_to_zipfile` or `s3_path_to_zipfile` must be provided (and not both)"
         )
-
-    should_upload_directly_to_lambda = (
-        local_path_to_zipfile
-        and not force_upload_to_s3_code_bucket
-        and not needs_s3_upload(local_path_to_zipfile)
-    )
-
-    if local_path_to_zipfile and not os.path.isfile(local_path_to_zipfile):
-        raise ValueError(f"Local zip file does not exist: {local_path_to_zipfile}")
 
     def pif(x: str) -> None:
         if verbose:
             print(x, file=sys.stderr)
 
-    if should_upload_directly_to_lambda:
-        with open(local_path_to_zipfile, "rb") as f:
-            zipfile_contents = f.read()
-        pif(f"Uploading {local_path_to_zipfile} to Lambda")
-        create_or_update_fn({"ZipFile": zipfile_contents})
-        pif(message)
-    elif s3_path_to_zipfile:
+    if s3_path_to_zipfile:
+        if s3_code_bucket is None:
+            raise ValueError(
+                "When `s3_path_to_zipfile` is provided, `s3_code_bucket` is required"
+            )
         create_or_update_fn({"S3Bucket": s3_code_bucket, "S3Key": s3_path_to_zipfile})
         pif(message)
-    else:
+        return
+
+    if local_path_to_zipfile is None:
+        raise ValueError("Shouldn't get here")
+
+    if not os.path.isfile(local_path_to_zipfile):
+        raise ValueError(f"Local zip file does not exist: {local_path_to_zipfile}")
+
+    if needs_s3_upload(local_path_to_zipfile) or force_upload_to_s3_code_bucket:
         if s3_code_bucket is None:
             raise ValueError(
                 """
@@ -75,6 +73,12 @@ def _create_or_update(
         ) as temp_key:
             create_or_update_fn({"S3Bucket": s3_code_bucket, "S3Key": temp_key})
             pif(message)
+    else:
+        with open(local_path_to_zipfile, "rb") as f:
+            zipfile_contents = f.read()
+        pif(f"Uploading {local_path_to_zipfile} to Lambda")
+        create_or_update_fn({"ZipFile": zipfile_contents})
+        pif(message)
 
 
 def perform_create(
@@ -101,7 +105,7 @@ def perform_create(
 
     client = boto3.client("lambda", region_name=aws_region)
 
-    def create(code_arguments) -> None:
+    def create(code_arguments: "FunctionCodeTypeDef") -> None:
         extra_options = {}
         if timeout is not None:
             extra_options["Timeout"] = timeout
@@ -115,7 +119,7 @@ def perform_create(
             Handler=handler,
             Environment={"Variables": env_vars},
             Code=code_arguments,
-            **extra_options,
+            **extra_options,  # type: ignore[arg-type]
         )
 
     _create_or_update(
@@ -156,7 +160,7 @@ def perform_update_code(
 
     client = boto3.client("lambda", region_name=aws_region)
 
-    def update(code_arguments) -> None:
+    def update(code_arguments: "FunctionCodeTypeDef") -> None:
         client.update_function_code(FunctionName=function_name, **code_arguments)
 
     _create_or_update(

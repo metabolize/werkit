@@ -24,7 +24,7 @@ def create_manager(
     input_message: t.Any = EXAMPLE_INPUT_MESSAGE,
     schema: Schema = schema,
     runtime_info: t.Any = EXAMPLE_RUNTIME_INFO,
-    **kwargs
+    **kwargs: t.Any
 ) -> Manager:
     return Manager(
         input_message=input_message, schema=schema, runtime_info=runtime_info, **kwargs
