@@ -15,7 +15,7 @@ class StateManager:
                 f"Unknown {'key' if len(unknown_keys) == 1 else 'keys'}: {', '.join(sorted(list(unknown_keys)))}"
             )
 
-    def deserialize(self, **kwargs: t.Dict) -> None:
+    def deserialize(self, **kwargs: t.Any) -> None:
         self._assert_known_keys(kwargs.keys())
         deserialized = {
             name: self.dependency_graph.all_nodes[name].deserialize(value)
@@ -23,7 +23,7 @@ class StateManager:
         }
         self.store.update(deserialized)
 
-    def normalize(self, **kwargs: t.Dict) -> t.Dict:
+    def normalize(self, **kwargs: t.Any) -> dict[str, t.Any]:
         return {
             name: self.dependency_graph.all_nodes[name].normalize(
                 name=name, value=value
@@ -31,7 +31,7 @@ class StateManager:
             for name, value in kwargs.items()
         }
 
-    def set(self, **kwargs: t.Dict) -> None:
+    def set(self, **kwargs: t.Any) -> None:
         self._assert_known_keys(kwargs.keys())
         normalized = self.normalize(**kwargs)
         self.store.update(normalized)

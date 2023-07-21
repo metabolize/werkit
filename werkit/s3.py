@@ -65,6 +65,7 @@ def temp_file_on_s3_from_string(
 def temp_file_on_s3_from_string(
     contents: str,
     bucket: str,
+    *,
     ret_etag: bool = False,
     key: t.Optional[str] = None,
     extension: t.Optional[str] = None,

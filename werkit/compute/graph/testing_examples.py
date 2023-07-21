@@ -1,5 +1,13 @@
 import typing as t
-from . import CustomType, Input, JSONType, bind_state_manager, intermediate, output
+from . import (
+    CustomType,
+    DefaultStateManagerProtocol,
+    Input,
+    JSONType,
+    bind_state_manager,
+    intermediate,
+    output,
+)
 
 
 @bind_state_manager()
