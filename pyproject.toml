@@ -17,7 +17,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.7,<4"
+python = ">=3.9,<4"
 # https://docs.aws.amazon.com/lambda/latest/dg/lambda-python.html
 boto3 = {version = "1.20.32", optional = true}
 click = {version = "^8.0.3", optional = true}
