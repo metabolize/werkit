@@ -1,7 +1,6 @@
 from __future__ import annotations
 import inspect
 import numbers
-import sys
 import typing as t
 
 
