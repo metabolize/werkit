@@ -13,4 +13,4 @@ from ._dependency_graph import (  # noqa: F401
     intermediate,
     output,
 )
-from ._state_manager import StateManager  # noqa: F401
+from ._state_manager import StateManager, Store  # noqa: F401
