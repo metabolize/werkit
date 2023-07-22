@@ -117,7 +117,7 @@ def test_integration_success(tmpdir: Path) -> None:
 
         result = data["result"]
         print(result)
-        assert isinstance(result, object)
+        assert isinstance(result, dict)
         assert all([r["success"] is True for r in result.values()])
         assert {k: r["result"] for k, r in result.items()} == {
             "first": 2**1,
