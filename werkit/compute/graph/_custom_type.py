@@ -1,10 +1,10 @@
 import typing as t
 from abc import ABC, abstractmethod
 
-if t.TYPE_CHECKING:
+if t.TYPE_CHECKING:  # pragma: no cover
     from jsonschema import Draft7Validator
 
-JSONType = t.Union[str, int, float, bool, None, t.Dict[str, t.Any], t.List[t.Any]]
+JSONType = t.Union[str, int, float, bool, None, dict[str, t.Any], t.List[t.Any]]
 
 CanonicalType = t.TypeVar("CanonicalType")
 

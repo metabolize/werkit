@@ -1,20 +1,35 @@
 from __future__ import annotations
 import inspect
 import numbers
-import sys
 import typing as t
 
-if sys.version_info >= (3, 8):
-    from typing import Literal, TypedDict
-else:
-    from typing_extensions import Literal, TypedDict
 
 from ._built_in_type import (
     BuiltInValueType,
+    BuiltInValueTypeName,
+    built_in_value_type_with_name,
     coerce_value_to_builtin_type,
     is_built_in_value_type,
 )
 from ._custom_type import CustomType, JSONType
+
+if t.TYPE_CHECKING:  # pragma: no cover
+    from jsonschema import Draft7Validator
+
+
+def _attrs_of_type(obj: t.Any, _type: t.Type[AttrType]) -> dict[str, AttrType]:
+    return {
+        name: getattr(obj, name)
+        for name in dir(obj)
+        if not name.startswith("__") and isinstance(getattr(obj, name), _type)
+    }
+
+
+def _find_duplicates(items: list[str]) -> list[str]:
+    from collections import Counter
+
+    counter = Counter(items)
+    return [item for item in counter if counter[item] > 1]
 
 
 AnyValueType = t.Union[BuiltInValueType, t.Type[CustomType]]
@@ -47,7 +62,7 @@ class BaseNode:
             else:
                 raise ValueError("How did we get here?")
         else:
-            return self.value_type.__name__
+            return t.cast(type[CustomType], self.value_type).name()
 
     def deserialize(self, value: JSONType) -> t.Any:
         if self.value_type_is_built_in:
@@ -78,7 +93,8 @@ class BaseNode:
             return serialized
 
 
-InputJSONType = TypedDict("InputJSONType", {"valueType": str})
+class InputJSONType(t.TypedDict):
+    valueType: str
 
 
 class Input(BaseNode):
@@ -86,9 +102,9 @@ class Input(BaseNode):
         return {"valueType": self.value_type_name}
 
 
-ComputeNodeJSONType = TypedDict(
-    "ComputeNodeJSONType", {"valueType": str, "dependencies": t.List[str]}
-)
+class ComputeNodeJSONType(t.TypedDict):
+    valueType: str
+    dependencies: t.List[str]
 
 
 class ComputeNode(BaseNode):
@@ -133,36 +149,142 @@ def output(value_type: AnyValueType) -> t.Callable[[t.Callable], Output]:
     return decorator
 
 
-DependencyGraphJSONType = TypedDict(
-    "DependencyGraphJSONType",
-    {
-        "schemaVersion": Literal[1],
-        "inputs": t.Dict[str, InputJSONType],
-        "intermediates": t.Dict[str, ComputeNodeJSONType],
-        "outputs": t.Dict[str, ComputeNodeJSONType],
-    },
-)
-
 AttrType = t.TypeVar("AttrType")
 
 
-def _attrs_of_type(obj: t.Any, _type: t.Type[AttrType]) -> t.Dict[str, AttrType]:
-    return {
-        name: getattr(obj, name)
-        for name in dir(obj)
-        if not name.startswith("__") and isinstance(getattr(obj, name), _type)
-    }
+class DependencyGraphJSONType(t.TypedDict):
+    schemaVersion: t.Literal[1]
+    inputs: dict[str, InputJSONType]
+    intermediates: dict[str, ComputeNodeJSONType]
+    outputs: dict[str, ComputeNodeJSONType]
+
+
+def dependency_graph_validator() -> "Draft7Validator":
+    import os
+    from jsonschema import Draft7Validator, RefResolver
+    from missouri import json
+
+    schema = t.cast(
+        dict[str, t.Any],
+        json.load(
+            os.path.join(
+                os.path.dirname(__file__),
+                "..",
+                "..",
+                "..",
+                "types",
+                "src",
+                "generated",
+                "dependency-graph.schema.json",
+            )
+        ),
+    )
+    resolver = RefResolver.from_schema(schema)
+    return Draft7Validator(
+        {"$ref": "#/definitions/DependencyGraphWithBuiltInTypes"}, resolver=resolver
+    )
+
+
+def assert_valid_dependency_graph_data(data: t.Any) -> DependencyGraphJSONType:
+    dependency_graph_validator().validate(data)
+    return t.cast(DependencyGraphJSONType, data)
+
+
+def not_implemented() -> t.NoReturn:
+    raise NotImplementedError("Deserialized compute nodes are not implemented")
+
+
+NodeType = t.TypeVar("NodeType", Input, Intermediate, Output)
+
+
+def create_unimplemented_node(
+    cls: type[NodeType],
+    value_type_name: str,
+    custom_types: dict[str, type[CustomType]],
+) -> NodeType:
+    value_type: AnyValueType
+    try:
+        value_type = custom_types[value_type_name]
+    except KeyError:
+        value_type = built_in_value_type_with_name(
+            t.cast(BuiltInValueTypeName, value_type_name)
+        )
+
+    # TODO: Figure out why narrowing the typevar doesn't allow the correct
+    # return type to be inferred.
+    if cls is Input:
+        return Input(value_type=value_type)  # type: ignore[return-value]
+    elif cls is Intermediate:
+        return Intermediate(method=not_implemented, value_type=value_type)  # type: ignore[return-value]
+    else:
+        return Output(method=not_implemented, value_type=value_type)  # type: ignore[return-value]
 
 
 class DependencyGraph:
-    def __init__(self, cls: t.Type):
-        assert inspect.isclass(cls)
-
-        self.inputs = _attrs_of_type(cls, Input)
-        self.intermediates = _attrs_of_type(cls, Intermediate)
-        self.outputs = _attrs_of_type(cls, Output)
+    def __init__(
+        self,
+        inputs: dict[str, Input],
+        intermediates: dict[str, Intermediate],
+        outputs: dict[str, Output],
+    ):
+        self.inputs = inputs
+        self.intermediates = intermediates
+        self.outputs = outputs
         self.compute_nodes = dict(**self.intermediates, **self.outputs)
         self.all_nodes = dict(**self.inputs, **self.compute_nodes)
+
+    @classmethod
+    def from_class(cls: type[DependencyGraph], in_class: t.Type) -> "DependencyGraph":
+        assert inspect.isclass(in_class)
+
+        return cls(
+            inputs=_attrs_of_type(in_class, Input),
+            intermediates=_attrs_of_type(in_class, Intermediate),
+            outputs=_attrs_of_type(in_class, Output),
+        )
+
+    @classmethod
+    def deserialize(
+        cls: type[DependencyGraph],
+        data: DependencyGraphJSONType,
+        custom_types: list[type[CustomType]] = [],
+    ) -> "DependencyGraph":
+        assert_valid_dependency_graph_data(data)
+
+        custom_type_names = [item.name() for item in custom_types]
+        duplicates = _find_duplicates(custom_type_names)
+        if duplicates:
+            raise ValueError(
+                f"Duplicate custom type names found: {', '.join(duplicates)}"
+            )
+        keyed_custom_types = {item.name(): item for item in custom_types}
+
+        return cls(
+            inputs={
+                name: create_unimplemented_node(
+                    cls=Input,
+                    value_type_name=input_data["valueType"],
+                    custom_types=keyed_custom_types,
+                )
+                for name, input_data in data["inputs"].items()
+            },
+            intermediates={
+                name: create_unimplemented_node(
+                    cls=Intermediate,
+                    value_type_name=input_data["valueType"],
+                    custom_types=keyed_custom_types,
+                )
+                for name, input_data in data["intermediates"].items()
+            },
+            outputs={
+                name: create_unimplemented_node(
+                    cls=Output,
+                    value_type_name=input_data["valueType"],
+                    custom_types=keyed_custom_types,
+                )
+                for name, input_data in data["outputs"].items()
+            },
+        )
 
     def keys(self) -> t.List[str]:
         return list(self.inputs.keys()) + list(self.compute_nodes.keys())

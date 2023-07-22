@@ -1,6 +1,7 @@
 import typing as t
 from . import (
     CustomType,
+    DependencyGraphJSONType,
     Input,
     JSONType,
     bind_state_manager,
@@ -31,7 +32,7 @@ EXPECTED_INPUTS = ["a", "b"]
 EXPECTED_INTERMEDIATES = ["i", "j"]
 EXPECTED_OUTPUT = "r"
 
-EXPECTED_SERIALIZED_DEPENDENCY_GRAPH = {
+EXPECTED_SERIALIZED_DEPENDENCY_GRAPH: DependencyGraphJSONType = {
     "schemaVersion": 1,
     "inputs": {"a": {"valueType": "number"}, "b": {"valueType": "number"}},
     "intermediates": {

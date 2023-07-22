@@ -835,6 +835,17 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "missouri"
+version = "0.1.0"
+description = "Read and write JSON in one line"
+category = "dev"
+optional = false
+python-versions = ">=3.8,<4"
+
+[package.dependencies]
+simplejson = ">=3,<4"
+
+[[package]]
 name = "more-itertools"
 version = "9.1.0"
 description = "More routines for operating on iterables, beyond itertools"
@@ -1422,7 +1433,7 @@ rds-graphile-worker = ["rds-graphile-worker-client"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9,<4"
-content-hash = "f34db7508aadb368e99e600cd74b51aa5fdd955c2dfa16700d7b295238f6b264"
+content-hash = "3464fb35bb18db62e9a8c70db676f1ad0d445b560bc2cb08d0258182e25ae9ca"
 
 [metadata.files]
 artifax = [
@@ -1817,6 +1828,10 @@ mccabe = [
 mdurl = [
     {file = "mdurl-0.1.2-py3-none-any.whl", hash = "sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8"},
     {file = "mdurl-0.1.2.tar.gz", hash = "sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba"},
+]
+missouri = [
+    {file = "missouri-0.1.0-py3-none-any.whl", hash = "sha256:d5f4e7bf7ab97a6b2544cf2d5db066c35f3eb49b39a80655a4940fee52f826d8"},
+    {file = "missouri-0.1.0.tar.gz", hash = "sha256:049837603fa43bb1221821509254d79a3f332dddb3ddf6fbb6ae1481eddddfdc"},
 ]
 more-itertools = [
     {file = "more-itertools-9.1.0.tar.gz", hash = "sha256:cabaa341ad0389ea83c17a94566a53ae4c9d07349861ecb14dc6d0345cf9ac5d"},

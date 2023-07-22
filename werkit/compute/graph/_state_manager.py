@@ -2,11 +2,10 @@ import typing as t
 from ._dependency_graph import ComputeNode, DependencyGraph
 
 
-class StateManager:
-    def __init__(self, instance: t.Any):
-        self.instance = instance
-        self.dependency_graph = DependencyGraph(instance.__class__)
-        self.store: t.Dict = {}
+class Store:
+    def __init__(self, dependency_graph: DependencyGraph):
+        self.dependency_graph = dependency_graph
+        self.store: dict[str, t.Any] = {}
 
     def _assert_known_keys(self, keys: t.Iterable[str]) -> None:
         unknown_keys = set(keys) - set(self.dependency_graph.keys())
@@ -35,6 +34,27 @@ class StateManager:
         self._assert_known_keys(kwargs.keys())
         normalized = self.normalize(**kwargs)
         self.store.update(normalized)
+
+    def serialize(self, targets: t.Optional[t.List[str]] = None) -> dict[str, t.Any]:
+        if targets is not None:
+            self._assert_known_keys(targets)
+            missing_keys = set(targets) - set(self.store.keys())
+            if missing_keys:
+                preamble = f"{'Key has' if len(missing_keys) == 1 else 'Keys have'} not been evaluated"
+                raise ValueError(f"{preamble}: {', '.join(sorted(list(missing_keys)))}")
+        return {
+            name: self.dependency_graph.all_nodes[name].serialize_value(value)
+            for name, value in self.store.items()
+            if targets is None or name in targets
+        }
+
+
+class StateManager(Store):
+    def __init__(self, instance: t.Any):
+        super().__init__(
+            dependency_graph=DependencyGraph.from_class(instance.__class__)
+        )
+        self.instance = instance
 
     def evaluate(
         self, targets: t.Optional[t.List[str]] = None, handle_exceptions: bool = False
@@ -74,19 +94,6 @@ class StateManager:
         else:
             values = afx.build(targets=targets)
             self.store.update(**dict(zip(targets, values)))
-
-    def serialize(self, targets: t.Optional[t.List[str]] = None) -> t.Dict:
-        if targets is not None:
-            self._assert_known_keys(targets)
-            missing_keys = set(targets) - set(self.store.keys())
-            if missing_keys:
-                preamble = f"{'Key has' if len(missing_keys) == 1 else 'Keys have'} not been evaluated"
-                raise ValueError(f"{preamble}: {', '.join(sorted(list(missing_keys)))}")
-        return {
-            name: self.dependency_graph.all_nodes[name].serialize_value(value)
-            for name, value in self.store.items()
-            if targets is None or name in targets
-        }
 
     def get(self, name: str) -> t.Any:
         self._assert_known_keys([name])
