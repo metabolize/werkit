@@ -5,7 +5,7 @@ from ._dependency_graph import ComputeNode, DependencyGraph
 class StateManager:
     def __init__(self, instance: t.Any):
         self.instance = instance
-        self.dependency_graph = DependencyGraph(instance.__class__)
+        self.dependency_graph = DependencyGraph.from_class(instance.__class__)
         self.store: t.Dict = {}
 
     def _assert_known_keys(self, keys: t.Iterable[str]) -> None:

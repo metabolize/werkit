@@ -11,10 +11,26 @@ else:
 
 from ._built_in_type import (
     BuiltInValueType,
+    built_in_value_type_with_name,
     coerce_value_to_builtin_type,
     is_built_in_value_type,
 )
 from ._custom_type import CustomType, JSONType
+
+
+def _attrs_of_type(obj: t.Any, _type: t.Type[AttrType]) -> dict[str, AttrType]:
+    return {
+        name: getattr(obj, name)
+        for name in dir(obj)
+        if not name.startswith("__") and isinstance(getattr(obj, name), _type)
+    }
+
+
+def _find_duplicates(items: list[str]) -> list[str]:
+    from collections import Counter
+
+    counter = Counter(items)
+    return [item for item in counter if counter[item] > 1]
 
 
 AnyValueType = t.Union[BuiltInValueType, t.Type[CustomType]]
@@ -47,7 +63,7 @@ class BaseNode:
             else:
                 raise ValueError("How did we get here?")
         else:
-            return self.value_type.__name__
+            return self.value_type.name
 
     def deserialize(self, value: JSONType) -> t.Any:
         if self.value_type_is_built_in:
@@ -133,6 +149,9 @@ def output(value_type: AnyValueType) -> t.Callable[[t.Callable], Output]:
     return decorator
 
 
+AttrType = t.TypeVar("AttrType")
+
+
 DependencyGraphJSONType = TypedDict(
     "DependencyGraphJSONType",
     {
@@ -143,26 +162,90 @@ DependencyGraphJSONType = TypedDict(
     },
 )
 
-AttrType = t.TypeVar("AttrType")
+
+def not_implemented() -> t.NoReturn:
+    raise NotImplementedError("Deserialized compute nodes are not implemented")
 
 
-def _attrs_of_type(obj: t.Any, _type: t.Type[AttrType]) -> t.Dict[str, AttrType]:
-    return {
-        name: getattr(obj, name)
-        for name in dir(obj)
-        if not name.startswith("__") and isinstance(getattr(obj, name), _type)
-    }
+def create_unimplemented_node(
+    cls: t.Union[type[Input], type[Intermediate], type[Output]],
+    value_type_name: str,
+    custom_types: dict[str, type[CustomType]],
+) -> AnyValueType:
+    try:
+        value_type = custom_types[value_type_name]
+    except KeyError:
+        value_type = built_in_value_type_with_name(value_type_name)
+
+    if cls is Input:
+        return cls(value_type=value_type)
+    else:
+        return cls(method=not_implemented, value_type=value_type)
 
 
 class DependencyGraph:
-    def __init__(self, cls: t.Type):
-        assert inspect.isclass(cls)
-
-        self.inputs = _attrs_of_type(cls, Input)
-        self.intermediates = _attrs_of_type(cls, Intermediate)
-        self.outputs = _attrs_of_type(cls, Output)
+    def __init__(
+        self,
+        inputs: dict[str, Input],
+        intermediates: dict[str, Intermediate],
+        outputs: dict[str, Output],
+    ):
+        self.inputs = inputs
+        self.intermediates = intermediates
+        self.outputs = outputs
         self.compute_nodes = dict(**self.intermediates, **self.outputs)
         self.all_nodes = dict(**self.inputs, **self.compute_nodes)
+
+    @classmethod
+    def from_class(cls: type[DependencyGraph], in_class: t.Type) -> "DependencyGraph":
+        assert inspect.isclass(in_class)
+
+        return cls(
+            inputs=_attrs_of_type(in_class, Input),
+            intermediates=_attrs_of_type(in_class, Intermediate),
+            outputs=_attrs_of_type(in_class, Output),
+        )
+
+    @classmethod
+    def deserialize(
+        cls: type[DependencyGraph],
+        data: DependencyGraphJSONType,
+        custom_types: list[type[CustomType]] = [],
+    ) -> "DependencyGraph":
+        custom_type_names = [item.name for item in custom_types]
+        duplicates = _find_duplicates(custom_type_names)
+        if duplicates:
+            raise ValueError(
+                f"Duplicate custom type names found: {', '.join(duplicates)}"
+            )
+        keyed_custom_types = {[item.name]: item for item in custom_types}
+
+        return cls(
+            inputs={
+                name: create_unimplemented_node(
+                    cls=Input,
+                    value_type_name=input_data["valueType"],
+                    custom_types=keyed_custom_types,
+                )
+                for name, input_data in data["inputs"].items()
+            },
+            intermediates={
+                name: create_unimplemented_node(
+                    cls=Intermediate,
+                    value_type_name=input_data["valueType"],
+                    custom_types=keyed_custom_types,
+                )
+                for name, input_data in data["intermediates"].items()
+            },
+            outputs={
+                name: create_unimplemented_node(
+                    cls=Output,
+                    value_type_name=input_data["valueType"],
+                    custom_types=keyed_custom_types,
+                )
+                for name, input_data in data["outputs"].items()
+            },
+        )
 
     def keys(self) -> t.List[str]:
         return list(self.inputs.keys()) + list(self.compute_nodes.keys())
