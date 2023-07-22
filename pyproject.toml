@@ -64,7 +64,7 @@ twine = "4.0.2"
 types-boto3 = "1.0.2"
 types-freezegun = "1.1.10"
 types-jsonschema = "4.17.0.9"
-types-simplejson = "3.18.0.3"
+types-simplejson = "3.19.0.2"
 
 [build-system]
 # Lint requires setuptools.

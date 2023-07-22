@@ -2114,13 +2114,13 @@ types-awscrt = "*"
 
 [[package]]
 name = "types-simplejson"
-version = "3.18.0.3"
+version = "3.19.0.2"
 description = "Typing stubs for simplejson"
 optional = false
 python-versions = "*"
 files = [
-    {file = "types-simplejson-3.18.0.3.tar.gz", hash = "sha256:c05a81a80c5b78567cd374b23d3e2151fec7398513295b656ddb57cb8e99f2fb"},
-    {file = "types_simplejson-3.18.0.3-py3-none-any.whl", hash = "sha256:69b949674af0aec90b0eef7f1a76bcbd7582a74329911ec668824e76e70bd3f2"},
+    {file = "types-simplejson-3.19.0.2.tar.gz", hash = "sha256:ebc81f886f89d99d6b80c726518aa2228bc77c26438f18fd81455e4f79f8ee1b"},
+    {file = "types_simplejson-3.19.0.2-py3-none-any.whl", hash = "sha256:8ba093dc7884f59b3e62aed217144085e675a269debc32678fd80e0b43b2b86f"},
 ]
 
 [[package]]
@@ -2198,4 +2198,4 @@ rds-graphile-worker = ["rds-graphile-worker-client"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4"
-content-hash = "09703c02d21504c323b9f2884f3211cfdf690670550d0c3ba12b795864546c63"
+content-hash = "fec2e51ed421e8a2fdccdb5755e0a5bfd2aa31d664f2ea4db050e82f46a7bf9e"
