@@ -184,7 +184,7 @@ def dependency_graph_validator() -> "Draft7Validator":
 
 def assert_valid_dependency_graph_data(data: t.Any) -> DependencyGraphJSONType:
     dependency_graph_validator().validate(data)
-    return t.cast(DependencyGraphJSONType, data)
+    return data
 
 
 def not_implemented() -> t.NoReturn:

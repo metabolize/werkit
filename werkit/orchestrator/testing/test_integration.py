@@ -99,7 +99,8 @@ def invoke_orchestrator(orchestrator_function_name: str) -> dict[str, t.Any]:
         FunctionName=orchestrator_function_name,
         Payload=json.dumps(message),
     )
-    return t.cast(dict[str, t.Any], json.load(response["Payload"]))
+
+    return json.load(response["Payload"])
 
 
 @pytest.mark.slow
@@ -114,7 +115,7 @@ def test_integration_success(tmpdir: Path) -> None:
 
         SCHEMA.output_message.validate(data)
 
-        result = t.cast(dict[str, t.Any], data["result"])
+        result = data["result"]
         print(result)
         assert isinstance(result, object)
         assert all([r["success"] is True for r in result.values()])
