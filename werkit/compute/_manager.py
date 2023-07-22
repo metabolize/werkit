@@ -7,7 +7,7 @@ from ._formatting import format_time
 from ._schema import Schema
 from ._serialization import serialize_exception, serialize_result
 
-if t.TYPE_CHECKING:
+if t.TYPE_CHECKING:  # pragma: no cover
     from typing_extensions import Self
 
 

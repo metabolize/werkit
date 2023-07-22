@@ -4,10 +4,6 @@ import numbers
 import sys
 import typing as t
 
-if sys.version_info >= (3, 8):
-    from typing import Literal, TypedDict
-else:
-    from typing_extensions import Literal, TypedDict
 
 from ._built_in_type import (
     BuiltInValueType,
@@ -18,7 +14,7 @@ from ._built_in_type import (
 )
 from ._custom_type import CustomType, JSONType
 
-if t.TYPE_CHECKING:
+if t.TYPE_CHECKING:  # pragma: no cover
     from jsonschema import Draft7Validator
 
 
@@ -98,7 +94,8 @@ class BaseNode:
             return serialized
 
 
-InputJSONType = TypedDict("InputJSONType", {"valueType": str})
+class InputJSONType(t.TypedDict):
+    valueType: str
 
 
 class Input(BaseNode):
@@ -106,9 +103,9 @@ class Input(BaseNode):
         return {"valueType": self.value_type_name}
 
 
-ComputeNodeJSONType = TypedDict(
-    "ComputeNodeJSONType", {"valueType": str, "dependencies": t.List[str]}
-)
+class ComputeNodeJSONType(t.TypedDict):
+    valueType: str
+    dependencies: t.List[str]
 
 
 class ComputeNode(BaseNode):
@@ -156,15 +153,11 @@ def output(value_type: AnyValueType) -> t.Callable[[t.Callable], Output]:
 AttrType = t.TypeVar("AttrType")
 
 
-DependencyGraphJSONType = TypedDict(
-    "DependencyGraphJSONType",
-    {
-        "schemaVersion": Literal[1],
-        "inputs": t.Dict[str, InputJSONType],
-        "intermediates": t.Dict[str, ComputeNodeJSONType],
-        "outputs": t.Dict[str, ComputeNodeJSONType],
-    },
-)
+class DependencyGraphJSONType(t.TypedDict):
+    schemaVersion: t.Literal[1]
+    inputs: t.Dict[str, InputJSONType]
+    intermediates: t.Dict[str, ComputeNodeJSONType]
+    outputs: t.Dict[str, ComputeNodeJSONType]
 
 
 def dependency_graph_validator() -> "Draft7Validator":

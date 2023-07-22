@@ -15,7 +15,7 @@ from ._state_manager import StateManager
 
 class DefaultStateManagerProtocol(t.Protocol):
     @property
-    def state_manager(self) -> StateManager:
+    def state_manager(self) -> StateManager:  # pragma: no cover
         ...
 
 

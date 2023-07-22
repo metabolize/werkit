@@ -2,7 +2,7 @@ import numbers
 import sys
 import typing as t
 
-if sys.version_info >= (3, 10):
+if sys.version_info >= (3, 10):  # pragma: no cover
     from typing import TypeGuard
 else:
     # TODO: Remove when Python 3.9 is dropped.

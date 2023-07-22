@@ -1,7 +1,7 @@
 import typing as t
 from typing_extensions import Unpack
 
-if t.TYPE_CHECKING:
+if t.TYPE_CHECKING:  # pragma: no cover
     from jsonschema import Draft7Validator
 
 
