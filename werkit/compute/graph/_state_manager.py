@@ -49,7 +49,6 @@ class Store:
         }
 
 
-
 class StateManager(Store):
     def __init__(self, instance: t.Any):
         super().__init__(

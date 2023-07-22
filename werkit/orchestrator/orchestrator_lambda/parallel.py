@@ -1,6 +1,5 @@
 import asyncio
 import datetime
-import json
 import typing as t
 from concurrent.futures import ThreadPoolExecutor
 import boto3
@@ -21,6 +20,8 @@ async def call_worker_service(
     event_loop: asyncio.AbstractEventLoop = event_loop,
     executor: t.Optional[ThreadPoolExecutor] = None,
 ) -> t.Any:
+    from missouri import json
+
     def invoke_lambda() -> "InvocationResponseTypeDef":
         return lambda_client.invoke(
             FunctionName=worker_lambda_function_name, Payload=json.dumps(_input)

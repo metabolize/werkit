@@ -17,6 +17,9 @@ from ._built_in_type import (
 )
 from ._custom_type import CustomType, JSONType
 
+if t.TYPE_CHECKING:
+    from jsonschema import Draft7Validator
+
 
 def _attrs_of_type(obj: t.Any, _type: t.Type[AttrType]) -> dict[str, AttrType]:
     return {
@@ -163,6 +166,34 @@ DependencyGraphJSONType = TypedDict(
 )
 
 
+def dependency_graph_validator() -> "Draft7Validator":
+    import os
+    from jsonschema import Draft7Validator, RefResolver
+    from missouri import json
+
+    schema = json.load(
+        os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "..",
+            "..",
+            "types",
+            "src",
+            "generated",
+            "dependency-graph.schema.json",
+        )
+    )
+    resolver = RefResolver.from_schema(schema)
+    return Draft7Validator(
+        {"$ref": "#/definitions/DependencyGraphWithBuiltInTypes"}, resolver=resolver
+    )
+
+
+def assert_valid_dependency_graph_data(data: t.Any) -> DependencyGraphJSONType:
+    dependency_graph_validator().validate(data)
+    return t.cast(DependencyGraphJSONType, data)
+
+
 def not_implemented() -> t.NoReturn:
     raise NotImplementedError("Deserialized compute nodes are not implemented")
 
@@ -212,6 +243,8 @@ class DependencyGraph:
         data: DependencyGraphJSONType,
         custom_types: list[type[CustomType]] = [],
     ) -> "DependencyGraph":
+        assert_valid_dependency_graph_data(data)
+
         custom_type_names = [item.name for item in custom_types]
         duplicates = _find_duplicates(custom_type_names)
         if duplicates:

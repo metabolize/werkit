@@ -45,30 +45,9 @@ def test_dependency_graph_serializes() -> None:
 
 
 def test_dependency_graph_serialization_matches_schema() -> None:
-    import os
-    import simplejson as json
-    from jsonschema import RefResolver, Draft7Validator
+    from ._dependency_graph import assert_valid_dependency_graph_data
 
     dependency_graph = DependencyGraph.from_class(MyComputeProcess)
     serialized = dependency_graph.serialize()
 
-    with open(
-        os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "..",
-            "..",
-            "types",
-            "src",
-            "generated",
-            "dependency-graph.schema.json",
-        ),
-        "r",
-    ) as f:
-        schema = json.load(f)
-    resolver = RefResolver.from_schema(schema)
-    validator = Draft7Validator(
-        {"$ref": "#/definitions/DependencyGraphWithBuiltInTypes"}, resolver=resolver
-    )
-
-    validator.validate(serialized)
+    assert_valid_dependency_graph_data(serialized)
