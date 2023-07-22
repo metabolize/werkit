@@ -836,7 +836,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "missouri"
-version = "0.2.0"
+version = "0.3.0"
 description = "Read and write JSON in one line"
 category = "main"
 optional = false
@@ -1366,14 +1366,6 @@ python-versions = ">=3.7,<4.0"
 types-awscrt = "*"
 
 [[package]]
-name = "types-simplejson"
-version = "3.18.0.3"
-description = "Typing stubs for simplejson"
-category = "dev"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "typing-extensions"
 version = "4.7.1"
 description = "Backported and Experimental Type Hints for Python 3.7+"
@@ -1433,7 +1425,7 @@ rds-graphile-worker = ["rds-graphile-worker-client"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9,<4"
-content-hash = "f7153372aa98d0b0af6cc886c32a807ed761b0f142c5890b3246faae12f0869c"
+content-hash = "14269076880fbd2131c0028a5bb7b1ed6006fedd984f2c48e7238f73c6ee6047"
 
 [metadata.files]
 artifax = [
@@ -1830,8 +1822,8 @@ mdurl = [
     {file = "mdurl-0.1.2.tar.gz", hash = "sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba"},
 ]
 missouri = [
-    {file = "missouri-0.2.0-py3-none-any.whl", hash = "sha256:6ca496b7170d19525b4d0be2aaba51d0775a647624eadbccbe9ff4adbe56dd41"},
-    {file = "missouri-0.2.0.tar.gz", hash = "sha256:8529f61437348bad8eb96a7e61a0a0fd4e3be54af088279c1839203cbd099c31"},
+    {file = "missouri-0.3.0-py3-none-any.whl", hash = "sha256:1365637036bc65f53cfc5836e21f81c3c3e4418c40fdc0f362a01bec23b335a6"},
+    {file = "missouri-0.3.0.tar.gz", hash = "sha256:70a0cec63fa115c1bfbf761400810cc17ce7b87fdb8b56763e00d6695998ad3d"},
 ]
 more-itertools = [
     {file = "more-itertools-9.1.0.tar.gz", hash = "sha256:cabaa341ad0389ea83c17a94566a53ae4c9d07349861ecb14dc6d0345cf9ac5d"},
@@ -2268,10 +2260,6 @@ types-jsonschema = [
 types-s3transfer = [
     {file = "types_s3transfer-0.6.1-py3-none-any.whl", hash = "sha256:6d1ac1dedac750d570428362acdf60fdd4f277b0788855c3894d3226756b2bfb"},
     {file = "types_s3transfer-0.6.1.tar.gz", hash = "sha256:75ac1d7143d58c1e6af467cfd4a96c67ee058a3adf7c249d9309999e1f5f41e4"},
-]
-types-simplejson = [
-    {file = "types-simplejson-3.18.0.3.tar.gz", hash = "sha256:c05a81a80c5b78567cd374b23d3e2151fec7398513295b656ddb57cb8e99f2fb"},
-    {file = "types_simplejson-3.18.0.3-py3-none-any.whl", hash = "sha256:69b949674af0aec90b0eef7f1a76bcbd7582a74329911ec668824e76e70bd3f2"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.7.1-py3-none-any.whl", hash = "sha256:440d5dd3af93b060174bf433bccd69b0babc3b15b1a8dca43789fd7f61514b36"},
