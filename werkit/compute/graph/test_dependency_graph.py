@@ -28,7 +28,7 @@ def test_dependency_graph_dependencies_have_correct_types() -> None:
     assert dependency_graph.outputs[EXPECTED_OUTPUT].value_type is int
 
 
-def test_dependency_graph_deserialize() -> None:
+def test_dependency_graph_deserializes() -> None:
     dependency_graph = DependencyGraph.deserialize(EXPECTED_SERIALIZED_DEPENDENCY_GRAPH)
 
     for name in EXPECTED_INPUTS:
