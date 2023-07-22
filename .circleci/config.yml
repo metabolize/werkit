@@ -128,7 +128,7 @@ jobs:
       - *show_versions
 
       - run:
-          name: Check code format
+          name: Check types
           command: ./dev.py check-types
 
 workflows:
