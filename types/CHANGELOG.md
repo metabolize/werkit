@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.32.1
+
+- Declare `@types/node` dependency to fix downstream type errors.
+
 ## 0.30.1
 
 - Fix importing of published package.
