@@ -169,7 +169,7 @@ def dependency_graph_validator() -> "Draft7Validator":
     )
     resolver = RefResolver.from_schema(schema)
     return Draft7Validator(
-        {"$ref": "#/definitions/DependencyGraphWithBuiltInTypes"}, resolver=resolver
+        {"$ref": "#/definitions/DependencyGraphWithAnyTypes"}, resolver=resolver
     )
 
 
