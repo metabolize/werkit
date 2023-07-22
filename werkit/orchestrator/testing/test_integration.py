@@ -80,7 +80,7 @@ EXAMPLE_MESSAGE_KEY = {"someParameters": ["just", "a", "message", "key", "nbd"]}
 
 
 def invoke_orchestrator(orchestrator_function_name: str) -> dict[str, t.Any]:
-    from missouri import json
+    import json
 
     message = {
         "message_key": EXAMPLE_MESSAGE_KEY,
@@ -99,7 +99,7 @@ def invoke_orchestrator(orchestrator_function_name: str) -> dict[str, t.Any]:
         FunctionName=orchestrator_function_name,
         Payload=json.dumps(message),
     )
-    return json.load(response["Payload"])
+    return t.cast(dict[str, t.Any], json.load(response["Payload"]))
 
 
 @pytest.mark.slow

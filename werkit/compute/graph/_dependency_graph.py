@@ -11,6 +11,7 @@ else:
 
 from ._built_in_type import (
     BuiltInValueType,
+    BuiltInValueTypeName,
     built_in_value_type_with_name,
     coerce_value_to_builtin_type,
     is_built_in_value_type,
@@ -66,7 +67,7 @@ class BaseNode:
             else:
                 raise ValueError("How did we get here?")
         else:
-            return self.value_type.name
+            return t.cast(type[CustomType], self.value_type).name()
 
     def deserialize(self, value: JSONType) -> t.Any:
         if self.value_type_is_built_in:
@@ -171,17 +172,20 @@ def dependency_graph_validator() -> "Draft7Validator":
     from jsonschema import Draft7Validator, RefResolver
     from missouri import json
 
-    schema = json.load(
-        os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "..",
-            "..",
-            "types",
-            "src",
-            "generated",
-            "dependency-graph.schema.json",
-        )
+    schema = t.cast(
+        dict[str, t.Any],
+        json.load(
+            os.path.join(
+                os.path.dirname(__file__),
+                "..",
+                "..",
+                "..",
+                "types",
+                "src",
+                "generated",
+                "dependency-graph.schema.json",
+            )
+        ),
     )
     resolver = RefResolver.from_schema(schema)
     return Draft7Validator(
@@ -198,20 +202,30 @@ def not_implemented() -> t.NoReturn:
     raise NotImplementedError("Deserialized compute nodes are not implemented")
 
 
+NodeType = t.TypeVar("NodeType", Input, Intermediate, Output)
+
+
 def create_unimplemented_node(
-    cls: t.Union[type[Input], type[Intermediate], type[Output]],
+    cls: type[NodeType],
     value_type_name: str,
     custom_types: dict[str, type[CustomType]],
-) -> AnyValueType:
+) -> NodeType:
+    value_type: AnyValueType
     try:
         value_type = custom_types[value_type_name]
     except KeyError:
-        value_type = built_in_value_type_with_name(value_type_name)
+        value_type = built_in_value_type_with_name(
+            t.cast(BuiltInValueTypeName, value_type_name)
+        )
 
+    # TODO: Figure out why narrowing the typevar doesn't allow the correct
+    # return type to be inferred.
     if cls is Input:
-        return cls(value_type=value_type)
+        return Input(value_type=value_type)  # type: ignore[return-value]
+    elif cls is Intermediate:
+        return Intermediate(method=not_implemented, value_type=value_type)  # type: ignore[return-value]
     else:
-        return cls(method=not_implemented, value_type=value_type)
+        return Output(method=not_implemented, value_type=value_type)  # type: ignore[return-value]
 
 
 class DependencyGraph:
@@ -245,13 +259,13 @@ class DependencyGraph:
     ) -> "DependencyGraph":
         assert_valid_dependency_graph_data(data)
 
-        custom_type_names = [item.name for item in custom_types]
+        custom_type_names = [item.name() for item in custom_types]
         duplicates = _find_duplicates(custom_type_names)
         if duplicates:
             raise ValueError(
                 f"Duplicate custom type names found: {', '.join(duplicates)}"
             )
-        keyed_custom_types = {[item.name]: item for item in custom_types}
+        keyed_custom_types = {item.name(): item for item in custom_types}
 
         return cls(
             inputs={

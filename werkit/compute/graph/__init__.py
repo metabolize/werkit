@@ -6,6 +6,7 @@ from ._custom_type import CustomType, JSONType  # noqa: F401
 from ._dependency_graph import (  # noqa: F401
     ComputeNode,
     DependencyGraph,
+    DependencyGraphJSONType,
     Input,
     Intermediate,
     Output,
