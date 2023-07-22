@@ -3,7 +3,6 @@ from . import (
     CustomType,
     DependencyGraphJSONType,
     Input,
-    JSONType,
     bind_state_manager,
     intermediate,
     output,
@@ -86,7 +85,7 @@ class MyModelType(CustomType[MyModel]):
         return value
 
     @classmethod
-    def serialize(self, value: MyModel) -> JSONType:
+    def serialize(self, value: MyModel) -> t.Any:
         return {
             "title": value.title,
             "description": value.description,
@@ -94,7 +93,7 @@ class MyModelType(CustomType[MyModel]):
         }
 
     @classmethod
-    def deserialize(self, json_data: JSONType) -> MyModel:
+    def deserialize(self, json_data: t.Any) -> MyModel:
         json_data = t.cast(dict, json_data)
         return MyModel(**json_data)
 
@@ -113,11 +112,11 @@ class Vector3(CustomType[tuple]):
         return tuple(round(coord, cls.DECIMALS) for coord in value)
 
     @classmethod
-    def serialize(self, value: tuple) -> JSONType:
+    def serialize(self, value: tuple) -> t.Any:
         return list(value)
 
     @classmethod
-    def deserialize(self, json_data: JSONType) -> tuple:
+    def deserialize(self, json_data: t.Any) -> tuple:
         json_data = t.cast(list, json_data)
         return tuple(json_data)
 

@@ -4,8 +4,6 @@ from abc import ABC, abstractmethod
 if t.TYPE_CHECKING:  # pragma: no cover
     from jsonschema import Draft7Validator
 
-JSONType = t.Union[str, int, float, bool, None, dict[str, t.Any], t.List[t.Any]]
-
 CanonicalType = t.TypeVar("CanonicalType")
 
 
@@ -49,7 +47,7 @@ class CustomType(ABC, t.Generic[CanonicalType]):
         return f"#/definitions/{cls.name()}"
 
     @classmethod
-    def validate(cls, json_data: JSONType) -> None:
+    def validate(cls, json_data: t.Any) -> None:
         """
         Validate the JSON representation.
         """
@@ -71,7 +69,7 @@ class CustomType(ABC, t.Generic[CanonicalType]):
 
     @classmethod
     @abstractmethod
-    def deserialize(cls, json_data: JSONType) -> CanonicalType:
+    def deserialize(cls, json_data: t.Any) -> CanonicalType:
         """
         Convert the JSON representation to the canonical native type.
         """
@@ -86,7 +84,7 @@ class CustomType(ABC, t.Generic[CanonicalType]):
 
     @classmethod
     @abstractmethod
-    def serialize(self, value: CanonicalType) -> JSONType:
+    def serialize(self, value: CanonicalType) -> t.Any:
         """
         Convert the canonical native type to a JSON representation.
         """

@@ -11,7 +11,7 @@ from ._built_in_type import (
     coerce_value_to_builtin_type,
     is_built_in_value_type,
 )
-from ._custom_type import CustomType, JSONType
+from ._custom_type import CustomType
 
 if t.TYPE_CHECKING:  # pragma: no cover
     from jsonschema import Draft7Validator
@@ -64,7 +64,7 @@ class BaseNode:
         else:
             return t.cast(type[CustomType], self.value_type).name()
 
-    def deserialize(self, value: JSONType) -> t.Any:
+    def deserialize(self, value: t.Any) -> t.Any:
         if self.value_type_is_built_in:
             return value
         else:
@@ -83,7 +83,7 @@ class BaseNode:
             # TODO: Perhaps catch and re-throw to improve the error message.
             return t.cast(t.Type[CustomType], self.value_type).normalize(value)
 
-    def serialize_value(self, value: t.Any) -> JSONType:
+    def serialize_value(self, value: t.Any) -> t.Any:
         if self.value_type_is_built_in:
             return value
         else:
