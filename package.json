@@ -6,7 +6,8 @@
   "scripts": {
     "format": "prettier --check \"**/*.@(ts|yml)\"",
     "format:fix": "prettier --write \"**/*.@(ts|yml)\"",
-    "schema:update": "1schema update"
+    "schema:update": "1schema update",
+    "postschema:update": "cp types/src/generated/dependency-graph.schema.json werkit/compute/graph/dependency-graph.schema.json"
   },
   "author": "Metabolize",
   "license": "MIT",

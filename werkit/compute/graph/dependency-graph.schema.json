@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "BuiltInValueType": {
+      "enum": ["boolean", "number", "string"],
+      "type": "string"
+    },
+    "ComputeNode<BuiltInValueType>": {
+      "additionalProperties": false,
+      "properties": {
+        "dependencies": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "valueType": {
+          "$ref": "#/definitions/BuiltInValueType"
+        }
+      },
+      "required": ["valueType", "dependencies"],
+      "type": "object"
+    },
+    "ComputeNode<string>": {
+      "additionalProperties": false,
+      "properties": {
+        "dependencies": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "valueType": {
+          "type": "string"
+        }
+      },
+      "required": ["valueType", "dependencies"],
+      "type": "object"
+    },
+    "DependencyGraph<BuiltInValueType>": {
+      "additionalProperties": false,
+      "properties": {
+        "inputs": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Input%3CBuiltInValueType%3E"
+          },
+          "type": "object"
+        },
+        "intermediates": {
+          "additionalProperties": {
+            "$ref": "#/definitions/ComputeNode%3CBuiltInValueType%3E"
+          },
+          "type": "object"
+        },
+        "outputs": {
+          "additionalProperties": {
+            "$ref": "#/definitions/ComputeNode%3CBuiltInValueType%3E"
+          },
+          "type": "object"
+        },
+        "schemaVersion": {
+          "const": 1,
+          "type": "number"
+        }
+      },
+      "required": ["schemaVersion", "inputs", "intermediates", "outputs"],
+      "type": "object"
+    },
+    "DependencyGraph<string>": {
+      "additionalProperties": false,
+      "properties": {
+        "inputs": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Input%3Cstring%3E"
+          },
+          "type": "object"
+        },
+        "intermediates": {
+          "additionalProperties": {
+            "$ref": "#/definitions/ComputeNode%3Cstring%3E"
+          },
+          "type": "object"
+        },
+        "outputs": {
+          "additionalProperties": {
+            "$ref": "#/definitions/ComputeNode%3Cstring%3E"
+          },
+          "type": "object"
+        },
+        "schemaVersion": {
+          "const": 1,
+          "type": "number"
+        }
+      },
+      "required": ["schemaVersion", "inputs", "intermediates", "outputs"],
+      "type": "object"
+    },
+    "DependencyGraphWithAnyTypes": {
+      "$ref": "#/definitions/DependencyGraph%3Cstring%3E"
+    },
+    "DependencyGraphWithBuiltInTypes": {
+      "$ref": "#/definitions/DependencyGraph%3CBuiltInValueType%3E"
+    },
+    "Input<BuiltInValueType>": {
+      "additionalProperties": false,
+      "properties": {
+        "valueType": {
+          "$ref": "#/definitions/BuiltInValueType"
+        }
+      },
+      "required": ["valueType"],
+      "type": "object"
+    },
+    "Input<string>": {
+      "additionalProperties": false,
+      "properties": {
+        "valueType": {
+          "type": "string"
+        }
+      },
+      "required": ["valueType"],
+      "type": "object"
+    }
+  }
+}
