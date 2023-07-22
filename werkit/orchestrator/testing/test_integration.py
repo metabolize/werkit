@@ -100,7 +100,8 @@ def invoke_orchestrator(orchestrator_function_name: str) -> dict[str, t.Any]:
         Payload=json.dumps(message),
     )
 
-    return json.load(response["Payload"])
+    # TODO: Remove this cast when type conflict is resolved.
+    return json.load(t.cast(t.Any, response["Payload"]))
 
 
 @pytest.mark.slow
