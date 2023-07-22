@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.32.0
+
+### BREAKING CHANGES
+
+- Bump missouri dependency.
+
+### Bug fixes
+
+- StateManager: Eliminate some type errors downstream.
+- Fix a runtime error checking the dependency graph schema using the published
+  package.
+
 ## 0.31.0
 
 ### BREAKING CHANGES
