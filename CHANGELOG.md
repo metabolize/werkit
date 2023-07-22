@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.31.0
+
+### BREAKING CHANGES
+
+- Require Python 3.9+
+- To create DependencyGraph from a class, use `DependencyGraph.from_class()`
+  instead of `DependencyGraph()`
+
+### New features
+
+- Add mypy types.
+- Add `DependencyGraph.deserialize()`
+- Extract Store superclass from StateManager
+
 ## 0.30.2
 
 - Fix compatibility with updated semver dependency.
@@ -38,36 +52,29 @@ Same as 0.30.0.
   version
 - Bump artifax dependency to 0.5.
 
-
 ## 0.26.0
 
 - StateManager: Serialize no longer triggers evaluation.
-
 
 ## 0.25.1
 
 - StateManager: Prevent exception when invoking `evaluate()` with an empty list.
 
-
 ## 0.25.0
 
 Same as 0.24.0.
-
 
 ## 0.24.0
 
 - Bump artifax dependency to 0.4.
 
-
 ## 0.23.1
 
 - Capitalization fix for previous.
 
-
 ## 0.23.0
 
 - Add compute graph functionality in `werkit.compute.graph`.
-
 
 ## 0.22.0
 
@@ -91,9 +98,9 @@ Same as 0.21.0.
 - Manager: Add required schema checking
 - Adopt new terminology: request -> input_message, serialized_result -> output_message
 - Update orchestrator->worker interface to support werkit JSON format
-    - Adopt werkit manager in orchestrator lambda
-    - Add explicit return schemas
-    - Move orchestrator code from `werkit.aws_lambda` to `werkit.orchestrator`
+  - Adopt werkit manager in orchestrator lambda
+  - Add explicit return schemas
+  - Move orchestrator code from `werkit.aws_lambda` to `werkit.orchestrator`
 
 ### New features
 
@@ -156,7 +163,7 @@ Same as 0.15.0.
 ### BREAKING CHANGES
 
 - Lambda deploy functions (e.g. `perform_create()`) require an explicit
-  `aws_region`. 
+  `aws_region`.
 
 ## Bug fixes
 
@@ -183,7 +190,6 @@ Same as 0.15.0.
 - Support installing Lambda-building dependencies using
   `pip install werkit[aws_lambda_build]`.
 
-
 ## 0.10.0
 
 ### New features
@@ -194,13 +200,11 @@ Same as 0.15.0.
 
 - Update boto dependency.
 
-
 ## 0.9.1
 
 ### Bug fixes
 
 - When building Lambda functions, install werkit from PyPI, not GitHub.
-
 
 ## 0.9.0
 
@@ -218,7 +222,6 @@ Same as 0.15.0.
 - Replace custom random string code with `uuid.uuid4()`.
 - Consolidate duplicate code.
 
-
 ## 0.8.0
 
 ### New features
@@ -226,7 +229,6 @@ Same as 0.15.0.
 - Optimize the orchestrator using ThreadPoolExecutor.
 - Use the same version of werkit in the builder (and don't refer to a
   nonexistent branch).
-
 
 ## 0.7.0
 
@@ -254,7 +256,6 @@ Same as 0.15.0.
 - Document the cloud result schema.
 - Update aioboto3 dependency.
 
-
 ## 0.6.0
 
 ### New features
@@ -263,14 +264,12 @@ Same as 0.15.0.
   user-provided worker lambda.
 - Add utilities for deploying Python-based functions to AWS Lambda.
 
-
 ## 0.5.0
 
 ### New features
 
 - CloudManager: Allow passing extra args to `docker build`.
 - CloudManager: Add `build()` method.
-
 
 ## 0.4.0
 
@@ -287,31 +286,25 @@ Same as 0.15.0.
 
 - Fix stack trace printing.
 
-
 ## 0.3.3
 
 - Make Redis and rq soft depenencies.
-
 
 ## 0.3.2
 
 - Make Redis URL optional when it is not needed.
 
-
 ## 0.3.1
 
 - Fix Redis URL configuration.
-
 
 ## 0.3.0
 
 - Add support for distributed jobs using Redis, RQ, and the Fargate CLI.
 
-
 ## 0.2.0
 
 - Propagate KeyboardInterupt and SystemExit exceptions.
-
 
 ## 0.1.0
 
