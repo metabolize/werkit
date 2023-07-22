@@ -80,7 +80,7 @@ EXAMPLE_MESSAGE_KEY = {"someParameters": ["just", "a", "message", "key", "nbd"]}
 
 
 def invoke_orchestrator(orchestrator_function_name: str) -> dict[str, t.Any]:
-    import json
+    from missouri import json
 
     message = {
         "message_key": EXAMPLE_MESSAGE_KEY,

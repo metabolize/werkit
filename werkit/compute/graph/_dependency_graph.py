@@ -164,20 +164,17 @@ def dependency_graph_validator() -> "Draft7Validator":
     from jsonschema import Draft7Validator, RefResolver
     from missouri import json
 
-    schema = t.cast(
-        dict[str, t.Any],
-        json.load(
-            os.path.join(
-                os.path.dirname(__file__),
-                "..",
-                "..",
-                "..",
-                "types",
-                "src",
-                "generated",
-                "dependency-graph.schema.json",
-            )
-        ),
+    schema = json.load(
+        os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "..",
+            "..",
+            "types",
+            "src",
+            "generated",
+            "dependency-graph.schema.json",
+        )
     )
     resolver = RefResolver.from_schema(schema)
     return Draft7Validator(
