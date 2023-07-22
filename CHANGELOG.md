@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.32.0
+
+### BREAKING CHANGES
+
+- Bump missouri dependency.
+
+### Bug fixes
+
+- StateManager: Eliminate some type errors downstream.
+
 ## 0.31.0
 
 ### BREAKING CHANGES
