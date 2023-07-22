@@ -1,13 +1,14 @@
 from __future__ import annotations
 import inspect
 import numbers
+import sys
 import typing as t
 
-try:
+if sys.version_info >= (3, 8):
     from typing import Literal, TypedDict
-except ImportError:
-    # TODO: Remove when Python 3.9 is dropped.
+else:
     from typing_extensions import Literal, TypedDict
+
 from ._built_in_type import (
     BuiltInValueType,
     coerce_value_to_builtin_type,
@@ -118,15 +119,15 @@ class Output(ComputeNode):
     pass
 
 
-def intermediate(value_type: AnyValueType):
-    def decorator(method):
+def intermediate(value_type: AnyValueType) -> t.Callable[[t.Callable], Intermediate]:
+    def decorator(method: t.Callable[..., t.Any]) -> Intermediate:
         return Intermediate(method, value_type)
 
     return decorator
 
 
-def output(value_type: AnyValueType):
-    def decorator(method):
+def output(value_type: AnyValueType) -> t.Callable[[t.Callable], Output]:
+    def decorator(method: t.Callable[..., t.Any]) -> Output:
         return Output(method, value_type)
 
     return decorator

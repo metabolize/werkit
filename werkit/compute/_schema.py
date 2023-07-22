@@ -1,3 +1,16 @@
+import typing as t
+from typing_extensions import Unpack
+
+if t.TYPE_CHECKING:
+    from jsonschema import Draft7Validator
+
+
+class RefKwargs(t.TypedDict, total=False):
+    input_message_ref: str
+    output_ref: str
+    output_message_ref: str
+
+
 class Schema:
     """
     Helper for validating request, result, and serialized result schemas
@@ -5,10 +18,10 @@ class Schema:
 
     def __init__(
         self,
-        schema,
-        input_message_ref="#/definitions/AnyInputMessage",
-        output_ref="#/definitions/Output",
-        output_message_ref="#/definitions/AnyOutputMessage",
+        schema: t.Any,
+        input_message_ref: str = "#/definitions/AnyInputMessage",
+        output_ref: str = "#/definitions/Output",
+        output_message_ref: str = "#/definitions/AnyOutputMessage",
     ):
         from jsonschema import RefResolver
 
@@ -24,14 +37,18 @@ class Schema:
         )
 
     @classmethod
-    def load_from_path(cls, schema_filename, **kwargs):
+    def load_from_path(
+        cls, schema_filename: str, **kwargs: Unpack[RefKwargs]
+    ) -> "Schema":
         import simplejson as json
 
         with open(schema_filename, "r") as f:
             return cls(schema=json.load(f), **kwargs)
 
     @classmethod
-    def load_relative_to_file(cls, file_obj, path_components, **kwargs):
+    def load_relative_to_file(
+        cls, filename: str, path_components: list[str], **kwargs: Unpack[RefKwargs]
+    ) -> "Schema":
         """
         By convention, the schema is placed in
         `types/src/generated/schema.json` relative to the handler.
@@ -40,13 +57,13 @@ class Schema:
 
         return cls.load_from_path(
             schema_filename=os.path.join(
-                os.path.dirname(file_obj),
+                os.path.dirname(filename),
                 *path_components,
             ),
             **kwargs,
         )
 
-    def validator_for(self, ref):
+    def validator_for(self, ref: str) -> "Draft7Validator":
         from jsonschema import Draft7Validator
 
         return Draft7Validator({"$ref": ref}, resolver=self.resolver)

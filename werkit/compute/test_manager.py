@@ -1,5 +1,6 @@
 import datetime
 import math
+import typing as t
 from freezegun import freeze_time
 import pytest
 from werkit.compute import Manager, Schema
@@ -20,18 +21,18 @@ schema = Schema.load_relative_to_file(
 
 
 def create_manager(
-    input_message=EXAMPLE_INPUT_MESSAGE,
-    schema=schema,
-    runtime_info=EXAMPLE_RUNTIME_INFO,
-    **kwargs
-):
+    input_message: t.Any = EXAMPLE_INPUT_MESSAGE,
+    schema: Schema = schema,
+    runtime_info: t.Any = EXAMPLE_RUNTIME_INFO,
+    **kwargs: t.Any
+) -> Manager:
     return Manager(
         input_message=input_message, schema=schema, runtime_info=runtime_info, **kwargs
     )
 
 
 @freeze_time("2019-12-31")
-def test_manager_serializes_result():
+def test_manager_serializes_result() -> None:
     with create_manager() as manager:
         manager.result = EXAMPLE_RESULT
 
@@ -47,7 +48,7 @@ def test_manager_serializes_result():
     }
 
 
-def test_time_precision():
+def test_time_precision() -> None:
     import time
 
     with create_manager() as manager:
@@ -59,7 +60,7 @@ def test_time_precision():
 
 
 @freeze_time("2019-12-31")
-def test_manager_serializes_error():
+def test_manager_serializes_error() -> None:
     with create_manager() as manager:
         raise ValueError()
 
@@ -78,7 +79,7 @@ def test_manager_serializes_error():
 
 
 @freeze_time("2019-12-31")
-def test_manager_serializes_expected_error_when_result_not_set():
+def test_manager_serializes_expected_error_when_result_not_set() -> None:
     with create_manager() as manager:
         pass
 
@@ -99,19 +100,19 @@ def test_manager_serializes_expected_error_when_result_not_set():
     }
 
 
-def test_manager_with_handle_exceptions_false_passes_error():
+def test_manager_with_handle_exceptions_false_passes_error() -> None:
     with pytest.raises(ValueError):
         with create_manager(handle_exceptions=False):
             raise ValueError()
 
 
-def test_manager_passes_keyboard_interrupt():
+def test_manager_passes_keyboard_interrupt() -> None:
     with pytest.raises(KeyboardInterrupt):
         with create_manager():
             raise KeyboardInterrupt()
 
 
-def test_manager_passes_value_error_when_no_message_key_present():
+def test_manager_passes_value_error_when_no_message_key_present() -> None:
     with pytest.raises(
         ValueError, match="Input message is missing `message_key` property"
     ):
@@ -119,7 +120,7 @@ def test_manager_passes_value_error_when_no_message_key_present():
             manager.result = EXAMPLE_RESULT
 
 
-def test_verbose_success(capfd):
+def test_verbose_success(capfd: pytest.CaptureFixture[str]) -> None:
     with create_manager(verbose=True) as manager:
         manager.result = EXAMPLE_RESULT
 
@@ -127,7 +128,7 @@ def test_verbose_success(capfd):
     assert err == "Completed in 0.0 sec\n"
 
 
-def test_verbose_error(capfd):
+def test_verbose_error(capfd: pytest.CaptureFixture[str]) -> None:
     with create_manager(verbose=True):
         raise ValueError()
 

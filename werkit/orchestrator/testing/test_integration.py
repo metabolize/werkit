@@ -1,6 +1,8 @@
 import os
 import sys
+import typing as t
 import uuid
+from pathlib import Path
 import boto3
 from dotenv import load_dotenv
 import pytest
@@ -10,13 +12,15 @@ from werkit.orchestrator.deploy import deploy_orchestrator
 
 from ..orchestrator_lambda.schema import SCHEMA
 
+if t.TYPE_CHECKING:
+    from mypy_boto3_s3.literals import RegionName
 
 load_dotenv()
 
-AWS_REGION = "us-east-1"
+AWS_REGION: "RegionName" = "us-east-1"
 
 
-def role():
+def role() -> str:
     """
     The role is accessed inside a function so pytest can import the module
     without triggering a KeyError.
@@ -28,8 +32,11 @@ def role():
 
 # TODO: Reuse the zip files across tests.
 def create_test_functions(
-    tmpdir, worker_timeout=None, worker_delay=None, worker_should_throw=False
-):
+    tmpdir: Path,
+    worker_timeout: t.Optional[int] = None,
+    worker_delay: t.Optional[int] = None,
+    worker_should_throw: bool = False,
+) -> tuple[str, str]:
     unique = uuid.uuid4().hex
     worker_function_name = f"werkit_integ_test_worker_{unique}"
     orchestrator_function_name = f"werkit_integ_test_orchestrator_{unique}"
@@ -72,7 +79,7 @@ def create_test_functions(
 EXAMPLE_MESSAGE_KEY = {"someParameters": ["just", "a", "message", "key", "nbd"]}
 
 
-def invoke_orchestrator(orchestrator_function_name):
+def invoke_orchestrator(orchestrator_function_name: str) -> dict[str, t.Any]:
     import json
 
     message = {
@@ -96,7 +103,7 @@ def invoke_orchestrator(orchestrator_function_name):
 
 
 @pytest.mark.slow
-def test_integration_success(tmpdir):
+def test_integration_success(tmpdir: Path) -> None:
     worker_function_name, orchestrator_function_name = create_test_functions(
         tmpdir=tmpdir
     )
@@ -107,7 +114,7 @@ def test_integration_success(tmpdir):
 
         SCHEMA.output_message.validate(data)
 
-        result = data["result"]
+        result = t.cast(dict[str, t.Any], data["result"])
         print(result)
         assert isinstance(result, object)
         assert all([r["success"] is True for r in result.values()])
@@ -124,7 +131,7 @@ def test_integration_success(tmpdir):
 
 
 @pytest.mark.slow
-def test_integration_unhandled_exception(tmpdir):
+def test_integration_unhandled_exception(tmpdir: Path) -> None:
     worker_function_name, orchestrator_function_name = create_test_functions(
         tmpdir=tmpdir, worker_should_throw=True
     )
@@ -154,7 +161,7 @@ def test_integration_unhandled_exception(tmpdir):
 
 
 @pytest.mark.slow
-def test_integration_timeout_failure(tmpdir):
+def test_integration_timeout_failure(tmpdir: Path) -> None:
     worker_function_name, orchestrator_function_name = create_test_functions(
         tmpdir=tmpdir, worker_timeout=1, worker_delay=3
     )

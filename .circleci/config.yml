@@ -117,6 +117,20 @@ jobs:
           when: always
           command: npm run format
 
+  types:
+    <<: *with_python
+
+    steps:
+      - checkout
+
+      - *install_poetry
+      - *install_python_deps
+      - *show_versions
+
+      - run:
+          name: Check code format
+          command: ./dev.py check-types
+
 workflows:
   version: 2
 
@@ -126,6 +140,7 @@ workflows:
           context: 'Metabolize OSS AWS'
       - lint
       - format
+      - types
 
   daily:
     triggers:
@@ -139,3 +154,4 @@ workflows:
           context: 'Metabolize OSS AWS'
       - lint
       - format
+      - types

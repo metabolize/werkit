@@ -7,8 +7,11 @@ from executor import execute
 
 
 def export_poetry_requirements(
-    output_file, extras=[], with_credentials=True, with_hashes=True
-):
+    output_file: str,
+    extras: list[str] = [],
+    with_credentials: bool = True,
+    with_hashes: bool = True,
+) -> None:
     args = ["poetry", "export", "--output", output_file]
     if with_credentials:
         args.append("--with-credentials")
@@ -20,13 +23,13 @@ def export_poetry_requirements(
 
 
 def create_venv_with_dependencies(
-    venv_dir,
-    upgrade_pip=True,
-    install_wheel=True,
-    install_requirements_from=["requirements.txt"],
-    install_transitive_dependencies=True,
-    environment={},
-):
+    venv_dir: str,
+    upgrade_pip: bool = True,
+    install_wheel: bool = True,
+    install_requirements_from: list[str] = ["requirements.txt"],
+    install_transitive_dependencies: bool = True,
+    environment: dict[str, str] = {},
+) -> None:
     venv.create(venv_dir, with_pip=True)
     python = os.path.join(venv_dir, "bin", "python")
 
@@ -47,7 +50,7 @@ def create_venv_with_dependencies(
         execute(*args, environment=environment)
 
 
-def site_packages_for_venv(venv_dir):
+def site_packages_for_venv(venv_dir: str) -> str:
     python = os.path.join(venv_dir, "bin", "python")
     return execute(
         python,
@@ -58,9 +61,14 @@ def site_packages_for_venv(venv_dir):
 
 
 def collect_zipfile_contents(
-    target_dir, venv_dir, src_files=[], src_dirs=[], lib_files=[], verbose=False
-):
-    def pif(x):
+    target_dir: str,
+    venv_dir: str,
+    src_files: list[str] = [],
+    src_dirs: list[str] = [],
+    lib_files: list[str] = [],
+    verbose: bool = False,
+) -> None:
+    def pif(x: str) -> None:
         if verbose:
             print(x, file=sys.stderr)
 
@@ -93,7 +101,7 @@ def collect_zipfile_contents(
         shutil.copyfile(src_file, target)
 
 
-def create_zipfile_from_dir(dir_path, path_to_zipfile):
+def create_zipfile_from_dir(dir_path: str, path_to_zipfile: str) -> None:
     with zipfile.ZipFile(path_to_zipfile, "w", zipfile.ZIP_DEFLATED) as f:
         for root, dirs, files in os.walk(dir_path):
             for file in files:

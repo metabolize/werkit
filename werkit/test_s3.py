@@ -1,5 +1,6 @@
 import os
 import uuid
+from pathlib import Path
 import boto3
 from botocore.exceptions import ClientError
 import pytest
@@ -7,7 +8,7 @@ from werkit.s3 import temp_file_on_s3, temp_file_on_s3_from_string
 
 
 @pytest.fixture
-def test_bucket():
+def test_bucket() -> str:
     return os.environ["INTEGRATION_TEST_BUCKET"]
 
 
@@ -22,13 +23,13 @@ example
 
 
 @pytest.fixture
-def example_file(tmp_path):
+def example_file(tmp_path: Path) -> str:
     file = tmp_path / EXAMPLE_KEY
     file.write_text(EXAMPLE_CONTENTS)
     return str(file)
 
 
-def test_temp_file_on_s3(example_file, test_bucket):
+def test_temp_file_on_s3(example_file: str, test_bucket: str) -> None:
     target_key = f"test_{uuid.uuid4().hex}.txt"
 
     with temp_file_on_s3(
@@ -44,7 +45,7 @@ def test_temp_file_on_s3(example_file, test_bucket):
         s3_client.head_object(Bucket=test_bucket, Key=target_key)
 
 
-def test_temp_file_on_s3_with_implicit_key(example_file, test_bucket):
+def test_temp_file_on_s3_with_implicit_key(example_file: str, test_bucket: str) -> None:
     with temp_file_on_s3(
         local_path=example_file, bucket=test_bucket, verbose=True
     ) as key:
@@ -52,7 +53,7 @@ def test_temp_file_on_s3_with_implicit_key(example_file, test_bucket):
         assert key.endswith(".txt")
 
 
-def test_temp_file_on_s3_from_string(test_bucket):
+def test_temp_file_on_s3_from_string(test_bucket: str) -> None:
     target_key = f"test_{uuid.uuid4().hex}.txt"
 
     with temp_file_on_s3_from_string(
@@ -68,7 +69,7 @@ def test_temp_file_on_s3_from_string(test_bucket):
         s3_client.head_object(Bucket=test_bucket, Key=target_key)
 
 
-def test_temp_file_on_s3_from_string_with_implicit_key(test_bucket):
+def test_temp_file_on_s3_from_string_with_implicit_key(test_bucket: str) -> None:
     with temp_file_on_s3_from_string(
         contents=EXAMPLE_CONTENTS, bucket=test_bucket, extension=".txt", verbose=True
     ) as key:

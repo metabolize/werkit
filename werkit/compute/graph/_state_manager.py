@@ -1,5 +1,5 @@
 import typing as t
-from ._dependency_graph import DependencyGraph
+from ._dependency_graph import ComputeNode, DependencyGraph
 
 
 class StateManager:
@@ -15,7 +15,7 @@ class StateManager:
                 f"Unknown {'key' if len(unknown_keys) == 1 else 'keys'}: {', '.join(sorted(list(unknown_keys)))}"
             )
 
-    def deserialize(self, **kwargs: t.Dict) -> None:
+    def deserialize(self, **kwargs: t.Any) -> None:
         self._assert_known_keys(kwargs.keys())
         deserialized = {
             name: self.dependency_graph.all_nodes[name].deserialize(value)
@@ -23,7 +23,7 @@ class StateManager:
         }
         self.store.update(deserialized)
 
-    def normalize(self, **kwargs: t.Dict) -> t.Dict:
+    def normalize(self, **kwargs: t.Any) -> dict[str, t.Any]:
         return {
             name: self.dependency_graph.all_nodes[name].normalize(
                 name=name, value=value
@@ -31,13 +31,13 @@ class StateManager:
             for name, value in kwargs.items()
         }
 
-    def set(self, **kwargs: t.Dict) -> None:
+    def set(self, **kwargs: t.Any) -> None:
         self._assert_known_keys(kwargs.keys())
         normalized = self.normalize(**kwargs)
         self.store.update(normalized)
 
     def evaluate(
-        self, targets: t.List[str] = None, handle_exceptions: bool = False
+        self, targets: t.Optional[t.List[str]] = None, handle_exceptions: bool = False
     ) -> None:
         import functools
         from artifax import Artifax
@@ -50,10 +50,10 @@ class StateManager:
             else:
                 self._assert_known_keys(targets)
 
-        def wrap_node(name, node):
+        def wrap_node(name: str, node: ComputeNode) -> t.Callable:
             wrapped = node.bind(self.instance)
 
-            def wrapper(*args):
+            def wrapper(*args: list[t.Any]) -> t.Any:
                 value = wrapped(*args)
                 return node.normalize(name, value)
 
@@ -75,7 +75,7 @@ class StateManager:
             values = afx.build(targets=targets)
             self.store.update(**dict(zip(targets, values)))
 
-    def serialize(self, targets: t.List[str] = None) -> t.Dict:
+    def serialize(self, targets: t.Optional[t.List[str]] = None) -> t.Dict:
         if targets is not None:
             self._assert_known_keys(targets)
             missing_keys = set(targets) - set(self.store.keys())

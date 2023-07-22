@@ -69,7 +69,13 @@ def coverage_report():
 
 @cli.command()
 def check_types():
-    execute("mypy", "--package", "werkit", "--show-error-codes")
+    execute(
+        "mypy",
+        "--package",
+        "werkit",
+        "--show-error-codes",
+        "--enable-incomplete-feature=Unpack",
+    )
 
 
 @cli.command()
