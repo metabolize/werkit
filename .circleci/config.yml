@@ -65,27 +65,6 @@ jobs:
           working_directory: types
           command: npm test
 
-  test-py37:
-    docker:
-      - image: cimg/python:3.7
-
-    steps:
-      - checkout
-
-      - *install_poetry
-      - run:
-          name: Install python dependencies
-          command: |
-            poetry install \
-              --no-ansi --no-interaction \
-              --extras client \
-              --extras lambda_common \
-              --extras compute_graph
-      - *show_versions
-      - run:
-          name: Run tests
-          command: ./dev.py coverage
-
   lint:
     <<: *with_python
 
@@ -145,8 +124,6 @@ workflows:
     jobs:
       - test:
           context: 'Metabolize OSS AWS'
-      - test-py37:
-          context: 'Metabolize OSS AWS'
       - lint
       - format
 
@@ -159,8 +136,6 @@ workflows:
               only: main
     jobs:
       - test:
-          context: 'Metabolize OSS AWS'
-      - test-py37:
           context: 'Metabolize OSS AWS'
       - lint
       - format
