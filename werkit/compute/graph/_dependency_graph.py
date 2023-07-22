@@ -155,9 +155,9 @@ AttrType = t.TypeVar("AttrType")
 
 class DependencyGraphJSONType(t.TypedDict):
     schemaVersion: t.Literal[1]
-    inputs: t.Dict[str, InputJSONType]
-    intermediates: t.Dict[str, ComputeNodeJSONType]
-    outputs: t.Dict[str, ComputeNodeJSONType]
+    inputs: dict[str, InputJSONType]
+    intermediates: dict[str, ComputeNodeJSONType]
+    outputs: dict[str, ComputeNodeJSONType]
 
 
 def dependency_graph_validator() -> "Draft7Validator":

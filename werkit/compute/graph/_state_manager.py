@@ -35,7 +35,7 @@ class Store:
         normalized = self.normalize(**kwargs)
         self.store.update(normalized)
 
-    def serialize(self, targets: t.Optional[t.List[str]] = None) -> t.Dict:
+    def serialize(self, targets: t.Optional[t.List[str]] = None) -> dict[str, t.Any]:
         if targets is not None:
             self._assert_known_keys(targets)
             missing_keys = set(targets) - set(self.store.keys())
