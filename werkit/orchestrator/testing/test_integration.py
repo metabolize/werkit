@@ -80,7 +80,7 @@ EXAMPLE_MESSAGE_KEY = {"someParameters": ["just", "a", "message", "key", "nbd"]}
 
 
 def invoke_orchestrator(orchestrator_function_name: str) -> dict[str, t.Any]:
-    import json
+    from missouri import json
 
     message = {
         "message_key": EXAMPLE_MESSAGE_KEY,
@@ -99,7 +99,9 @@ def invoke_orchestrator(orchestrator_function_name: str) -> dict[str, t.Any]:
         FunctionName=orchestrator_function_name,
         Payload=json.dumps(message),
     )
-    return t.cast(dict[str, t.Any], json.load(response["Payload"]))
+
+    # TODO: Remove this cast when type conflict is resolved.
+    return json.load(t.cast(t.Any, response["Payload"]))
 
 
 @pytest.mark.slow
@@ -114,9 +116,9 @@ def test_integration_success(tmpdir: Path) -> None:
 
         SCHEMA.output_message.validate(data)
 
-        result = t.cast(dict[str, t.Any], data["result"])
+        result = data["result"]
         print(result)
-        assert isinstance(result, object)
+        assert isinstance(result, dict)
         assert all([r["success"] is True for r in result.values()])
         assert {k: r["result"] for k, r in result.items()} == {
             "first": 2**1,

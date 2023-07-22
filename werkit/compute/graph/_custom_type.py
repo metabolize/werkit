@@ -51,15 +51,13 @@ class CustomType(ABC, t.Generic[CanonicalType]):
         """
         Validate the JSON representation.
         """
-        import simplejson as json
+        from missouri import json
         from jsonschema import Draft7Validator, RefResolver
 
         try:
             validator = t.cast(Draft7Validator, cls._validator)
         except AttributeError:
-            with open(cls.schema_path(), "r") as f:
-                schema = json.load(f)
-
+            schema = json.load(cls.schema_path())
             resolver = RefResolver.from_schema(schema)
             validator = cls._validator = Draft7Validator(
                 {"$ref": cls.ref()}, resolver=resolver

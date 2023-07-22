@@ -40,10 +40,9 @@ class Schema:
     def load_from_path(
         cls, schema_filename: str, **kwargs: Unpack[RefKwargs]
     ) -> "Schema":
-        import simplejson as json
+        from missouri import json
 
-        with open(schema_filename, "r") as f:
-            return cls(schema=json.load(f), **kwargs)
+        return cls(schema=json.load(schema_filename), **kwargs)
 
     @classmethod
     def load_relative_to_file(
