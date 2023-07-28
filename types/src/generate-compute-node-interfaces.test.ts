@@ -76,7 +76,7 @@ describe('`generateComputeNodeTypes()`', () => {
       expect(
         generateComputeNodeInterfaces({
           dependencyGraph: DEPENDENCY_GRAPH_WITH_BUILT_IN_TYPES,
-        })
+        }),
       ).to.equal(INTERFACE_FOR_DEPENDENCY_GRAPH_WITH_BUILT_IN_TYPES)
     })
   })
@@ -87,7 +87,7 @@ describe('`generateComputeNodeTypes()`', () => {
         generateComputeNodeInterfaces({
           dependencyGraph: DEPENDENCY_GRAPH_WITH_CUSTOM_TYPE,
           imports: "import { MyModel } from '../models'",
-        })
+        }),
       ).to.equal(INTERFACE_FOR_DEPENDENCY_GRAPH_WITH_CUSTOM_TYPE)
     })
   })

@@ -16,8 +16,8 @@
     "werkit": "file:./types"
   },
   "devDependencies": {
-    "1schema": "^0.1.5",
-    "prettier": "^2.2.1",
+    "1schema": "0.2.0",
+    "prettier": "3.0.0",
     "typescript": "5.1.6"
   }
 }
