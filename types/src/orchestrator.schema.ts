@@ -2,7 +2,7 @@ import { WerkitOutputMessage } from './manager.schema'
 
 export interface OrchestratorInput<
   WorkerInputType,
-  ItemPropertyName extends keyof WorkerInputType
+  ItemPropertyName extends keyof WorkerInputType,
 > {
   itemPropertyName: ItemPropertyName
   itemCollection: Record<string, WorkerInputType[ItemPropertyName]>

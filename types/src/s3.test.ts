@@ -99,7 +99,7 @@ describe('S3 test helpers', () => {
           await expect(
             s3
               .headObject({ Bucket: integrationTestBucket, Key: targetKey })
-              .promise()
+              .promise(),
           )
             .to.eventually.be.rejectedWith(Error)
             .and.have.property('code', 'NotFound')
@@ -181,7 +181,7 @@ describe('S3 test helpers', () => {
           await expect(
             s3
               .headObject({ Bucket: integrationTestBucket, Key: targetKey })
-              .promise()
+              .promise(),
           )
             .to.eventually.be.rejectedWith(Error)
             .and.have.property('code', 'NotFound')
