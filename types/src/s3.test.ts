@@ -1,17 +1,22 @@
 import AWS from 'aws-sdk'
 import chai, { expect } from 'chai'
+import chaiAsPromised from 'chai-as-promised'
+import chaiString from 'chai-string'
 import dotenv from 'dotenv'
 import { promises as fs } from 'fs'
 import path from 'path'
 import tmp, { DirectoryResult } from 'tmp-promise'
+import { fileURLToPath } from 'url'
 
 import { TempFileOnS3, tempFileOnS3, tempFileOnS3FromString } from './s3'
 import { uuidHex } from './uuid-hex'
 
-chai.use(require('chai-as-promised'))
-chai.use(require('chai-string'))
+chai.use(chaiAsPromised)
+chai.use(chaiString)
 
-dotenv.config({ path: path.join(__dirname, '..', '..', '.env') })
+dotenv.config({
+  path: path.join(fileURLToPath(import.meta.url), '..', '..', '.env'),
+})
 
 const EXAMPLE_FILENAME = 'example.txt'
 const EXAMPLE_CONTENTS = `
