@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.33.0
+
+- Add CLI for generating compute-graph interface types.
+
 ## 0.32.1
 
 - Declare `@types/node` dependency to fix downstream type errors.
