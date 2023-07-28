@@ -3,10 +3,13 @@
   "version": "0.32.1",
   "description": "TypeScript types for Werkit, a toolkit for encapsulating Python-based computation into deployable and distributable tasks",
   "main": "dist",
+  "bin": "dist/cli.js",
   "types": "dist",
+  "type": "module",
   "scripts": {
     "prebuild": "del dist",
     "build": "tsc",
+    "postbuild": "shebang-trim dist/cli.js",
     "prepare": "npm run build",
     "test": "mocha \"src/*.test.ts\" \"src/**/*.test.ts\"",
     "check-types": "tsc --noEmit",
@@ -27,12 +30,14 @@
   "dependencies": {
     "@metabolize/uuid-to-hex": "^2.0.0",
     "@types/node": "20.4.2",
+    "argparse": "^2.0.1",
     "uuid": "^9.0.0"
   },
   "optionalDependencies": {
     "aws-sdk": "2.x"
   },
   "devDependencies": {
+    "@types/argparse": "2.0.10",
     "@types/chai-as-promised": "7.1.5",
     "@types/chai": "4.3.5",
     "@types/chai-string": "1.4.2",
@@ -45,6 +50,7 @@
     "del-cli": "5.0.0",
     "dotenv": "16.3.1",
     "mocha": "10.2.0",
+    "shebang-trim": "1.2.0",
     "tmp-promise": "3.0.3",
     "ts-node": "10.9.1"
   },
