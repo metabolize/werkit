@@ -149,6 +149,19 @@ def test_manager_passes_value_error_and_skips_body_when_input_message_has_no_mes
     mock.assert_not_called()
 
 
+def test_manager_skips_body_when_input_message_has_message_key_but_fails_validation() -> (
+    None
+):
+    from unittest.mock import Mock
+
+    mock = Mock()
+
+    with create_manager(input_message={"message_key": None}):
+        mock()
+
+    mock.assert_not_called()
+
+
 def test_verbose_success(capfd: pytest.CaptureFixture[str]) -> None:
     with create_manager(verbose=True) as manager:
         manager.result = EXAMPLE_RESULT
