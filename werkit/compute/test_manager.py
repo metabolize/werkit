@@ -112,12 +112,41 @@ def test_manager_passes_keyboard_interrupt() -> None:
             raise KeyboardInterrupt()
 
 
-def test_manager_passes_value_error_when_no_message_key_present() -> None:
+def test_manager_passes_value_error_and_skips_body_when_input_message_has_no_message_key_and_fails_validation() -> (
+    None
+):
+    from unittest.mock import Mock
+
+    mock = Mock()
+
     with pytest.raises(
         ValueError, match="Input message is missing `message_key` property"
     ):
-        with create_manager(input_message=math.pi) as manager:
-            manager.result = EXAMPLE_RESULT
+        with create_manager(schema=schema, input_message=math.pi):
+            mock()
+
+    mock.assert_not_called()
+
+
+def test_manager_passes_value_error_and_skips_body_when_input_message_has_no_message_key_and_passes_validation() -> (
+    None
+):
+    from unittest.mock import Mock
+
+    schema = Schema.load_relative_to_file(
+        __file__,
+        ["generated", "manager_testing.schema.json"],
+        input_message_ref="#/definitions/Anything",
+    )
+    mock = Mock()
+
+    with pytest.raises(
+        ValueError, match="Input message is missing `message_key` property"
+    ):
+        with create_manager(schema=schema, input_message=math.pi):
+            mock()
+
+    mock.assert_not_called()
 
 
 def test_verbose_success(capfd: pytest.CaptureFixture[str]) -> None:
