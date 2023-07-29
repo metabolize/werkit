@@ -67,6 +67,8 @@ class Manager:
         return manager.output_message
     """
 
+    message_key: t.Any
+
     def __init__(
         self,
         input_message: dict[str, t.Any],
@@ -97,12 +99,11 @@ class Manager:
         self.verbose = verbose
         self.time_precision = time_precision
         self.input_message = input_message
-
-    @property
-    def message_key(self) -> t.Any:
         try:
-            return self.input_message["message_key"]
+            self.message_key = self.input_message["message_key"]
         except (KeyError, TypeError):
+            # This can't be returned using the queue, since that's what the
+            # message key is for.
             raise ValueError("Input message is missing `message_key` property")
 
     @property

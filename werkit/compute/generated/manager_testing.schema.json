@@ -7,6 +7,7 @@
     "AnyOutputMessage": {
       "$ref": "#/definitions/OutputMessage%3Cany%3E"
     },
+    "Anything": {},
     "Input": {
       "additionalProperties": false,
       "properties": {

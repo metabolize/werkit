@@ -29,6 +29,7 @@ def example_file(tmp_path: Path) -> str:
     return str(file)
 
 
+@pytest.mark.slow
 def test_temp_file_on_s3(example_file: str, test_bucket: str) -> None:
     target_key = f"test_{uuid.uuid4().hex}.txt"
 
@@ -45,6 +46,7 @@ def test_temp_file_on_s3(example_file: str, test_bucket: str) -> None:
         s3_client.head_object(Bucket=test_bucket, Key=target_key)
 
 
+@pytest.mark.slow
 def test_temp_file_on_s3_with_implicit_key(example_file: str, test_bucket: str) -> None:
     with temp_file_on_s3(
         local_path=example_file, bucket=test_bucket, verbose=True
@@ -53,6 +55,7 @@ def test_temp_file_on_s3_with_implicit_key(example_file: str, test_bucket: str) 
         assert key.endswith(".txt")
 
 
+@pytest.mark.slow
 def test_temp_file_on_s3_from_string(test_bucket: str) -> None:
     target_key = f"test_{uuid.uuid4().hex}.txt"
 
@@ -69,6 +72,7 @@ def test_temp_file_on_s3_from_string(test_bucket: str) -> None:
         s3_client.head_object(Bucket=test_bucket, Key=target_key)
 
 
+@pytest.mark.slow
 def test_temp_file_on_s3_from_string_with_implicit_key(test_bucket: str) -> None:
     with temp_file_on_s3_from_string(
         contents=EXAMPLE_CONTENTS, bucket=test_bucket, extension=".txt", verbose=True

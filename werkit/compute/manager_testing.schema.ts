@@ -20,3 +20,5 @@ export type OutputMessage<MessageKeyType> = WerkitOutputMessage<
 >
 export type AnyInputMessage = InputMessage<any>
 export type AnyOutputMessage = OutputMessage<any>
+
+export type Anything = any
