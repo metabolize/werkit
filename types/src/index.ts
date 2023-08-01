@@ -1,5 +1,5 @@
 export * from './dependency-graph.schema'
-export * from './destination.schema'
+export * from './destination-message'
 export { generateComputeNodeInterfaces } from './generate-compute-node-interfaces'
 export * from './manager.schema'
 export * from './lambda-deploy'
