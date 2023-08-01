@@ -52,7 +52,7 @@ boto3-stubs = {version = "1.26.90", extras = ["s3", "lambda"]}
 click = "8.0.3"
 coverage = "7.2.7"
 executor = "23.2"
-flake8 = "5.0.4"
+flake8 = "6.1.0"
 flake8-import-order = "0.18.2"
 freezegun = "1.2.2"
 mypy = "1.4.1"
