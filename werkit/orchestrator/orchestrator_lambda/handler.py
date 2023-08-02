@@ -66,7 +66,7 @@ def handler(
 
     manager = Manager(input_message=event, schema=SCHEMA)
 
-    def work():
+    def work() -> dict[str, t.Any]:
         if not worker_lambda_function_name:
             raise Exception(
                 f"Environment variable {LAMBDA_WORKER_FUNCTION_NAME} must be defined, "
