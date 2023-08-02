@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.35.0
+
+### New features
+
+- `Manager.work()`: Add `should_send` and `should_return` parameters.
+
 ## 0.34.0
 
 ### BREAKING CHANGES
