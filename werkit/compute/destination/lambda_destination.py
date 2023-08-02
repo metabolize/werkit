@@ -53,6 +53,7 @@ class LambdaDestination(Destination):
             "DESTINATION_LAMBDA_QUALIFIER", None
         )
 
+        # Keep this in sync with the DestinationMessage interface.
         message = {"taskIdentifier": self.task_identifier, "payload": output_message}
 
         # TODO: Dry this while satisfying the type checker...
