@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.34.0
+
+- Add DestinationMessage type.
+
 ## 0.33.0
 
 - Add CLI for generating compute-graph interface types.

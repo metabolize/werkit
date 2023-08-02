@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.34.0
+
+### BREAKING CHANGES
+
+- Manager: Add `work()` method, replacing its use as a context handler.
+
+### New features
+
+- Add LambdaDestination.
+
 ## 0.32.0
 
 ### BREAKING CHANGES
