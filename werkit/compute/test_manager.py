@@ -37,7 +37,7 @@ def test_manager_serializes_result() -> None:
         return EXAMPLE_RESULT
 
     manager = create_manager()
-    output_message = manager.work(work)
+    output_message = manager.work(work, should_send=False, should_return=True)
 
     assert output_message == {
         "message_key": EXAMPLE_MESSAGE_KEY,
@@ -59,7 +59,7 @@ def test_time_precision() -> None:
         return EXAMPLE_RESULT
 
     manager = create_manager()
-    output_message = manager.work(work)
+    output_message = manager.work(work, should_send=False, should_return=True)
 
     assert output_message["duration_seconds"] >= 0.35
     assert output_message["duration_seconds"] < 0.4
@@ -71,7 +71,7 @@ def test_manager_serializes_error() -> None:
         raise ValueError()
 
     manager = create_manager()
-    output_message = manager.work(work)
+    output_message = manager.work(work, should_send=False, should_return=True)
 
     assert output_message["error"][-1] == "ValueError\n"
     del output_message["error"]
@@ -93,7 +93,7 @@ def test_manager_with_handle_exceptions_false_passes_error() -> None:
 
     manager = create_manager(handle_exceptions=False)
     with pytest.raises(ValueError):
-        manager.work(work)
+        manager.work(work, should_send=False, should_return=True)
 
 
 def test_manager_passes_keyboard_interrupt() -> None:
@@ -101,7 +101,7 @@ def test_manager_passes_keyboard_interrupt() -> None:
         raise KeyboardInterrupt()
 
     with pytest.raises(KeyboardInterrupt):
-        create_manager().work(work)
+        create_manager().work(work, should_send=False, should_return=True)
 
 
 def test_manager_passes_value_error_and_skips_body_when_input_message_has_no_message_key_and_fails_validation() -> (
@@ -117,7 +117,9 @@ def test_manager_passes_value_error_and_skips_body_when_input_message_has_no_mes
     with pytest.raises(
         ValueError, match="Input message is missing `message_key` property"
     ):
-        create_manager(schema=schema, input_message=math.pi).work(work)
+        create_manager(schema=schema, input_message=math.pi).work(
+            work, should_send=False, should_return=True
+        )
 
     mock.assert_not_called()
 
@@ -141,7 +143,9 @@ def test_manager_passes_value_error_and_skips_work_fn_when_input_message_has_no_
     with pytest.raises(
         ValueError, match="Input message is missing `message_key` property"
     ):
-        create_manager(schema=schema, input_message=math.pi).work(work)
+        create_manager(schema=schema, input_message=math.pi).work(
+            work, should_send=False, should_return=True
+        )
 
     mock.assert_not_called()
 
@@ -156,7 +160,9 @@ def test_manager_skips_work_fn_when_input_message_has_message_key_but_fails_vali
     def work(input: t.Any) -> t.Any:
         mock()
 
-    create_manager(input_message={"message_key": None}).work(work)
+    create_manager(input_message={"message_key": None}).work(
+        work, should_send=False, should_return=True
+    )
 
     mock.assert_not_called()
 
@@ -165,7 +171,7 @@ def test_verbose_success(capfd: pytest.CaptureFixture[str]) -> None:
     def work(input: t.Any) -> t.Any:
         return EXAMPLE_RESULT
 
-    create_manager(verbose=True).work(work)
+    create_manager(verbose=True).work(work, should_send=False, should_return=True)
 
     out, err = capfd.readouterr()
     assert err == "Completed in 0.0 sec\n"
@@ -175,7 +181,7 @@ def test_verbose_error(capfd: pytest.CaptureFixture[str]) -> None:
     def work(input: t.Any) -> t.Any:
         raise ValueError()
 
-    create_manager(verbose=True).work(work)
+    create_manager(verbose=True).work(work, should_send=False, should_return=True)
 
     out, err = capfd.readouterr()
     assert err == "Errored in 0.0 sec\n"

@@ -64,7 +64,7 @@ class Manager:
             handle_exceptions=handle_exceptions,
             verbose=verbose,
         )
-        output_message = manager.work(work)
+        return manager.work(work, should_send=False, should_return=True)
     """
 
     message_key: t.Any
@@ -218,12 +218,30 @@ class Manager:
 
         return None
 
+    @t.overload
+    def work(
+        self,
+        work_fn: t.Callable,
+        should_send: bool,
+        should_return: t.Literal[True],
+    ) -> dict[str, t.Any]:
+        ...
+
+    @t.overload
+    def work(
+        self,
+        work_fn: t.Callable,
+        should_send: bool,
+        should_return: t.Literal[False],
+    ) -> None:
+        ...
+
     def work(
         self,
         work_fn: t.Callable,
         should_send: bool,
         should_return: bool,
-    ) -> dict[str, t.Any]:
+    ) -> t.Optional[dict[str, t.Any]]:
         self.should_send = should_send
 
         with self:
