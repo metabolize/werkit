@@ -63,7 +63,10 @@ def handler(
     timeout: int = env_worker_lambda_timeout or 120,
 ) -> dict[str, t.Any]:
     print("input_message", event)
-    with Manager(input_message=event, schema=SCHEMA) as manager:
+
+    manager = Manager(input_message=event, schema=SCHEMA)
+
+    def work(_: t.Any) -> dict[str, t.Any]:
         if not worker_lambda_function_name:
             raise Exception(
                 f"Environment variable {LAMBDA_WORKER_FUNCTION_NAME} must be defined, "
@@ -84,7 +87,7 @@ def handler(
                     executor=executor,
                 )
             )
-            manager.result = dict(
+            return dict(
                 zip(
                     item_collection.keys(),
                     [
@@ -97,4 +100,5 @@ def handler(
                     ],
                 )
             )
-    return manager.output_message
+
+    return manager.work(work, should_send=False, should_return=True)
