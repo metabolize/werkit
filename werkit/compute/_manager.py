@@ -68,6 +68,7 @@ class Manager:
     """
 
     message_key: t.Any
+    should_send: t.Optional[bool]
 
     def __init__(
         self,
@@ -143,7 +144,9 @@ class Manager:
     def _note_compute_success(self, result: t.Any) -> None:
         self.output_message = self.serialize_result(result)
         self.schema.output_message.validate(self.output_message)
-        if self.destination:
+        if self.should_send:
+            if self.destination is None:
+                raise ValueError("With `should_send=True`, expected a destination")
             self.destination.send(
                 message_key=self.message_key, output_message=self.output_message
             )
@@ -169,7 +172,9 @@ class Manager:
                 "Error handled by werkit. (To disable, invoke `Manager()` with `handle_exceptions=False`.)"
             )
             print("".join(self.output_message["error"]))
-            if self.destination:
+            if self.should_send:
+                if self.destination is None:
+                    raise ValueError("With `should_send=True`, expected a destination")
                 self.destination.send(
                     message_key=self.message_key, output_message=self.output_message
                 )
@@ -213,7 +218,14 @@ class Manager:
 
         return None
 
-    def work(self, work_fn: t.Callable) -> dict[str, t.Any]:
+    def work(
+        self,
+        work_fn: t.Callable,
+        should_send: bool,
+        should_return: bool,
+    ) -> dict[str, t.Any]:
+        self.should_send = should_send
+
         with self:
             try:
                 self.schema.input_message.validate(self.input_message)
@@ -225,4 +237,7 @@ class Manager:
 
             self.result = work_fn(self.input_message)
 
-        return self.output_message
+        if should_return:
+            return self.output_message
+        else:
+            return None
