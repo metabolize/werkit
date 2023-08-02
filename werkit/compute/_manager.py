@@ -53,18 +53,18 @@ class Manager:
             the nearest hundredth of a second.
 
     Example:
+        def work():
+            result = perform_computation()
+            # If needed, convert result to JSON-serializable objects.
+            return transform(result)
 
-        with Manager(
+        manager = Manager(
             input_message=params,
             schema=schema,
             handle_exceptions=handle_exceptions,
             verbose=verbose,
-        ) as manager:
-            result = perform_computation()
-            # If needed, convert result to JSON-serializable objects.
-            serialized = transform(result)
-            manager.result = serialized
-        return manager.output_message
+        )
+        output_message = manager.work(work)
     """
 
     message_key: t.Any
@@ -212,3 +212,17 @@ class Manager:
             )
 
         return None
+
+    def work(self, work_fn: t.Callable) -> dict[str, t.Any]:
+        with self:
+            try:
+                self.schema.input_message.validate(self.input_message)
+            except:  # noqa: E722
+                if not self.__exit__(*sys.exc_info()):
+                    raise
+                else:
+                    return self.output_message
+
+            self.result = work_fn(self.input_message)
+
+        return self.output_message
