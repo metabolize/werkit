@@ -33,10 +33,13 @@ def create_manager(
 
 @freeze_time("2019-12-31")
 def test_manager_serializes_result() -> None:
-    with create_manager() as manager:
-        manager.result = EXAMPLE_RESULT
+    def work(input: t.Any) -> t.Any:
+        return EXAMPLE_RESULT
 
-    assert manager.output_message == {
+    manager = create_manager()
+    output_message = manager.work(work)
+
+    assert output_message == {
         "message_key": EXAMPLE_MESSAGE_KEY,
         "success": True,
         "result": EXAMPLE_RESULT,
@@ -51,45 +54,29 @@ def test_manager_serializes_result() -> None:
 def test_time_precision() -> None:
     import time
 
-    with create_manager() as manager:
+    def work(input: t.Any) -> t.Any:
         time.sleep(0.35)
-        manager.result = EXAMPLE_RESULT
+        return EXAMPLE_RESULT
 
-    assert manager.output_message["duration_seconds"] >= 0.35
-    assert manager.output_message["duration_seconds"] < 0.4
+    manager = create_manager()
+    output_message = manager.work(work)
+
+    assert output_message["duration_seconds"] >= 0.35
+    assert output_message["duration_seconds"] < 0.4
 
 
 @freeze_time("2019-12-31")
 def test_manager_serializes_error() -> None:
-    with create_manager() as manager:
+    def work(input: t.Any) -> t.Any:
         raise ValueError()
 
-    assert manager.output_message["error"][-1] == "ValueError\n"
-    del manager.output_message["error"]
+    manager = create_manager()
+    output_message = manager.work(work)
 
-    assert manager.output_message == {
-        "message_key": EXAMPLE_MESSAGE_KEY,
-        "success": False,
-        "result": None,
-        "error_origin": "compute",
-        "start_time": datetime.datetime(2019, 12, 31).astimezone().isoformat(),
-        "duration_seconds": 0,
-        "runtime_info": EXAMPLE_RUNTIME_INFO,
-    }
+    assert output_message["error"][-1] == "ValueError\n"
+    del output_message["error"]
 
-
-@freeze_time("2019-12-31")
-def test_manager_serializes_expected_error_when_result_not_set() -> None:
-    with create_manager() as manager:
-        pass
-
-    assert (
-        manager.output_message["error"][-1]
-        == "AttributeError: 'result' was not set on the 'Manager' instance\n"
-    )
-    del manager.output_message["error"]
-
-    assert manager.output_message == {
+    assert output_message == {
         "message_key": EXAMPLE_MESSAGE_KEY,
         "success": False,
         "result": None,
@@ -101,15 +88,20 @@ def test_manager_serializes_expected_error_when_result_not_set() -> None:
 
 
 def test_manager_with_handle_exceptions_false_passes_error() -> None:
+    def work(input: t.Any) -> t.Any:
+        raise ValueError()
+
+    manager = create_manager(handle_exceptions=False)
     with pytest.raises(ValueError):
-        with create_manager(handle_exceptions=False):
-            raise ValueError()
+        manager.work(work)
 
 
 def test_manager_passes_keyboard_interrupt() -> None:
+    def work(input: t.Any) -> t.Any:
+        raise KeyboardInterrupt()
+
     with pytest.raises(KeyboardInterrupt):
-        with create_manager():
-            raise KeyboardInterrupt()
+        create_manager().work(work)
 
 
 def test_manager_passes_value_error_and_skips_body_when_input_message_has_no_message_key_and_fails_validation() -> (
@@ -119,16 +111,18 @@ def test_manager_passes_value_error_and_skips_body_when_input_message_has_no_mes
 
     mock = Mock()
 
+    def work(input: t.Any) -> t.Any:
+        mock()
+
     with pytest.raises(
         ValueError, match="Input message is missing `message_key` property"
     ):
-        with create_manager(schema=schema, input_message=math.pi):
-            mock()
+        create_manager(schema=schema, input_message=math.pi).work(work)
 
     mock.assert_not_called()
 
 
-def test_manager_passes_value_error_and_skips_body_when_input_message_has_no_message_key_and_passes_validation() -> (
+def test_manager_passes_value_error_and_skips_work_fn_when_input_message_has_no_message_key_and_passes_validation() -> (
     None
 ):
     from unittest.mock import Mock
@@ -138,28 +132,50 @@ def test_manager_passes_value_error_and_skips_body_when_input_message_has_no_mes
         ["generated", "manager_testing.schema.json"],
         input_message_ref="#/definitions/Anything",
     )
+
     mock = Mock()
+
+    def work(input: t.Any) -> t.Any:
+        mock()
 
     with pytest.raises(
         ValueError, match="Input message is missing `message_key` property"
     ):
-        with create_manager(schema=schema, input_message=math.pi):
-            mock()
+        create_manager(schema=schema, input_message=math.pi).work(work)
+
+    mock.assert_not_called()
+
+
+def test_manager_skips_work_fn_when_input_message_has_message_key_but_fails_validation() -> (
+    None
+):
+    from unittest.mock import Mock
+
+    mock = Mock()
+
+    def work(input: t.Any) -> t.Any:
+        mock()
+
+    create_manager(input_message={"message_key": None}).work(work)
 
     mock.assert_not_called()
 
 
 def test_verbose_success(capfd: pytest.CaptureFixture[str]) -> None:
-    with create_manager(verbose=True) as manager:
-        manager.result = EXAMPLE_RESULT
+    def work(input: t.Any) -> t.Any:
+        return EXAMPLE_RESULT
+
+    create_manager(verbose=True).work(work)
 
     out, err = capfd.readouterr()
     assert err == "Completed in 0.0 sec\n"
 
 
 def test_verbose_error(capfd: pytest.CaptureFixture[str]) -> None:
-    with create_manager(verbose=True):
+    def work(input: t.Any) -> t.Any:
         raise ValueError()
+
+    create_manager(verbose=True).work(work)
 
     out, err = capfd.readouterr()
     assert err == "Errored in 0.0 sec\n"
