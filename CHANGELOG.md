@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.34.0
+
+### New features
+
+- Add LambdaDestination.
+
 ## 0.32.0
 
 ### BREAKING CHANGES
