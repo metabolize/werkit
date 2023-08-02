@@ -38,17 +38,19 @@ from werkit.compute import Manager
 # `Output`, and `AnyOutputMessage`.
 schema = Schema.load_relative_to_file(__file__, ["path", "to", "schema.json"])
 
+def work():
+    result = perform_computation()
+    # If needed, convert result to JSON-serializable objects.
+    return transform(result)
+
 def myfunc(params, verbose=False, handle_exceptions=True):
-    with Manager(
+    return Manager(
         input_message=params,
         schema=schema,
         handle_exceptions=handle_exceptions,
         verbose=verbose,
-    ) as manager:
-        manager.result = do_some_computation()
-    return manager.output_message
+    ).work(work, should_send=False, should_return=True)
 ```
-
 
 ### Parallel computation on AWS lambda
 
@@ -58,9 +60,8 @@ Werkit comes with a default lambda handler, that accepts an event of the form `{
 
 The werkit default handler is configurable via the following environmnent variables:
 
-* `LAMBDA_WORKER_FUNCTION_NAME`: Name of the lambda worker function to invoke 
-* `LAMBDA_WORKER_TIMEOUT`: How long to wait in seconds for the lambda worker function to return before returning a TimeoutError
-
+- `LAMBDA_WORKER_FUNCTION_NAME`: Name of the lambda worker function to invoke
+- `LAMBDA_WORKER_TIMEOUT`: How long to wait in seconds for the lambda worker function to return before returning a TimeoutError
 
 ### Building and deploying functions to AWS Lambda
 
@@ -277,7 +278,6 @@ def update_code():
 [types]: https://github.com/metabolize/werkit/tree/main/types
 [npm]: https://www.npmjs.com/package/werkit
 
-
 ## Development
 
 First, [install Poetry][].
@@ -288,7 +288,6 @@ environment with the project's dependencies.
 Subsequently, run `./dev.py install` to update the dependencies.
 
 [install poetry]: https://python-poetry.org/docs/#installation
-
 
 ## License
 
