@@ -87,7 +87,7 @@ def handler(
                     executor=executor,
                 )
             )
-            result = dict(
+            return dict(
                 zip(
                     item_collection.keys(),
                     [
@@ -100,6 +100,5 @@ def handler(
                     ],
                 )
             )
-        return result
 
     return manager.work(work, should_send=False, should_return=True)
