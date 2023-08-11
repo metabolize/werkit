@@ -3,6 +3,8 @@ import shutil
 import sys
 import venv
 import zipfile
+from pathlib import Path
+
 from executor import execute
 
 
@@ -97,6 +99,8 @@ def collect_zipfile_contents(
 
     for src_file in src_files:
         target = os.path.join(target_dir, src_file)
+        Path(os.path.dirname(target)).mkdir(parents=True, exist_ok=True)
+
         pif(f"Copying {src_file} to {target}")
         shutil.copyfile(src_file, target)
 
