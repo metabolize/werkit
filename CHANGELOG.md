@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.35.1
+
+### Bug fixes
+
+- In `collect_zipfile_contents`, create target subdirectory for each file in
+` src_files`.
+
 ## 0.35.0
 
 ### New features
