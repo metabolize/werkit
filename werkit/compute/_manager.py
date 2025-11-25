@@ -72,7 +72,7 @@ class Manager:
 
     def __init__(
         self,
-        input_message: dict[str, t.Any],
+        input_message: t.Mapping[str, t.Any],
         schema: Schema,
         destination: t.Optional[Destination] = None,
         runtime_info: t.Any = None,
@@ -234,6 +234,15 @@ class Manager:
         should_send: bool,
         should_return: t.Literal[False],
     ) -> None:
+        ...
+
+    @t.overload
+    def work(
+        self,
+        work_fn: t.Callable,
+        should_send: bool,
+        should_return: bool,
+    ) -> t.Optional[dict[str, t.Any]]:
         ...
 
     def work(
