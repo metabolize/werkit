@@ -236,6 +236,15 @@ class Manager:
     ) -> None:
         ...
 
+    @t.overload
+    def work(
+        self,
+        work_fn: t.Callable,
+        should_send: bool,
+        should_return: bool,
+    ) -> t.Optional[dict[str, t.Any]]:
+        ...
+
     def work(
         self,
         work_fn: t.Callable,
