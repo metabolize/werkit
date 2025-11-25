@@ -1,11 +1,19 @@
 # Changelog
 
+## 0.35.2
+
+### Other changes
+
+- Manager: Type tweaks
+  - Add overload for `work()` for non-literal `should_return`
+  - Allow input_message to be a TypedDict
+
 ## 0.35.1
 
 ### Bug fixes
 
 - In `collect_zipfile_contents`, create target subdirectory for each file in
-` src_files`.
+  `src_files`.
 
 ## 0.35.0
 
