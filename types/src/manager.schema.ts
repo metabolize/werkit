@@ -8,8 +8,10 @@ export interface WerkitComputeMeta {
   runtime_info?: any
 }
 
-export interface WerkitSuccessOutputMessage<ResultType, MessageKeyType>
-  extends WerkitComputeMeta {
+export interface WerkitSuccessOutputMessage<
+  ResultType,
+  MessageKeyType,
+> extends WerkitComputeMeta {
   success: true
   result: ResultType
   error: null
@@ -19,8 +21,9 @@ export interface WerkitSuccessOutputMessage<ResultType, MessageKeyType>
 
 export type WerkitErrorOrigin = 'compute' | 'system' | 'orchestration'
 
-export interface WerkitErrorOutputMessage<MessageKeyType>
-  extends WerkitComputeMeta {
+export interface WerkitErrorOutputMessage<
+  MessageKeyType,
+> extends WerkitComputeMeta {
   success: false
   result: null
   error: string[]
