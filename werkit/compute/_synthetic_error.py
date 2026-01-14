@@ -9,6 +9,7 @@ class SyntheticError(Exception):
 
     Only the message's `error` key is preserved.
     """
+
     error_origin: WerkitErrorOrigin
     error: list[str]
 

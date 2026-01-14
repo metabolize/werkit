@@ -104,7 +104,9 @@ def test_manager_serializes_synthetic_error() -> None:
         raise ValueError("No good!")
 
     def work(input: t.Any) -> t.Any:
-        output_message = create_manager().work(work_inner, should_send=False, should_return=True)
+        output_message = create_manager().work(
+            work_inner, should_send=False, should_return=True
+        )
         assert output_message["success"] is False
         raise SyntheticError(output_message)
 
