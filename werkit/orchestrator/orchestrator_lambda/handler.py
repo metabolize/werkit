@@ -69,7 +69,9 @@ def handler(
 ) -> WerkitOutputMessage[ResultType, MessageKeyType]:
     print("input_message", event)
 
-    manager: Manager[ResultType, MessageKeyType] = Manager(input_message=event, schema=SCHEMA)
+    manager: Manager[ResultType, MessageKeyType] = Manager(
+        input_message=event, schema=SCHEMA
+    )
 
     def work(_: t.Any) -> dict[str, t.Any]:
         if not worker_lambda_function_name:
