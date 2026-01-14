@@ -37,7 +37,7 @@ def temp_file_on_s3(
 
 
 @t.overload
-def temp_file_on_s3_from_string(
+def temp_file_on_s3_from_string(  # noqa: E704
     contents: str,
     bucket: str,
     ret_etag: t.Literal[True],
@@ -48,7 +48,7 @@ def temp_file_on_s3_from_string(
 
 
 @t.overload
-def temp_file_on_s3_from_string(
+def temp_file_on_s3_from_string(  # noqa: E704
     contents: str,
     bucket: str,
     ret_etag: t.Literal[False],
@@ -59,7 +59,7 @@ def temp_file_on_s3_from_string(
 
 
 @t.overload
-def temp_file_on_s3_from_string(
+def temp_file_on_s3_from_string(  # noqa: E704
     contents: str,
     bucket: str,
     *,

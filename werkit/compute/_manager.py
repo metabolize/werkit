@@ -235,7 +235,7 @@ class Manager(t.Generic[ResultType, MessageKeyType]):
         return None
 
     @t.overload
-    def work(
+    def work(  # noqa: E704
         self,
         work_fn: t.Callable,
         should_send: bool,
@@ -243,7 +243,7 @@ class Manager(t.Generic[ResultType, MessageKeyType]):
     ) -> WerkitOutputMessage[ResultType, MessageKeyType]: ...
 
     @t.overload
-    def work(
+    def work(  # noqa: E704
         self,
         work_fn: t.Callable,
         should_send: bool,
@@ -251,7 +251,7 @@ class Manager(t.Generic[ResultType, MessageKeyType]):
     ) -> None: ...
 
     @t.overload
-    def work(
+    def work(  # noqa: E704
         self,
         work_fn: t.Callable,
         should_send: bool,
