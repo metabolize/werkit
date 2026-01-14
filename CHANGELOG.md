@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.36.0
+
+### New features
+
+- Manager: Support synthetic exceptions
+
 ## 0.35.2
 
 ### Other changes
