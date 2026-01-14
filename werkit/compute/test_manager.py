@@ -68,12 +68,12 @@ def test_time_precision() -> None:
 @freeze_time("2019-12-31")
 def test_manager_serializes_error() -> None:
     def work(input: t.Any) -> t.Any:
-        raise ValueError()
+        raise ValueError("No good!")
 
     manager = create_manager()
     output_message = manager.work(work, should_send=False, should_return=True)
 
-    assert output_message["error"][-1] == "ValueError\n"
+    assert output_message["error"][-1] == "ValueError: No good!\n"
     del output_message["error"]
 
     assert output_message == {
@@ -89,11 +89,40 @@ def test_manager_serializes_error() -> None:
 
 def test_manager_with_handle_exceptions_false_passes_error() -> None:
     def work(input: t.Any) -> t.Any:
-        raise ValueError()
+        raise ValueError("No good!")
 
     manager = create_manager(handle_exceptions=False)
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=r"No good!$"):
         manager.work(work, should_send=False, should_return=True)
+
+
+@freeze_time("2019-12-31")
+def test_manager_serializes_synthetic_error() -> None:
+    from ._synthetic_error import SyntheticError
+
+    def work_inner(input: t.Any) -> t.Any:
+        raise ValueError("No good!")
+
+    def work(input: t.Any) -> t.Any:
+        output_message = create_manager().work(work_inner, should_send=False, should_return=True)
+        assert output_message["success"] is False
+        raise SyntheticError(output_message)
+
+    manager = create_manager()
+    output_message = manager.work(work, should_send=False, should_return=True)
+
+    assert output_message["error"][-1] == "ValueError: No good!\n"
+    del output_message["error"]
+
+    assert output_message == {
+        "message_key": EXAMPLE_MESSAGE_KEY,
+        "success": False,
+        "result": None,
+        "error_origin": "compute",
+        "start_time": datetime.datetime(2019, 12, 31).astimezone().isoformat(),
+        "duration_seconds": 0,
+        "runtime_info": EXAMPLE_RUNTIME_INFO,
+    }
 
 
 def test_manager_passes_keyboard_interrupt() -> None:

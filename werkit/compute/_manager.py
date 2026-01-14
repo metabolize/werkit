@@ -36,6 +36,9 @@ class Manager:
     - `duration_seconds` (`float`): The time spent in computation.
     - `runtime_info` (`object`): User-provided runtime metadata.
 
+    To pass along an already-serialized error output message, wrap it in a
+    `werkit.compute.SyntheticError`.
+
     Args:
         schema (werkit.compute.Schema): A helper object containing the
             request, result, and serialized result schemas.

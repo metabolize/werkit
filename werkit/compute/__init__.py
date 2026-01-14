@@ -13,3 +13,11 @@ the result to a queue (or any other destination, such at S3).
 from ._destination import Destination  # noqa: F401
 from ._manager import Manager  # noqa: F401
 from ._schema import Schema  # noqa: F401
+from ._synthetic_error import SyntheticError  # noqa: F401
+from ._types import (
+    WerkitComputeMeta,
+    WerkitErrorOrigin,
+    WerkitErrorOutputMessage,
+    WerkitOutputMessage,
+    WerkitSuccessOutputMessage,
+)  # noqa: F401
