@@ -8,6 +8,7 @@ from botocore.exceptions import ClientError
 from werkit.compute import Manager
 from .parallel import parallel_map_on_lambda
 from .schema import SCHEMA
+from ...compute import WerkitOutputMessage
 from ...compute._serialization import serialize_exception
 
 LAMBDA_WORKER_FUNCTION_NAME = "LAMBDA_WORKER_FUNCTION_NAME"
@@ -20,10 +21,13 @@ env_worker_lambda_timeout = (
     else None
 )
 
+ResultType = t.TypeVar("ResultType")
+MessageKeyType = t.TypeVar("MessageKeyType")
+
 
 def transform_result(
     message_key: t.Any, result: t.Any, start_time: datetime.datetime
-) -> dict[str, t.Any]:
+) -> WerkitOutputMessage[ResultType, MessageKeyType]:
     if (
         isinstance(result, ClientError)
         or isinstance(result, asyncio.TimeoutError)
@@ -49,9 +53,10 @@ def transform_result(
             "error_origin": "system",
             "start_time": start_time.astimezone().isoformat(),
             "duration_seconds": -1,
+            "runtime_info": {},
         }
     else:
-        return result
+        return t.cast(WerkitOutputMessage[ResultType, MessageKeyType], result)
 
 
 # TODO: This handler should have a unit test which uses a stubbed lambda. This
@@ -61,10 +66,12 @@ def handler(
     context: dict[str, t.Any],
     worker_lambda_function_name: t.Optional[str] = env_worker_lambda_function_name,
     timeout: int = env_worker_lambda_timeout or 120,
-) -> dict[str, t.Any]:
+) -> WerkitOutputMessage[ResultType, MessageKeyType]:
     print("input_message", event)
 
-    manager = Manager(input_message=event, schema=SCHEMA)
+    manager: Manager[ResultType, MessageKeyType] = Manager(
+        input_message=event, schema=SCHEMA
+    )
 
     def work(_: t.Any) -> dict[str, t.Any]:
         if not worker_lambda_function_name:

@@ -1,5 +1,14 @@
 import datetime
 import typing as t
+from ._types import (
+    WerkitErrorOrigin,
+    WerkitErrorOutputMessage,
+    WerkitSuccessOutputMessage,
+)
+
+
+ResultType = t.TypeVar("ResultType")
+MessageKeyType = t.TypeVar("MessageKeyType")
 
 
 def serialize_result(
@@ -8,7 +17,7 @@ def serialize_result(
     start_time: datetime.datetime,
     duration_seconds: float,
     runtime_info: t.Any = None,
-) -> dict[str, t.Any]:
+) -> WerkitSuccessOutputMessage[ResultType, MessageKeyType]:
     """
     Wrap the computation result in the `werkit.Manager` result schema.
 
@@ -30,17 +39,14 @@ def serialize_result(
     }
 
 
-ErrorOrigin = t.Literal["compute", "system", "orchestration"]
-
-
 def serialize_exception(
     message_key: t.Any,
     exception: BaseException,
-    error_origin: ErrorOrigin,
+    error_origin: WerkitErrorOrigin,
     start_time: datetime.datetime,
     duration_seconds: float = -1,
     runtime_info: t.Any = None,
-) -> dict[str, t.Any]:
+) -> WerkitErrorOutputMessage[MessageKeyType]:
     """
     Wrap an exception in the `werkit.Manager` result schema.
 
@@ -55,13 +61,21 @@ def serialize_exception(
         runtime_info (object): Serializable runtime metadata.
     """
     import traceback
+    from ._synthetic_error import SyntheticError
+
+    if isinstance(exception, SyntheticError):
+        error = exception.error
+        out_error_origin = exception.error_origin
+    else:
+        error = traceback.format_exception(None, exception, exception.__traceback__)
+        out_error_origin = error_origin
 
     return {
         "message_key": message_key,
         "success": False,
         "result": None,
-        "error": traceback.format_exception(None, exception, exception.__traceback__),
-        "error_origin": error_origin,
+        "error": error,
+        "error_origin": out_error_origin,
         "duration_seconds": duration_seconds,
         "start_time": start_time.astimezone().isoformat(),
         "runtime_info": runtime_info,
