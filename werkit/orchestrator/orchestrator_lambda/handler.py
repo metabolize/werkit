@@ -8,7 +8,7 @@ from botocore.exceptions import ClientError
 from werkit.compute import Manager
 from .parallel import parallel_map_on_lambda
 from .schema import SCHEMA
-from ...compute import WerkitErrorOutputMessage, WerkitOutputMessage
+from ...compute import WerkitOutputMessage
 from ...compute._serialization import serialize_exception
 
 LAMBDA_WORKER_FUNCTION_NAME = "LAMBDA_WORKER_FUNCTION_NAME"
