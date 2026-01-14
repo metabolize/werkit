@@ -224,8 +224,7 @@ class Manager:
         work_fn: t.Callable,
         should_send: bool,
         should_return: t.Literal[True],
-    ) -> dict[str, t.Any]:
-        ...
+    ) -> dict[str, t.Any]: ...
 
     @t.overload
     def work(
@@ -233,8 +232,7 @@ class Manager:
         work_fn: t.Callable,
         should_send: bool,
         should_return: t.Literal[False],
-    ) -> None:
-        ...
+    ) -> None: ...
 
     @t.overload
     def work(
@@ -242,8 +240,7 @@ class Manager:
         work_fn: t.Callable,
         should_send: bool,
         should_return: bool,
-    ) -> t.Optional[dict[str, t.Any]]:
-        ...
+    ) -> t.Optional[dict[str, t.Any]]: ...
 
     def work(
         self,

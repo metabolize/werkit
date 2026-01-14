@@ -44,8 +44,7 @@ def temp_file_on_s3_from_string(
     key: t.Optional[str] = None,
     extension: t.Optional[str] = None,
     verbose: bool = False,
-) -> AbstractContextManager[tuple[str, str]]:
-    ...
+) -> AbstractContextManager[tuple[str, str]]: ...
 
 
 @t.overload
@@ -56,8 +55,7 @@ def temp_file_on_s3_from_string(
     key: t.Optional[str] = None,
     extension: t.Optional[str] = None,
     verbose: bool = False,
-) -> AbstractContextManager[str]:
-    ...
+) -> AbstractContextManager[str]: ...
 
 
 @t.overload
@@ -69,8 +67,7 @@ def temp_file_on_s3_from_string(
     key: t.Optional[str] = None,
     extension: t.Optional[str] = None,
     verbose: bool = False,
-) -> AbstractContextManager[str]:
-    ...
+) -> AbstractContextManager[str]: ...
 
 
 # @t.overload doesn't work properly with @contextmanager
