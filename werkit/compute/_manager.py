@@ -6,12 +6,20 @@ from ._destination import Destination
 from ._formatting import format_time
 from ._schema import Schema
 from ._serialization import serialize_exception, serialize_result
+from ._types import (
+    WerkitErrorOutputMessage,
+    WerkitOutputMessage,
+    WerkitSuccessOutputMessage,
+)
 
 if t.TYPE_CHECKING:  # pragma: no cover
     from typing_extensions import Self
 
+MessageKeyType = t.TypeVar("MessageKeyType")
+ResultType = t.TypeVar("ResultType")
 
-class Manager:
+
+class Manager(t.Generic[ResultType, MessageKeyType]):
     """
     Wrap a bit of cloud or batch computation, automatically handling and
     serializing errors and timing the computation.
@@ -72,6 +80,7 @@ class Manager:
 
     message_key: t.Any
     should_send: t.Optional[bool]
+    output_message: t.Optional[WerkitOutputMessage[ResultType, MessageKeyType]]
 
     def __init__(
         self,
@@ -127,15 +136,17 @@ class Manager:
         return self
 
     @property
-    def result(self) -> t.Any:
+    def result(self) -> ResultType:
         return self._result
 
     @result.setter
-    def result(self, value: t.Any) -> None:
+    def result(self, value: ResultType) -> None:
         self.schema.output.validate(value)
         self._result = value
 
-    def serialize_result(self, result: t.Any) -> dict[str, t.Any]:
+    def serialize_result(
+        self, result: ResultType
+    ) -> WerkitSuccessOutputMessage[ResultType, MessageKeyType]:
         return serialize_result(
             message_key=self.message_key,
             serializable_result=result,
@@ -144,7 +155,7 @@ class Manager:
             runtime_info=self.runtime_info,
         )
 
-    def _note_compute_success(self, result: t.Any) -> None:
+    def _note_compute_success(self, result: ResultType) -> None:
         self.output_message = self.serialize_result(result)
         self.schema.output_message.validate(self.output_message)
         if self.should_send:
@@ -154,7 +165,9 @@ class Manager:
                 message_key=self.message_key, output_message=self.output_message
             )
 
-    def serialize_exception(self, exception: BaseException) -> dict[str, t.Any]:
+    def serialize_exception(
+        self, exception: BaseException
+    ) -> WerkitErrorOutputMessage[MessageKeyType]:
         return serialize_exception(
             message_key=self.message_key,
             exception=exception,
@@ -227,8 +240,7 @@ class Manager:
         work_fn: t.Callable,
         should_send: bool,
         should_return: t.Literal[True],
-    ) -> dict[str, t.Any]:
-        ...
+    ) -> WerkitOutputMessage[ResultType, MessageKeyType]: ...
 
     @t.overload
     def work(
@@ -236,8 +248,7 @@ class Manager:
         work_fn: t.Callable,
         should_send: bool,
         should_return: t.Literal[False],
-    ) -> None:
-        ...
+    ) -> None: ...
 
     @t.overload
     def work(
@@ -245,15 +256,14 @@ class Manager:
         work_fn: t.Callable,
         should_send: bool,
         should_return: bool,
-    ) -> t.Optional[dict[str, t.Any]]:
-        ...
+    ) -> t.Optional[WerkitOutputMessage[ResultType, MessageKeyType]]: ...
 
     def work(
         self,
         work_fn: t.Callable,
         should_send: bool,
         should_return: bool,
-    ) -> t.Optional[dict[str, t.Any]]:
+    ) -> t.Optional[WerkitOutputMessage[ResultType, MessageKeyType]]:
         self.should_send = should_send
 
         with self:

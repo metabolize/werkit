@@ -3,7 +3,7 @@ import math
 import typing as t
 from freezegun import freeze_time
 import pytest
-from werkit.compute import Manager, Schema
+from werkit.compute import Manager, Schema, WerkitOutputMessage
 
 EXAMPLE_RUNTIME_INFO = {"foo": "bar"}
 EXAMPLE_MESSAGE_KEY = {"someParameters": ["just", "a", "message", "key", "nbd"]}
@@ -73,10 +73,13 @@ def test_manager_serializes_error() -> None:
     manager = create_manager()
     output_message = manager.work(work, should_send=False, should_return=True)
 
+    assert output_message["error"] is not None
     assert output_message["error"][-1] == "ValueError: No good!\n"
-    del output_message["error"]
 
-    assert output_message == {
+    remainder = dict(output_message)
+    del remainder["error"]
+
+    assert remainder == {
         "message_key": EXAMPLE_MESSAGE_KEY,
         "success": False,
         "result": None,
@@ -103,7 +106,7 @@ def test_manager_serializes_synthetic_error() -> None:
     def work_inner(input: t.Any) -> t.Any:
         raise ValueError("No good!")
 
-    def work(input: t.Any) -> t.Any:
+    def work(input: t.Any) -> WerkitOutputMessage[t.Any, t.Any]:
         output_message = create_manager().work(
             work_inner, should_send=False, should_return=True
         )
@@ -113,10 +116,13 @@ def test_manager_serializes_synthetic_error() -> None:
     manager = create_manager()
     output_message = manager.work(work, should_send=False, should_return=True)
 
+    assert output_message["error"] is not None
     assert output_message["error"][-1] == "ValueError: No good!\n"
-    del output_message["error"]
 
-    assert output_message == {
+    remainder = dict(output_message)
+    del remainder["error"]
+
+    assert remainder == {
         "message_key": EXAMPLE_MESSAGE_KEY,
         "success": False,
         "result": None,

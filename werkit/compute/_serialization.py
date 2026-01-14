@@ -1,6 +1,14 @@
 import datetime
 import typing as t
-from ._types import WerkitErrorOrigin
+from ._types import (
+    WerkitErrorOrigin,
+    WerkitErrorOutputMessage,
+    WerkitSuccessOutputMessage,
+)
+
+
+ResultType = t.TypeVar("ResultType")
+MessageKeyType = t.TypeVar("MessageKeyType")
 
 
 def serialize_result(
@@ -9,7 +17,7 @@ def serialize_result(
     start_time: datetime.datetime,
     duration_seconds: float,
     runtime_info: t.Any = None,
-) -> dict[str, t.Any]:
+) -> WerkitSuccessOutputMessage[ResultType, MessageKeyType]:
     """
     Wrap the computation result in the `werkit.Manager` result schema.
 
@@ -38,7 +46,7 @@ def serialize_exception(
     start_time: datetime.datetime,
     duration_seconds: float = -1,
     runtime_info: t.Any = None,
-) -> dict[str, t.Any]:
+) -> WerkitErrorOutputMessage[MessageKeyType]:
     """
     Wrap an exception in the `werkit.Manager` result schema.
 
