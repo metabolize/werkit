@@ -235,31 +235,28 @@ class Manager(t.Generic[ResultType, MessageKeyType]):
         return None
 
     @t.overload
-    def work(
+    def work(  # noqa: E704
         self,
         work_fn: t.Callable,
         should_send: bool,
         should_return: t.Literal[True],
-    ) -> WerkitOutputMessage[ResultType, MessageKeyType]:
-        ...
+    ) -> WerkitOutputMessage[ResultType, MessageKeyType]: ...
 
     @t.overload
-    def work(
+    def work(  # noqa: E704
         self,
         work_fn: t.Callable,
         should_send: bool,
         should_return: t.Literal[False],
-    ) -> None:
-        ...
+    ) -> None: ...
 
     @t.overload
-    def work(
+    def work(  # noqa: E704
         self,
         work_fn: t.Callable,
         should_send: bool,
         should_return: bool,
-    ) -> t.Optional[WerkitOutputMessage[ResultType, MessageKeyType]]:
-        ...
+    ) -> t.Optional[WerkitOutputMessage[ResultType, MessageKeyType]]: ...
 
     def work(
         self,
