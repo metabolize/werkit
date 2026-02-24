@@ -60,7 +60,9 @@ class CustomType(ABC, t.Generic[CanonicalType]):
             validator = t.cast(Draft7Validator, cls._validator)
         except AttributeError:
             schema = json.load(cls.schema_path())
-            registry = Registry().with_resource(uri="", resource=Resource(contents=schema)).combine(DRAFT7)
+            registry = Registry().with_resource(
+                uri="", resource=Resource(contents=schema, specifcation=DRAFT7)
+            )
             validator = cls._validator = Draft7Validator(
                 {"$ref": cls.ref()}, registry=registry
             )

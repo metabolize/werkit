@@ -26,7 +26,9 @@ class Schema:
         from referencing import Registry, Resource
         from referencing.jsonschema import DRAFT7
 
-        self.registry = Registry().with_resource(uri="", resource=Resource(contents=schema)).combine(DRAFT7)
+        self.registry = Registry().with_resource(
+            uri="", resource=Resource(contents=schema, specification=DRAFT7)
+        )
         self.input_message = (
             None if input_message_ref is None else self.validator_for(input_message_ref)
         )
