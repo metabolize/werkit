@@ -23,9 +23,10 @@ class Schema:
         output_ref: str = "#/definitions/Output",
         output_message_ref: str = "#/definitions/AnyOutputMessage",
     ):
-        from jsonschema import RefResolver
+        from referencing import Registry, Resource
+        from referencing.jsonschema import DRAFT7
 
-        self.resolver = RefResolver.from_schema(schema)
+        self.registry = Registry().with_resource(uri="", resource=Resource(contents=schema)).combine(DRAFT7)
         self.input_message = (
             None if input_message_ref is None else self.validator_for(input_message_ref)
         )
@@ -65,4 +66,4 @@ class Schema:
     def validator_for(self, ref: str) -> "Draft7Validator":
         from jsonschema import Draft7Validator
 
-        return Draft7Validator({"$ref": ref}, resolver=self.resolver)
+        return Draft7Validator({"$ref": ref}, registry=self.registry)

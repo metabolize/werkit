@@ -52,15 +52,17 @@ class CustomType(ABC, t.Generic[CanonicalType]):
         Validate the JSON representation.
         """
         from missouri import json
-        from jsonschema import Draft7Validator, RefResolver
+        from jsonschema import Draft7Validator
+        from referencing import Registry, Resource
+        from referencing.jsonschema import DRAFT7
 
         try:
             validator = t.cast(Draft7Validator, cls._validator)
         except AttributeError:
             schema = json.load(cls.schema_path())
-            resolver = RefResolver.from_schema(schema)
+            registry = Registry().with_resource(uri="", resource=Resource(contents=schema)).combine(DRAFT7)
             validator = cls._validator = Draft7Validator(
-                {"$ref": cls.ref()}, resolver=resolver
+                {"$ref": cls.ref()}, registry=registry
             )
 
         validator.validate(json_data)

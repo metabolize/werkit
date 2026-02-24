@@ -161,15 +161,17 @@ class DependencyGraphJSONType(t.TypedDict):
 
 def dependency_graph_validator() -> "Draft7Validator":
     import os
-    from jsonschema import Draft7Validator, RefResolver
+    from jsonschema import Draft7Validator
+    from referencing import Registry, Resource
+    from referencing.jsonschema import DRAFT7
     from missouri import json
 
     schema = json.load(
         os.path.join(os.path.dirname(__file__), "dependency-graph.schema.json")
     )
-    resolver = RefResolver.from_schema(schema)
+    registry = Registry().with_resource(uri="", resource=Resource(contents=schema)).combine(DRAFT7)
     return Draft7Validator(
-        {"$ref": "#/definitions/DependencyGraphWithAnyTypes"}, resolver=resolver
+        {"$ref": "#/definitions/DependencyGraphWithAnyTypes"}, registry=registry
     )
 
 
