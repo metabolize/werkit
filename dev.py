@@ -16,7 +16,7 @@ def python_source_files():
         + glob.glob("werkit/*.py")
         + glob.glob("werkit/**/*.py")
         + glob.glob("werkit/**/**/*.py")
-    )  # + ["doc/"]
+    )
 
 
 @click.group()
