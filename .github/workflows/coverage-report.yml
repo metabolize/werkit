@@ -1,0 +1,28 @@
+name: Generate coverage report
+on: workflow_dispatch
+
+jobs:
+  generate_coverage_report:
+    name: Generate coverage report
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - uses: ./.github/workflows/common
+
+    - name: Run tests and check coverage
+      run: ./dev.py coverage
+
+    - name: Generate coverage report
+      if: always()
+      run: |
+        poetry run coverage html --fail-under=0
+
+    - name: Upload coverage report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: htmlcov/
