@@ -37,11 +37,24 @@ def create_venv_with_dependencies(
 
     if upgrade_pip:
         Command(python)(
-            "-m", "pip", "install", "--upgrade", "pip", _env={**os.environ, **environment}, _fg=True
+            "-m",
+            "pip",
+            "install",
+            "--upgrade",
+            "pip",
+            _env={**os.environ, **environment},
+            _fg=True,
         )
 
     if install_wheel:
-        Command(python)("-m", "pip", "install", "wheel", _env={**os.environ, **environment}, _fg=True)
+        Command(python)(
+            "-m",
+            "pip",
+            "install",
+            "wheel",
+            _env={**os.environ, **environment},
+            _fg=True,
+        )
 
     if len(install_requirements_from) > 0:
         args = [python, "-m", "pip", "install"]
