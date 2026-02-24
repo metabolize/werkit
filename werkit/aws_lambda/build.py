@@ -4,8 +4,7 @@ import sys
 import venv
 import zipfile
 from pathlib import Path
-
-from sh import Command
+import sh
 
 
 def export_poetry_requirements(
@@ -14,14 +13,14 @@ def export_poetry_requirements(
     with_credentials: bool = True,
     with_hashes: bool = True,
 ) -> None:
-    args = ["poetry", "export", "--output", output_file]
+    args = ["export", "--output", output_file]
     if with_credentials:
         args.append("--with-credentials")
     if not with_hashes:
         args.append("--without-hashes")
     for extra in extras:
         args += ["--extras", extra]
-    Command(args[0])(*args[1:], _fg=True)
+    sh.poetry(*args, _fg=True)
 
 
 def create_venv_with_dependencies(
@@ -36,7 +35,7 @@ def create_venv_with_dependencies(
     python = os.path.join(venv_dir, "bin", "python")
 
     if upgrade_pip:
-        Command(python)(
+        sh.Command(python)(
             "-m",
             "pip",
             "install",
@@ -47,7 +46,7 @@ def create_venv_with_dependencies(
         )
 
     if install_wheel:
-        Command(python)(
+        sh.Command(python)(
             "-m",
             "pip",
             "install",
@@ -57,18 +56,18 @@ def create_venv_with_dependencies(
         )
 
     if len(install_requirements_from) > 0:
-        args = [python, "-m", "pip", "install"]
+        args = ["-m", "pip", "install"]
         if not install_transitive_dependencies:
             args += ["--no-dependencies"]
         for requirements_file in install_requirements_from:
             args += ["-r", requirements_file]
-        Command(args[0])(*args[1:], _env={**os.environ, **environment}, _fg=True)
+        sh.Command(python)(args, _env={**os.environ, **environment}, _fg=True)
 
 
 def site_packages_for_venv(venv_dir: str) -> str:
     python = os.path.join(venv_dir, "bin", "python")
     return str(
-        Command(python)(
+        sh.Command(python)(
             "-c",
             'import sysconfig; print(sysconfig.get_paths()["purelib"])',
         )
