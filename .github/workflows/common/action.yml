@@ -1,0 +1,42 @@
+name: Prepare environment
+
+inputs:
+  'python-version':
+    required: false
+    default: '3.10'
+  'poetry-version':
+    required: false
+    default: '1.2.2'
+  'extras-param':
+    required: false
+    default: ''
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Set up Python ${{ inputs.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Install Poetry ${{ inputs.poetry-version }}
+      uses: abatilo/actions-poetry@v4
+      with:
+        poetry-version: ${{ inputs.poetry-version }}
+
+    - name: Define a cache for the virtual environment
+      uses: actions/cache@v3
+      with:
+        path: .venv
+        key: venv-v2-${{ runner.os }}-${{ inputs.python-version }}-${{ inputs.extras-param }}-${{ hashFiles('poetry.lock') }}
+
+    - name: Create the in-project virtualenv if it doesn't exist
+      shell: bash
+      run: test -d .venv || python -m venv .venv
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        poetry install ${{ inputs.extras-param }}
+        poetry run pip freeze
