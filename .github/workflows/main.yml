@@ -76,11 +76,11 @@ jobs:
     - name: Run tests
       run: ./dev.py coverage
       env:
-        AWS_DEFAULT_REGION: ${{ secrets.OSS_AWS_DEFAULT_REGION }}
+        AWS_DEFAULT_REGION: ${{ vars.OSS_AWS_DEFAULT_REGION }}
         AWS_ACCESS_KEY_ID: ${{ secrets.OSS_AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.OSS_AWS_SECRET_ACCESS_KEY }}
-        INTEGRATION_TEST_BUCKET: ${{ secrets.INTEGRATION_TEST_BUCKET }}
-        INTEGRATION_TEST_LAMBDA_ROLE: ${{ secrets.INTEGRATION_TEST_LAMBDA_ROLE }}
+        INTEGRATION_TEST_BUCKET: ${{ vars.INTEGRATION_TEST_BUCKET }}
+        INTEGRATION_TEST_LAMBDA_ROLE: ${{ vars.INTEGRATION_TEST_LAMBDA_ROLE }}
 
   build_and_upload:
     name: Build and upload
