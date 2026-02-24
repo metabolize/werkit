@@ -5,9 +5,9 @@ import boto3
 from ..s3 import temp_file_on_s3
 
 if t.TYPE_CHECKING:
-    from mypy_boto3_s3.literals import RegionName
     from mypy_boto3_lambda.literals import RuntimeType
     from mypy_boto3_lambda.type_defs import FunctionCodeTypeDef
+    from mypy_boto3_s3.literals import RegionName
 
 
 def default_runtime() -> "RuntimeType":

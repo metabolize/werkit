@@ -21,7 +21,7 @@ python = ">=3.9,<4"
 # https://docs.aws.amazon.com/lambda/latest/dg/lambda-python.html
 boto3 = {version = "1.20.32", optional = true}
 click = {version = "^8.0.3", optional = true}
-executor = {version = ">=21.0", optional = true}
+sh = {version = ">=2.0", optional = true}
 harrison = {version = "^2.0", optional = true}
 missouri = ">= 1.0, < 2.0"
 rds-graphile-worker-client = {version = "^0.1.1", optional = true}
@@ -35,7 +35,7 @@ typing-extensions = {version = ">=4", optional = true, python = "<3.10"}
 # exos = {version = "*", optional = true}
 
 [tool.poetry.extras]
-aws_lambda_build = ["executor"]
+aws_lambda_build = ["sh"]
 client = ["boto3"]
 # compute_graph = ["artifax"]
 compute_graph = ["artifax", "pathos", "exos", "typing-extensions"]
@@ -48,9 +48,9 @@ black = "25.9.0"
 boto3-stubs = {version = "1.40.42", extras = ["s3", "lambda"]}
 click = "8.0.3"
 coverage = "7.10.7"
-executor = "23.2"
-flake8 = "6.1.0"
-flake8-import-order = "0.18.2"
+sh = "^2.0"
+flake8 = "7.3.0"
+flake8-import-order = "0.19.2"
 freezegun = "1.2.2"
 mypy = "1.18.2"
 pytest = "8.4.2"
@@ -96,5 +96,5 @@ module = 'rds_graphile_worker_client.*'
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-module = 'executor.*'
+module = "sh"
 ignore_missing_imports = true
