@@ -4,7 +4,8 @@ import sys
 import venv
 import zipfile
 from pathlib import Path
-import sh
+
+from executor import execute
 
 
 def export_poetry_requirements(
@@ -13,14 +14,14 @@ def export_poetry_requirements(
     with_credentials: bool = True,
     with_hashes: bool = True,
 ) -> None:
-    args = ["export", "--output", output_file]
+    args = ["poetry", "export", "--output", output_file]
     if with_credentials:
         args.append("--with-credentials")
     if not with_hashes:
         args.append("--without-hashes")
     for extra in extras:
         args += ["--extras", extra]
-    sh.poetry(*args, _fg=True)
+    execute(*args)
 
 
 def create_venv_with_dependencies(
@@ -35,43 +36,30 @@ def create_venv_with_dependencies(
     python = os.path.join(venv_dir, "bin", "python")
 
     if upgrade_pip:
-        sh.Command(python)(
-            "-m",
-            "pip",
-            "install",
-            "--upgrade",
-            "pip",
-            _env={**os.environ, **environment},
-            _fg=True,
+        execute(
+            python, "-m", "pip", "install", "--upgrade", "pip", environment=environment
         )
 
     if install_wheel:
-        sh.Command(python)(
-            "-m",
-            "pip",
-            "install",
-            "wheel",
-            _env={**os.environ, **environment},
-            _fg=True,
-        )
+        execute(python, "-m", "pip", "install", "wheel", environment=environment)
 
     if len(install_requirements_from) > 0:
-        args = ["-m", "pip", "install"]
+        args = [python, "-m", "pip", "install"]
         if not install_transitive_dependencies:
             args += ["--no-dependencies"]
         for requirements_file in install_requirements_from:
             args += ["-r", requirements_file]
-        sh.Command(python)(args, _env={**os.environ, **environment}, _fg=True)
+        execute(*args, environment=environment)
 
 
 def site_packages_for_venv(venv_dir: str) -> str:
     python = os.path.join(venv_dir, "bin", "python")
-    return str(
-        sh.Command(python)(
-            "-c",
-            'import sysconfig; print(sysconfig.get_paths()["purelib"])',
-        )
-    ).strip()
+    return execute(
+        python,
+        "-c",
+        'import sysconfig; print(sysconfig.get_paths()["purelib"])',
+        capture=True,
+    )
 
 
 def collect_zipfile_contents(
