@@ -2,8 +2,8 @@
 
 import os
 import click
-import sh
 from dotenv import load_dotenv
+import sh
 
 load_dotenv()
 
