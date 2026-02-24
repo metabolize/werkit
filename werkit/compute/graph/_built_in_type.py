@@ -1,8 +1,5 @@
 import numbers
-import sys
 import typing as t
-
-from typing import TypeGuard
 
 
 BuiltInValueType = t.Union[t.Type[bool], t.Type[int], t.Type[float], t.Type[str]]
@@ -10,7 +7,7 @@ BuiltInValueType = t.Union[t.Type[bool], t.Type[int], t.Type[float], t.Type[str]
 BuiltInValueTypeName = t.Literal["bool", "number", "string"]
 
 
-def is_built_in_value_type(_type: t.Type) -> TypeGuard[BuiltInValueType]:
+def is_built_in_value_type(_type: t.Type) -> t.TypeGuard[BuiltInValueType]:
     return _type in (bool, int, float, numbers.Number, str)
 
 
