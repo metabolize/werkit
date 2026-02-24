@@ -2,8 +2,8 @@
 
 import os
 import click
+import sh
 from dotenv import load_dotenv
-from executor import execute
 
 load_dotenv()
 
@@ -26,8 +26,7 @@ def cli():
 
 @cli.command()
 def install():
-    execute(
-        "poetry",
+    sh.poetry(
         "install",
         "--sync",
         "--extras",
@@ -40,64 +39,65 @@ def install():
         "rds_graphile_worker",
         "--extras",
         "compute_graph",
+        _fg=True,
     )
 
 
 @cli.command()
 @click.option("--slow/--not-slow", default=True)
 def test(slow):
-    args = ["python3", "-m", "pytest"]
+    args = ["-m", "pytest"]
     if not slow:
         args += ["-m", "not slow"]
-    execute(*args)
+    sh.python3(*args, _fg=True)
 
 
 @cli.command()
 @click.option("--slow/--not-slow", default=True)
 def coverage(slow):
-    args = ["python3", "-m", "pytest", "--cov=werkit"]
+    args = ["-m", "pytest", "--cov=werkit"]
     if not slow:
         args += ["-m", "not slow"]
-    execute(*args)
+    sh.python3(*args, _fg=True)
 
 
 @cli.command()
 def coverage_report():
-    execute("coverage html")
-    execute("open htmlcov/index.html")
+    sh.coverage("html", _fg=True)
+    sh.open("htmlcov/index.html", _fg=True)
 
 
 @cli.command()
 def check_types():
-    execute(
-        "mypy",
+    sh.mypy(
         "--package",
         "werkit",
         "--show-error-codes",
         "--enable-incomplete-feature=Unpack",
+        _fg=True,
     )
 
 
 @cli.command()
 def lint():
-    execute("flake8", *python_source_files())
+    sh.flake8(*python_source_files(), _fg=True)
 
 
 @cli.command()
 def black():
-    execute("black", *python_source_files())
+    sh.black(*python_source_files(), _fg=True)
 
 
 @cli.command()
 def black_check():
-    execute("black", "--check", *python_source_files())
+    sh.black("--check", *python_source_files(), _fg=True)
 
 
 @cli.command()
 def publish():
-    execute("rm -rf dist/")
-    execute("poetry build")
-    execute("twine upload dist/*")
+    sh.rm("-rf", "dist/", _fg=True)
+    sh.poetry("build", _fg=True)
+    sh.twine("upload", "dist/*", _fg=True)
 
 
 if __name__ == "__main__":
