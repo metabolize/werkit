@@ -27,7 +27,6 @@ jobs:
   check_types:
     name: Check types
     runs-on: ubuntu-latest
-    if: false
 
     steps:
     - name: Checkout repository
