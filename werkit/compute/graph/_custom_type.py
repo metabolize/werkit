@@ -54,14 +54,13 @@ class CustomType(ABC, t.Generic[CanonicalType]):
         from missouri import json
         from jsonschema import Draft7Validator
         from referencing import Registry, Resource
-        from referencing.jsonschema import DRAFT7
 
         try:
             validator = t.cast(Draft7Validator, cls._validator)
         except AttributeError:
             schema = json.load(cls.schema_path())
             registry = Registry().with_resource(
-                uri="", resource=Resource(contents=schema, specifcation=DRAFT7)
+                uri="", resource=Resource.from_contents(schema)
             )
             validator = cls._validator = Draft7Validator(
                 {"$ref": cls.ref()}, registry=registry
