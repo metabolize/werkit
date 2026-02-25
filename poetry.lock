@@ -696,14 +696,6 @@ python-versions = ">=3.6"
 python-dateutil = ">=2.7"
 
 [[package]]
-name = "harrison"
-version = "2.0.0"
-description = "Time a block of code"
-category = "main"
-optional = true
-python-versions = "*"
-
-[[package]]
 name = "id"
 version = "1.5.0"
 description = "A tool for generating OIDC identities"
@@ -1506,13 +1498,13 @@ aws-lambda-build = ["sh"]
 cli = ["click"]
 client = ["boto3"]
 compute-graph = ["artifax", "typing-extensions"]
-lambda-common = ["harrison"]
+lambda-common = []
 rds-graphile-worker = ["rds-graphile-worker-client"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9,<4"
-content-hash = "66aa8cabfb7f1a74b479860f5203cff90bb3b2f8431a91107bdcc11243333b40"
+content-hash = "6598bea4bf484feeefe3f01f02505f3399789bd84b671cf15ab2184779152536"
 
 [metadata.files]
 artifax = [
@@ -1942,10 +1934,6 @@ flake8-import-order = [
 freezegun = [
     {file = "freezegun-1.2.2-py3-none-any.whl", hash = "sha256:ea1b963b993cb9ea195adbd893a48d573fda951b0da64f60883d7e988b606c9f"},
     {file = "freezegun-1.2.2.tar.gz", hash = "sha256:cd22d1ba06941384410cd967d8a99d5ae2442f57dfafeff2fda5de8dc5c05446"},
-]
-harrison = [
-    {file = "harrison-2.0.0-py3-none-any.whl", hash = "sha256:9e29a352e5a4082d9967b15d52ac4c703dcbddc4719292dea02810727f2cad02"},
-    {file = "harrison-2.0.0.tar.gz", hash = "sha256:ddd1abe199429c68fcae31c2774e556c7a6cd36ebd665f2363ea084b0cf9d673"},
 ]
 id = [
     {file = "id-1.5.0-py3-none-any.whl", hash = "sha256:f1434e1cef91f2cbb8a4ec64663d5a23b9ed43ef44c4c957d02583d61714c658"},
