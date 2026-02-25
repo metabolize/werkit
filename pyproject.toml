@@ -73,7 +73,6 @@ norecursedirs = ["build", "node_modules"]
 [tool.coverage.report]
 omit = [
     "**/test_*.py",
-    "werkit/orchestrator/testing/worker_service/*.py",
 ]
 
 [[tool.mypy.overrides]]

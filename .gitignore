@@ -163,7 +163,6 @@ doc/api/
 
 
 function.zip
-python-orchestrator.zip
 python-worker.zip
 /node_modules
 /types/node_modules
