@@ -538,7 +538,7 @@ botocore = ["botocore"]
 
 [[package]]
 name = "certifi"
-version = "2026.1.4"
+version = "2026.2.25"
 description = "Python package for providing Mozilla's CA Bundle."
 category = "dev"
 optional = false
@@ -695,14 +695,6 @@ python-versions = ">=3.8"
 
 [package.dependencies]
 python-dateutil = ">=2.7"
-
-[[package]]
-name = "harrison"
-version = "2.0.0"
-description = "Time a block of code"
-category = "main"
-optional = true
-python-versions = "*"
 
 [[package]]
 name = "id"
@@ -1501,13 +1493,13 @@ aws-lambda-build = ["sh"]
 cli = ["click"]
 client = ["boto3"]
 compute-graph = ["artifax", "typing-extensions"]
-lambda-common = ["harrison"]
+lambda-common = []
 rds-graphile-worker = ["rds-graphile-worker-client"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10,<4"
-content-hash = "2dea21c3eba433a5584c217d3c986a53116dd8a132b566796fe963f4088fcb8a"
+content-hash = "a69d160546a5980b19002c1e692b97cfa501a29151faca6bc546a5322bdbbc1b"
 
 [metadata.files]
 artifax = [
@@ -1563,8 +1555,8 @@ botocore-stubs = [
     {file = "botocore_stubs-1.42.41.tar.gz", hash = "sha256:dbeac2f744df6b814ce83ec3f3777b299a015cbea57a2efc41c33b8c38265825"},
 ]
 certifi = [
-    {file = "certifi-2026.1.4-py3-none-any.whl", hash = "sha256:9943707519e4add1115f44c2bc244f782c0249876bf51b6599fee1ffbedd685c"},
-    {file = "certifi-2026.1.4.tar.gz", hash = "sha256:ac726dd470482006e014ad384921ed6438c457018f4b3d204aea4281258b2120"},
+    {file = "certifi-2026.2.25-py3-none-any.whl", hash = "sha256:027692e4402ad994f1c42e52a4997a9763c646b73e4096e4d5d6db8af1d6f0fa"},
+    {file = "certifi-2026.2.25.tar.gz", hash = "sha256:e887ab5cee78ea814d3472169153c2d12cd43b14bd03329a39a9c6e2e80bfba7"},
 ]
 cffi = [
     {file = "cffi-2.0.0-cp310-cp310-macosx_10_13_x86_64.whl", hash = "sha256:0cf2d91ecc3fcc0625c2c530fe004f82c110405f101548512cce44322fa8ac44"},
@@ -1959,10 +1951,6 @@ flake8-import-order = [
 freezegun = [
     {file = "freezegun-1.5.5-py3-none-any.whl", hash = "sha256:cd557f4a75cf074e84bc374249b9dd491eaeacd61376b9eb3c423282211619d2"},
     {file = "freezegun-1.5.5.tar.gz", hash = "sha256:ac7742a6cc6c25a2c35e9292dfd554b897b517d2dec26891a2e8debf205cb94a"},
-]
-harrison = [
-    {file = "harrison-2.0.0-py3-none-any.whl", hash = "sha256:9e29a352e5a4082d9967b15d52ac4c703dcbddc4719292dea02810727f2cad02"},
-    {file = "harrison-2.0.0.tar.gz", hash = "sha256:ddd1abe199429c68fcae31c2774e556c7a6cd36ebd665f2363ea084b0cf9d673"},
 ]
 id = [
     {file = "id-1.6.1-py3-none-any.whl", hash = "sha256:f5ec41ed2629a508f5d0988eda142e190c9c6da971100612c4de9ad9f9b237ca"},

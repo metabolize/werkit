@@ -22,7 +22,6 @@ python = ">=3.10,<4"
 boto3 = {version = "1.34.145", optional = true}
 click = {version = "^8.0.3", optional = true}
 sh = {version = ">=2.0", optional = true}
-harrison = {version = "^2.0", optional = true}
 missouri = ">= 1.0, < 2.0"
 rds-graphile-worker-client = {version = "^0.1.1", optional = true}
 semver = "3.0.1"
@@ -39,7 +38,7 @@ aws_lambda_build = ["sh"]
 client = ["boto3"]
 # compute_graph = ["artifax"]
 compute_graph = ["artifax", "pathos", "exos", "typing-extensions"]
-lambda_common = ["harrison"]
+lambda_common = []
 cli = ["click"]
 rds_graphile_worker = ["rds-graphile-worker-client"]
 
@@ -73,7 +72,6 @@ norecursedirs = ["build", "node_modules"]
 [tool.coverage.report]
 omit = [
     "**/test_*.py",
-    "werkit/orchestrator/testing/worker_service/*.py",
 ]
 
 [[tool.mypy.overrides]]
@@ -82,10 +80,6 @@ disallow_untyped_calls = true
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
 disallow_untyped_decorators = true
-
-[[tool.mypy.overrides]]
-module = 'harrison.*'
-ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = 'artifax.*'
