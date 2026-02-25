@@ -17,17 +17,16 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<4"
+python = ">=3.10,<4"
 # https://docs.aws.amazon.com/lambda/latest/dg/lambda-python.html
-boto3 = {version = "1.20.32", optional = true}
+boto3 = {version = "1.34.145", optional = true}
 click = {version = "^8.0.3", optional = true}
 sh = {version = ">=2.0", optional = true}
-harrison = {version = "^2.0", optional = true}
 missouri = ">= 1.0, < 2.0"
 semver = "3.0.1"
 jsonschema = "^4.1.2"
 artifax = {version = "0.5", optional = true}
-typing-extensions = {version = ">=4", optional = true, python = "<3.10"}
+typing-extensions = {version = ">=4", optional = true}
 # artifax = {git = "https://github.com/curvewise-forks/artifax.git", rev = "3cd288a1698a798c0e488eba31e8e9ce3f075e1c", optional = true}
 # Temporarily declare artifax dependencies until we publish an artifax fork.
 # pathos = {version = "*", optional = true}
@@ -38,7 +37,7 @@ aws_lambda_build = ["sh"]
 client = ["boto3"]
 # compute_graph = ["artifax"]
 compute_graph = ["artifax", "pathos", "exos", "typing-extensions"]
-lambda_common = ["harrison"]
+lambda_common = []
 cli = ["click"]
 
 [tool.poetry.dev-dependencies]
@@ -49,7 +48,7 @@ coverage = "7.10.7"
 sh = "^2.0"
 flake8 = "7.3.0"
 flake8-import-order = "0.19.2"
-freezegun = "1.2.2"
+freezegun = "1.5.5"
 mypy = "1.18.2"
 pytest = "8.4.2"
 pytest-cov = "4.1.0"
@@ -71,7 +70,6 @@ norecursedirs = ["build", "node_modules"]
 [tool.coverage.report]
 omit = [
     "**/test_*.py",
-    "werkit/orchestrator/testing/worker_service/*.py",
 ]
 
 [[tool.mypy.overrides]]
@@ -80,10 +78,6 @@ disallow_untyped_calls = true
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
 disallow_untyped_decorators = true
-
-[[tool.mypy.overrides]]
-module = 'harrison.*'
-ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = 'artifax.*'

@@ -20,7 +20,7 @@ def export_poetry_requirements(
         args.append("--without-hashes")
     for extra in extras:
         args += ["--extras", extra]
-    sh.poetry(*args, _fg=True)
+    sh.poetry(*args)
 
 
 def create_venv_with_dependencies(
