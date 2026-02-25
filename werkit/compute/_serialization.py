@@ -6,7 +6,6 @@ from ._types import (
     WerkitSuccessOutputMessage,
 )
 
-
 ResultType = t.TypeVar("ResultType")
 MessageKeyType = t.TypeVar("MessageKeyType")
 

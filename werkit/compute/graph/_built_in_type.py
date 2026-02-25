@@ -1,7 +1,6 @@
 import numbers
 import typing as t
 
-
 BuiltInValueType = t.Union[t.Type[bool], t.Type[int], t.Type[float], t.Type[str]]
 
 BuiltInValueTypeName = t.Literal["bool", "number", "string"]
