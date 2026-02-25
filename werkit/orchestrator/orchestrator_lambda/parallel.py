@@ -61,6 +61,8 @@ async def wait_for(
         return ex
     except asyncio.TimeoutError as ex:
         return ex
+    except asyncio.exceptions.TimeoutError as ex:
+        return ex
     except Exception as ex:
         return ex
 
