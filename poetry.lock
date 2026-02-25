@@ -1080,14 +1080,6 @@ python-versions = ">=3.9"
 dill = ["dill (>=0.4.1)"]
 
 [[package]]
-name = "psycopg2"
-version = "2.9.11"
-description = "psycopg2 - Python-PostgreSQL Database Adapter"
-category = "main"
-optional = true
-python-versions = ">=3.9"
-
-[[package]]
 name = "pycodestyle"
 version = "2.14.0"
 description = "Python style guide checker"
@@ -1197,18 +1189,6 @@ description = "A (partial) reimplementation of pywin32 using ctypes/cffi"
 category = "dev"
 optional = false
 python-versions = ">=3.6"
-
-[[package]]
-name = "rds-graphile-worker-client"
-version = "0.1.1"
-description = "A small, simple client for adding jobs to the graphile-worker job queue on RDS postgresql database"
-category = "main"
-optional = true
-python-versions = "*"
-
-[package.dependencies]
-boto3 = ">=1.16.25,<2"
-psycopg2 = ">=2.8.6,<3"
 
 [[package]]
 name = "readme-renderer"
@@ -1494,12 +1474,11 @@ cli = ["click"]
 client = ["boto3"]
 compute-graph = ["artifax", "typing-extensions"]
 lambda-common = []
-rds-graphile-worker = ["rds-graphile-worker-client"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10,<4"
-content-hash = "a69d160546a5980b19002c1e692b97cfa501a29151faca6bc546a5322bdbbc1b"
+content-hash = "3bc77eb1cf3377ad895580270b60f071f498ac6ebaee15ccbabe8464f977693d"
 
 [metadata.files]
 artifax = [
@@ -2147,15 +2126,6 @@ ppft = [
     {file = "ppft-1.7.8-py3-none-any.whl", hash = "sha256:d3e0e395215b14afc3dd5adfc032ccecfda2d4ed50dc7ded076cd1d215442843"},
     {file = "ppft-1.7.8.tar.gz", hash = "sha256:5f696d4f397ae9b0af39b1faffb31957c51dfbc5a3815856472d4f4e872937ee"},
 ]
-psycopg2 = [
-    {file = "psycopg2-2.9.11-cp310-cp310-win_amd64.whl", hash = "sha256:103e857f46bb76908768ead4e2d0ba1d1a130e7b8ed77d3ae91e8b33481813e8"},
-    {file = "psycopg2-2.9.11-cp311-cp311-win_amd64.whl", hash = "sha256:210daed32e18f35e3140a1ebe059ac29209dd96468f2f7559aa59f75ee82a5cb"},
-    {file = "psycopg2-2.9.11-cp312-cp312-win_amd64.whl", hash = "sha256:e03e4a6dbe87ff81540b434f2e5dc2bddad10296db5eea7bdc995bf5f4162938"},
-    {file = "psycopg2-2.9.11-cp313-cp313-win_amd64.whl", hash = "sha256:8dc379166b5b7d5ea66dcebf433011dfc51a7bb8a5fc12367fa05668e5fc53c8"},
-    {file = "psycopg2-2.9.11-cp314-cp314-win_amd64.whl", hash = "sha256:f10a48acba5fe6e312b891f290b4d2ca595fc9a06850fe53320beac353575578"},
-    {file = "psycopg2-2.9.11-cp39-cp39-win_amd64.whl", hash = "sha256:6ecddcf573777536bddfefaea8079ce959287798c8f5804bee6933635d538924"},
-    {file = "psycopg2-2.9.11.tar.gz", hash = "sha256:964d31caf728e217c697ff77ea69c2ba0865fa41ec20bb00f0977e62fdcc52e3"},
-]
 pycodestyle = [
     {file = "pycodestyle-2.14.0-py2.py3-none-any.whl", hash = "sha256:dd6bf7cb4ee77f8e016f9c8e74a35ddd9f67e1d5fd4184d86c3b98e07099f42d"},
     {file = "pycodestyle-2.14.0.tar.gz", hash = "sha256:c4b5b517d278089ff9d0abdec919cd97262a3367449ea1c8b49b91529167b783"},
@@ -2235,10 +2205,6 @@ pytokens = [
 pywin32-ctypes = [
     {file = "pywin32-ctypes-0.2.3.tar.gz", hash = "sha256:d162dc04946d704503b2edc4d55f3dba5c1d539ead017afa00142c38b9885755"},
     {file = "pywin32_ctypes-0.2.3-py3-none-any.whl", hash = "sha256:8a1513379d709975552d202d942d9837758905c8d01eb82b8bcc30918929e7b8"},
-]
-rds-graphile-worker-client = [
-    {file = "rds_graphile_worker_client-0.1.1-py3-none-any.whl", hash = "sha256:7b4b9ba680ff60b12b226fdcc36f2290eadc7c6c14a2afee9ac95cd778711441"},
-    {file = "rds_graphile_worker_client-0.1.1.tar.gz", hash = "sha256:84409ea2bd87282062be04ffc71efaafecfc619d168fb4eca4f5a4df0bdd1466"},
 ]
 readme-renderer = [
     {file = "readme_renderer-44.0-py3-none-any.whl", hash = "sha256:2fbca89b81a08526aadf1357a8c2ae889ec05fb03f5da67f9769c9a592166151"},
