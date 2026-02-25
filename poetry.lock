@@ -1500,14 +1500,14 @@ type = ["pytest-mypy"]
 aws-lambda-build = ["sh"]
 cli = ["click"]
 client = ["boto3"]
-compute-graph = ["artifax", "typing-extensions"]
+compute-graph = ["artifax"]
 lambda-common = ["harrison"]
 rds-graphile-worker = ["rds-graphile-worker-client"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10,<4"
-content-hash = "c2fa36b7f221d73225c4f53b73e29c6b27d70082c1821d25504cfc5d889cc8f7"
+content-hash = "bda78caedc0c8d42287c4fc441398f80680b3cb76e681a21972ae69b7c078015"
 
 [metadata.files]
 artifax = [
