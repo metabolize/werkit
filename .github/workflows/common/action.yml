@@ -29,7 +29,7 @@ runs:
       uses: actions/cache@v3
       with:
         path: .venv
-        key: venv-v2-${{ runner.os }}-${{ inputs.python-version }}-${{ inputs.extras-param }}-${{ hashFiles('poetry.lock') }}
+        key: venv-v3-${{ runner.os }}-${{ inputs.python-version }}-${{ inputs.extras-param }}-${{ hashFiles('poetry.lock') }}
 
     - name: Create the in-project virtualenv if it doesn't exist
       shell: bash

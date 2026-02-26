@@ -3,7 +3,6 @@ import typing as t
 from ._dependency_graph import ComputeNode, Input
 from ._state_manager import StateManager
 
-
 # This decorator is hard to type, so we provide a protcol which can be used with
 # `t.cast()`.
 

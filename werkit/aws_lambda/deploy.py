@@ -61,13 +61,11 @@ def _create_or_update(
 
     if needs_s3_upload(local_path_to_zipfile) or force_upload_to_s3_code_bucket:
         if s3_code_bucket is None:
-            raise ValueError(
-                """
+            raise ValueError("""
                 When zipfile is larger than 50 MB,
                 or force_upload_to_s3_code_bucket is True,
                 then s3_code_bucket is required
-                """
-            )
+                """)
         with temp_file_on_s3(
             local_path=local_path_to_zipfile, bucket=s3_code_bucket, verbose=verbose
         ) as temp_key:

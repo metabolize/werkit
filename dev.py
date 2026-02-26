@@ -36,8 +36,6 @@ def install():
         "--extras",
         "lambda_common",
         "--extras",
-        "rds_graphile_worker",
-        "--extras",
         "compute_graph",
         _fg=True,
     )
