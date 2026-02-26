@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "werkit"
-version = "0.36.0"
+version = "0.37.0"
 description = "Toolkit for encapsulating Python-based computation into deployable and distributable tasks"
 authors = ["Paul Melnikow <github@paulmelnikow.com>", "Metabolize"]
 license = "MIT"
@@ -31,7 +31,6 @@ typing-extensions = {version = ">=4", optional = true}
 [tool.poetry.extras]
 aws_lambda_build = ["sh"]
 client = ["boto3"]
-# compute_graph = ["artifax"]
 compute_graph = ["artifax", "typing-extensions"]
 lambda_common = []
 cli = ["click"]

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.37.0
+
+- Remove orchestrator types.
+
 ## 0.34.0
 
 - Add DestinationMessage type.
