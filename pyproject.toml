@@ -24,7 +24,7 @@ click = {version = "^8.0.3", optional = true}
 sh = {version = ">=2.0,<3", optional = true}
 missouri = ">=1.0,<2.0"
 semver = ">=3.0.4,<4"
-jsonschema = "^4.1.2"
+jsonschema = "^4.26.0"
 referencing = "^0.37.0"
 artifax = {version = "0.5", optional = true}
 typing-extensions = {version = ">=4", optional = true}
@@ -53,7 +53,7 @@ python-dotenv = "1.2.1"
 twine = "6.2.0"
 types-boto3 = "1.42.56"
 types-freezegun = "1.1.10"
-types-jsonschema = "4.17.0.10"
+types-jsonschema = "4.26.0.20260202"
 
 [build-system]
 # Lint requires setuptools.

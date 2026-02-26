@@ -16,6 +16,8 @@ class Schema:
     Helper for validating request, result, and serialized result schemas
     """
 
+    REGISTRY_URI = "https://example.test/"
+
     def __init__(
         self,
         schema: t.Any,
@@ -26,7 +28,7 @@ class Schema:
         from referencing import Registry, Resource
 
         self.registry = Registry().with_resource(
-            uri="", resource=Resource.from_contents(schema)
+            uri=self.REGISTRY_URI, resource=Resource.from_contents(schema)
         )
         self.input_message = (
             None if input_message_ref is None else self.validator_for(input_message_ref)
@@ -67,4 +69,6 @@ class Schema:
     def validator_for(self, ref: str) -> "Draft7Validator":
         from jsonschema import Draft7Validator
 
-        return Draft7Validator({"$ref": ref}, registry=self.registry)
+        return Draft7Validator(
+            {"$ref": f"{self.REGISTRY_URI}{ref}"}, registry=self.registry
+        )

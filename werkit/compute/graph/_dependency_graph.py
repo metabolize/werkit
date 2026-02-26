@@ -168,9 +168,13 @@ def dependency_graph_validator() -> "Draft7Validator":
     schema = json.load(
         os.path.join(os.path.dirname(__file__), "dependency-graph.schema.json")
     )
-    registry = Registry().with_resource(uri="", resource=Resource.from_contents(schema))
+    registry_uri = "https://example.test"
+    registry = Registry().with_resource(
+        uri=registry_uri, resource=Resource.from_contents(schema)
+    )
     return Draft7Validator(
-        {"$ref": "#/definitions/DependencyGraphWithAnyTypes"}, registry=registry
+        {"$ref": f"{registry_uri}#/definitions/DependencyGraphWithAnyTypes"},
+        registry=registry,
     )
 
 
