@@ -3,7 +3,6 @@
 [![version](https://img.shields.io/pypi/v/werkit?style=flat-square)][pypi]
 [![python versions](https://img.shields.io/pypi/pyversions/werkit?style=flat-square)][pypi]
 [![license](https://img.shields.io/pypi/l/werkit?style=flat-square)][pypi]
-[![build](https://img.shields.io/circleci/project/github/metabolize/werkit/main?style=flat-square)][build]
 [![code style](https://img.shields.io/badge/code%20style-black-black?style=flat-square)][black]
 
 Toolkit for encapsulating Python-based computation into deployable and
@@ -19,7 +18,6 @@ They're particularly useful for providing repsonse consistency across different
 revisions of a service or different services.
 
 [pypi]: https://pypi.org/project/werkit/
-[build]: https://app.circleci.com/pipelines/github/metabolize/werkit?branch=main
 [docs build]: https://werkit.readthedocs.io/en/latest/
 [black]: https://black.readthedocs.io/en/stable/
 
