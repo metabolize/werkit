@@ -1,4 +1,8 @@
-import AWS from 'aws-sdk'
+import {
+  GetObjectCommand,
+  HeadObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import chaiString from 'chai-string'
@@ -35,9 +39,9 @@ describe('S3 test helpers', () => {
     integrationTestBucket = process.env.INTEGRATION_TEST_BUCKET
   })
 
-  let s3: AWS.S3
+  let s3: S3Client
   before(() => {
-    s3 = new AWS.S3()
+    s3 = new S3Client({})
   })
 
   let sourceDir: DirectoryResult | undefined
@@ -83,10 +87,15 @@ describe('S3 test helpers', () => {
           throw Error('result should be set')
         }
 
-        const fetched = await s3
-          .getObject({ Bucket: integrationTestBucket, Key: targetKey })
-          .promise()
-        expect(fetched.Body?.toString()).to.equal(EXAMPLE_CONTENTS)
+        const fetched = await s3.send(
+          new GetObjectCommand({
+            Bucket: integrationTestBucket,
+            Key: targetKey,
+          }),
+        )
+        expect(await fetched.Body?.transformToString()).to.equal(
+          EXAMPLE_CONTENTS,
+        )
         expect(fetched.ETag).to.equal(result.eTag)
       })
 
@@ -102,12 +111,15 @@ describe('S3 test helpers', () => {
 
         it('removes the temporary file', async () => {
           await expect(
-            s3
-              .headObject({ Bucket: integrationTestBucket, Key: targetKey })
-              .promise(),
+            s3.send(
+              new HeadObjectCommand({
+                Bucket: integrationTestBucket,
+                Key: targetKey,
+              }),
+            ),
           )
             .to.eventually.be.rejectedWith(Error)
-            .and.have.property('code', 'NotFound')
+            .and.have.property('name', 'NotFound')
         })
       })
     })
@@ -165,10 +177,15 @@ describe('S3 test helpers', () => {
           throw Error('result should be set')
         }
 
-        const fetched = await s3
-          .getObject({ Bucket: integrationTestBucket, Key: targetKey })
-          .promise()
-        expect(fetched.Body?.toString()).to.equal(EXAMPLE_CONTENTS)
+        const fetched = await s3.send(
+          new GetObjectCommand({
+            Bucket: integrationTestBucket,
+            Key: targetKey,
+          }),
+        )
+        expect(await fetched.Body?.transformToString()).to.equal(
+          EXAMPLE_CONTENTS,
+        )
         expect(fetched.ETag).to.equal(result.eTag)
       })
 
@@ -184,12 +201,15 @@ describe('S3 test helpers', () => {
 
         it('removes the temporary file', async () => {
           await expect(
-            s3
-              .headObject({ Bucket: integrationTestBucket, Key: targetKey })
-              .promise(),
+            s3.send(
+              new HeadObjectCommand({
+                Bucket: integrationTestBucket,
+                Key: targetKey,
+              }),
+            ),
           )
             .to.eventually.be.rejectedWith(Error)
-            .and.have.property('code', 'NotFound')
+            .and.have.property('name', 'NotFound')
         })
       })
     })

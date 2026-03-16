@@ -1,4 +1,8 @@
-import AWS from 'aws-sdk'
+import {
+  DeleteObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3'
 import { promises as fs } from 'fs'
 import path from 'path'
 
@@ -31,16 +35,16 @@ async function writeTempFile({
   bucket: string
   contents: Buffer | string
 }): Promise<{ eTag: string; cleanup: () => Promise<void> }> {
-  const s3 = new AWS.S3()
+  const s3 = new S3Client({})
 
-  const { ETag: eTag } = await s3
-    .upload({ Bucket: bucket, Key: key, Body: contents })
-    .promise()
+  const { ETag: eTag } = await s3.send(
+    new PutObjectCommand({ Bucket: bucket, Key: key, Body: contents }),
+  )
 
   return {
-    eTag,
+    eTag: eTag!,
     async cleanup(): Promise<void> {
-      await s3.deleteObject({ Bucket: bucket, Key: key as string }).promise()
+      await s3.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }))
     },
   }
 }
