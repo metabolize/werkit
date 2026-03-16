@@ -14,32 +14,32 @@ jobs:
     if: github.event_name == 'push' || (github.event_name == 'schedule' && github.ref == 'refs/heads/main')
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - uses: ./.github/workflows/python-common
+      - uses: ./.github/workflows/python-common
 
-    - name: Check code format
-      run: ./dev.py black-check
+      - name: Check code format
+        run: ./dev.py black-check
 
-    - uses: ./.github/workflows/node-common
-      if: always()
+      - uses: ./.github/workflows/node-common
+        if: always()
 
-    - name: Check TypeScript, YAML, and JSON format
-      run: npm run format:check
+      - name: Check TypeScript, YAML, and JSON format
+        run: npm run format:check
 
   check_types:
     name: Check types
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - uses: ./.github/workflows/python-common
+      - uses: ./.github/workflows/python-common
 
-    - name: Check types
-      run: ./dev.py check-types
+      - name: Check types
+        run: ./dev.py check-types
 
   check_lint:
     name: Check lint
@@ -47,13 +47,13 @@ jobs:
     if: github.event_name == 'push' || (github.event_name == 'schedule' && github.ref == 'refs/heads/main')
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - uses: ./.github/workflows/python-common
+      - uses: ./.github/workflows/python-common
 
-    - name: Check lint
-      run: ./dev.py lint
+      - name: Check lint
+        run: ./dev.py lint
 
   run_tests:
     name: Run tests - Python ${{ matrix.python-version }}
@@ -71,22 +71,22 @@ jobs:
           - python-version: '3.14'
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - uses: ./.github/workflows/python-common
-      with:
-        python-version: ${{ matrix.python-version }}
-        extras-param: '--extras client --extras lambda_common --extras compute_graph'
+      - uses: ./.github/workflows/python-common
+        with:
+          python-version: ${{ matrix.python-version }}
+          extras-param: '--extras client --extras lambda_common --extras compute_graph'
 
-    - name: Run tests
-      run: ./dev.py coverage
-      env:
-        AWS_DEFAULT_REGION: ${{ vars.OSS_AWS_DEFAULT_REGION }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.OSS_AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.OSS_AWS_SECRET_ACCESS_KEY }}
-        INTEGRATION_TEST_BUCKET: ${{ vars.INTEGRATION_TEST_BUCKET }}
-        INTEGRATION_TEST_LAMBDA_ROLE: ${{ vars.INTEGRATION_TEST_LAMBDA_ROLE }}
+      - name: Run tests
+        run: ./dev.py coverage
+        env:
+          AWS_DEFAULT_REGION: ${{ vars.OSS_AWS_DEFAULT_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.OSS_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.OSS_AWS_SECRET_ACCESS_KEY }}
+          INTEGRATION_TEST_BUCKET: ${{ vars.INTEGRATION_TEST_BUCKET }}
+          INTEGRATION_TEST_LAMBDA_ROLE: ${{ vars.INTEGRATION_TEST_LAMBDA_ROLE }}
 
   build_and_upload:
     name: Build and upload
@@ -94,16 +94,16 @@ jobs:
     if: github.event_name == 'push' || (github.event_name == 'schedule' && github.ref == 'refs/heads/main')
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - uses: ./.github/workflows/python-common
+      - uses: ./.github/workflows/python-common
 
-    - name: Build the package
-      run: poetry build
+      - name: Build the package
+        run: poetry build
 
-    - name: Upload distributable
-      uses: actions/upload-artifact@v4
-      with:
-        name: dist-artifacts
-        path: dist/
+      - name: Upload distributable
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-artifacts
+          path: dist/
