@@ -17,10 +17,16 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - uses: ./.github/workflows/common
+    - uses: ./.github/workflows/python-common
 
     - name: Check code format
       run: ./dev.py black-check
+
+    - uses: ./.github/workflows/node-common
+      if: always()
+
+    - name: Check TypeScript, YAML, and JSON format
+      run: npm run format:check
 
   check_types:
     name: Check types
@@ -30,7 +36,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - uses: ./.github/workflows/common
+    - uses: ./.github/workflows/python-common
 
     - name: Check types
       run: ./dev.py check-types
@@ -44,7 +50,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - uses: ./.github/workflows/common
+    - uses: ./.github/workflows/python-common
 
     - name: Check lint
       run: ./dev.py lint
@@ -68,7 +74,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - uses: ./.github/workflows/common
+    - uses: ./.github/workflows/python-common
       with:
         python-version: ${{ matrix.python-version }}
         extras-param: '--extras client --extras lambda_common --extras compute_graph'
@@ -91,7 +97,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - uses: ./.github/workflows/common
+    - uses: ./.github/workflows/python-common
 
     - name: Build the package
       run: poetry build
