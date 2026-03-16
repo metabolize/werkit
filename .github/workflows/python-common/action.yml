@@ -1,18 +1,18 @@
-name: Prepare environment
+name: Prepare Python environment
 
 inputs:
-  'python-version':
+  python-version:
     required: false
     default: '3.10'
-  'poetry-version':
+  poetry-version:
     required: false
     default: '1.2.2'
-  'extras-param':
+  extras-param:
     required: false
     default: ''
 
 runs:
-  using: "composite"
+  using: 'composite'
 
   steps:
     - name: Set up Python ${{ inputs.python-version }}
