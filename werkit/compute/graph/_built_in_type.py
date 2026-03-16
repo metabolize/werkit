@@ -1,20 +1,12 @@
 import numbers
-import sys
 import typing as t
-
-if sys.version_info >= (3, 10):  # pragma: no cover
-    from typing import TypeGuard
-else:
-    # TODO: Remove when Python 3.9 is dropped.
-    from typing_extensions import TypeGuard
-
 
 BuiltInValueType = t.Union[t.Type[bool], t.Type[int], t.Type[float], t.Type[str]]
 
 BuiltInValueTypeName = t.Literal["bool", "number", "string"]
 
 
-def is_built_in_value_type(_type: t.Type) -> TypeGuard[BuiltInValueType]:
+def is_built_in_value_type(_type: t.Type) -> t.TypeGuard[BuiltInValueType]:
     return _type in (bool, int, float, numbers.Number, str)
 
 

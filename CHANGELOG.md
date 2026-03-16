@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.37.0
+
+### BREAKING CHANGES
+
+- Require Python 3.10+.
+- Remove werkit.orchestrator.
+- Remove werkit.compute.destination.RdsGraphileWorkerDestination.
+
+### Other changes
+
+- Migrate from executor to sh.
+- Upgrade `jsonschema` and add `referencing`.
+- Upgrade boto3.
+- Upgrade semver.
+- Always install typing_extensions.
+- Remove obsolete workaround pinning `pyrsistent`.
+
+## 0.36.0
+
+### New features
+
+- Manager: Support synthetic exceptions
+
 ## 0.35.2
 
 ### Other changes

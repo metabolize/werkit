@@ -1,6 +1,6 @@
 {
   "name": "werkit",
-  "version": "0.35.1",
+  "version": "0.37.0",
   "description": "TypeScript types for Werkit, a toolkit for encapsulating Python-based computation into deployable and distributable tasks",
   "main": "dist",
   "bin": "dist/cli.js",
@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@types/argparse": "2.0.10",
+    "@types/node": "22.19.15",
     "@types/chai-as-promised": "7.1.5",
     "@types/chai": "4.3.5",
     "@types/chai-string": "1.4.2",
