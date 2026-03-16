@@ -31,6 +31,10 @@ runs:
         path: .venv
         key: venv-v3-${{ runner.os }}-${{ inputs.python-version }}-${{ inputs.poetry-version }}-${{ inputs.extras-param }}-${{ hashFiles('poetry.lock') }}
 
+    - name: Configure Poetry to use in-project virtualenv
+      shell: bash
+      run: poetry config virtualenvs.in-project true
+
     - name: Create the in-project virtualenv if it doesn't exist
       shell: bash
       run: test -d .venv || python -m venv .venv
