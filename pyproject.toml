@@ -51,7 +51,7 @@ pytest = "9.0.2"
 pytest-cov = "7.0.0"
 python-dotenv = "1.2.1"
 twine = "6.2.0"
-types-boto3 = "1.42.56"
+types-boto3 = "1.42.68"
 types-freezegun = "1.1.10"
 types-jsonschema = "4.26.0.20260202"
 
