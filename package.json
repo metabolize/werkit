@@ -6,6 +6,7 @@
   "scripts": {
     "format:check": "prettier --check \"**/*.@(ts|yml)\"",
     "format:fix": "prettier --write \"**/*.@(ts|yml)\"",
+    "schema:check": "1schema check",
     "schema:update": "1schema update",
     "postschema:update": "cp types/src/generated/dependency-graph.schema.json werkit/compute/graph/dependency-graph.schema.json"
   },
@@ -16,8 +17,8 @@
     "werkit": "file:./types"
   },
   "devDependencies": {
-    "1schema": "0.2.0",
-    "prettier": "3.0.0",
+    "1schema": "1.0.0",
+    "prettier": "3.7.4",
     "typescript": "5.9.3"
   }
 }

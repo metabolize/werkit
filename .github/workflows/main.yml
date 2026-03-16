@@ -27,6 +27,7 @@ jobs:
 
       - name: Check TypeScript, YAML, and JSON format
         run: npm run format:check
+        if: always()
 
   check_types:
     name: Check types
@@ -54,6 +55,13 @@ jobs:
 
       - name: Check lint
         run: ./dev.py lint
+
+      - uses: ./.github/workflows/node-common
+        if: always()
+
+      - name: Check that generated schema are up to date
+        run: npm run schema:check
+        if: always()
 
   run_tests:
     name: Run tests - Python ${{ matrix.python-version }}
