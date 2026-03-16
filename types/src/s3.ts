@@ -1,11 +1,26 @@
-// Work around a lint false positive.
-/* global BufferEncoding */
-
 import AWS from 'aws-sdk'
 import { promises as fs } from 'fs'
 import path from 'path'
 
 import { uuidHex } from './uuid-hex'
+
+// Inline equivalent of Node's `BufferEncoding` type, defined here to avoid
+// making `@types/node` a transitive dependency. To keep this up to date, refer
+// to `BufferEncoding` in types/node/buffer.d.ts in DefinitelyTyped:
+// https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/node/buffer.d.ts
+type BufferEncoding =
+  | 'ascii'
+  | 'utf8'
+  | 'utf-8'
+  | 'utf16le'
+  | 'utf-16le'
+  | 'ucs2'
+  | 'ucs-2'
+  | 'base64'
+  | 'base64url'
+  | 'latin1'
+  | 'binary'
+  | 'hex'
 
 async function writeTempFile({
   key,
