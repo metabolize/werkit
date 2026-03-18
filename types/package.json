@@ -39,18 +39,17 @@
     "@types/mocha": "10.0.10",
     "chai": "6.2.2",
     "chai-as-promised": "8.0.2",
-    "chai-string": "1.6.0",
+    "chai-string": "2.0.0",
     "del-cli": "7.0.0",
     "dotenv": "17.3.1",
     "mocha": "11.7.5",
     "shebang-trim": "1.2.0",
-    "ts-node": "10.9.2"
+    "tsx": "4.21.0"
   },
   "mocha": {
     "extension": [
       "ts"
     ],
-    "loader": "ts-node/esm",
-    "experimental-specifier-resolution": "node"
+    "import": "tsx"
   }
 }
