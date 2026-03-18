@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.38.0
+
+- Remove Lambda and S3 helpers. Lambda helpers are now in `werkit-lambda` and S3
+  helpers in `s3-temp`.
+
 ## 0.37.0
 
 - Remove orchestrator types.
