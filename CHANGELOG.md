@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.38.0
+
+### BREAKING CHANGES
+
+- `werkit.aws.lambda.deploy.perform_create()`: Specifying a runtime is required.
+
 ## 0.37.0
 
 ### BREAKING CHANGES
