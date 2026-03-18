@@ -1,0 +1,37 @@
+{
+  "name": "werkit-lambda",
+  "version": "0.37.0",
+  "description": "Lambda deployment utilities for Werkit",
+  "main": "dist",
+  "types": "dist",
+  "type": "module",
+  "scripts": {
+    "prebuild": "del dist",
+    "build": "tsc",
+    "prepare": "npm run build",
+    "check-types": "tsc --noEmit",
+    "check-package-version": "if [ $(cd .. && poetry version --short) = $(node -e \"console.log(require('./package.json').version)\") ]; then exit 0; else echo 'Package versions are not in sync'; exit 1; fi;",
+    "prepublishOnly": "npm run check-package-version"
+  },
+  "files": [
+    "dist"
+  ],
+  "author": "Metabolize",
+  "license": "MIT",
+  "repository": "metabolize/werkit",
+  "keywords": [
+    "devops",
+    "computation",
+    "compute",
+    "lambda"
+  ],
+  "dependencies": {
+    "@aws-sdk/client-lambda": "3.x",
+    "s3-temp": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.15",
+    "del-cli": "7.0.0",
+    "typescript": "5.9.3"
+  }
+}

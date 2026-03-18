@@ -2,13 +2,11 @@ import {
   CreateFunctionCommand,
   DeleteFunctionCommand,
   LambdaClient,
+  Runtime,
   UpdateFunctionCodeCommand,
   waitUntilFunctionUpdated,
 } from '@aws-sdk/client-lambda'
-
-import { tempFileOnS3 } from './s3'
-
-export const DEFAULT_RUNTIME = 'nodejs14.x'
+import { tempFileOnS3 } from 's3-temp'
 
 export async function createFunction({
   region,
@@ -17,9 +15,9 @@ export async function createFunction({
   role,
   localPathToZipfile,
   s3CodeBucket,
+  runtime,
   timeoutSeconds,
   memorySizeMb,
-  runtime = DEFAULT_RUNTIME,
   envVars = {},
   verbose = false,
 }: {
@@ -29,9 +27,9 @@ export async function createFunction({
   role: string
   localPathToZipfile: string
   s3CodeBucket: string
+  runtime: Runtime
   timeoutSeconds?: number
   memorySizeMb?: number
-  runtime?: string
   envVars?: { [k: string]: string }
   verbose?: boolean
 }): Promise<void> {

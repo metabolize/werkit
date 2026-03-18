@@ -14,7 +14,8 @@
   "license": "MIT",
   "repository": "metabolize/werkit",
   "dependencies": {
-    "werkit": "file:./types"
+    "werkit": "file:./types",
+    "werkit-lambda": "file:./werkit-lambda-js"
   },
   "devDependencies": {
     "1schema": "1.0.0",

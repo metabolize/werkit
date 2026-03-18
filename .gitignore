@@ -166,3 +166,4 @@ function.zip
 python-worker.zip
 /node_modules
 /types/node_modules
+/werkit-lambda-js/node_modules

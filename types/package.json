@@ -28,17 +28,9 @@
     "compute"
   ],
   "dependencies": {
-    "@metabolize/uuid-to-hex": "^2.0.0",
-    "argparse": "^2.0.1",
-    "uuid": "^13.0.0"
-  },
-  "optionalDependencies": {
-    "@aws-sdk/client-lambda": "3.x",
-    "@aws-sdk/client-s3": "3.x"
+    "argparse": "^2.0.1"
   },
   "devDependencies": {
-    "@aws-sdk/client-lambda": "3.x",
-    "@aws-sdk/client-s3": "3.x",
     "@types/argparse": "2.0.17",
     "@types/node": "22.19.15",
     "@types/chai-as-promised": "8.0.2",
@@ -52,7 +44,6 @@
     "dotenv": "17.3.1",
     "mocha": "11.7.5",
     "shebang-trim": "1.2.0",
-    "tmp-promise": "3.0.3",
     "ts-node": "10.9.2"
   },
   "mocha": {
