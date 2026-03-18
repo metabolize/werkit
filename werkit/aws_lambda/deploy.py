@@ -10,14 +10,6 @@ if t.TYPE_CHECKING:
     from mypy_boto3_s3.literals import RegionName
 
 
-def default_runtime() -> "RuntimeType":
-    import sys
-
-    return t.cast(
-        "RuntimeType", f"python{sys.version_info.major}.{sys.version_info.minor}"
-    )
-
-
 def needs_s3_upload(path_to_zipfile: str) -> bool:
     return os.path.getsize(path_to_zipfile) > 50 * 2**20
 
@@ -84,11 +76,11 @@ def perform_create(
     handler: str,
     function_name: str,
     role: str,
+    runtime: "RuntimeType",
     local_path_to_zipfile: t.Optional[str] = None,
     s3_path_to_zipfile: t.Optional[str] = None,
     timeout: t.Optional[int] = None,
     memory_size: t.Optional[int] = None,
-    runtime: t.Optional["RuntimeType"] = None,
     env_vars: dict[str, str] = {},
     s3_code_bucket: t.Optional[str] = None,
     verbose: bool = False,
@@ -112,7 +104,7 @@ def perform_create(
 
         client.create_function(
             FunctionName=function_name,
-            Runtime=runtime or default_runtime(),
+            Runtime=runtime,
             Role=role,
             Handler=handler,
             Environment={"Variables": env_vars},
