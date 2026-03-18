@@ -2,10 +2,11 @@
 
 'use strict'
 
+import { ArgumentParser } from 'argparse'
 import { promises as fs } from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { ArgumentParser } from 'argparse'
+
 import { generateComputeNodeInterfaces } from './generate-compute-node-interfaces.js'
 
 async function performGenerateComputeNodeInterfaces({
@@ -20,7 +21,7 @@ async function performGenerateComputeNodeInterfaces({
   )
   // TODO: Validate using the JSON schema.
 
-  let imports: string | undefined = undefined
+  let imports: string | undefined
   if (importPath) {
     imports = await fs.readFile(importPath, 'utf-8')
   }
@@ -81,7 +82,6 @@ export default async function main(inArgs?: string[]): Promise<void> {
   try {
     await main()
   } catch (e) {
-    // eslint-disable-next-line no-console
     console.error(e)
     process.exit(1)
   }
