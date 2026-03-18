@@ -1,7 +1,7 @@
 {
   "name": "werkit-lambda",
-  "version": "0.37.0",
-  "description": "Lambda deployment utilities (designed for use with werkit)",
+  "version": "0.1.0",
+  "description": "Lambda deployment utilities, designed for use with werkit",
   "main": "dist",
   "types": "dist",
   "type": "module",
@@ -9,9 +9,7 @@
     "prebuild": "del dist",
     "build": "tsc",
     "prepare": "npm run build",
-    "typecheck": "tsc --noEmit",
-    "check-package-version": "if [ $(cd .. && poetry version --short) = $(node -e \"console.log(require('./package.json').version)\") ]; then exit 0; else echo 'Package versions are not in sync'; exit 1; fi;",
-    "prepublishOnly": "npm run check-package-version"
+    "typecheck": "tsc --noEmit"
   },
   "files": [
     "CHANGELOG.md",
