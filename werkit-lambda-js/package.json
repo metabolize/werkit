@@ -29,6 +29,7 @@
     "s3-temp": "^0.1.0"
   },
   "devDependencies": {
+    "@aws-sdk/client-lambda": "3.1011.0",
     "@types/node": "22.19.15",
     "del-cli": "7.0.0",
     "typescript": "5.9.3"

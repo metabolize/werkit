@@ -22,6 +22,20 @@ jobs:
       - name: Check TypeScript, YAML, and JSON format
         run: npm run format:check
 
+  lint:
+    name: Check lint
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || (github.event_name == 'schedule' && github.ref == 'refs/heads/main')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: ./.github/workflows/node-common
+
+      - name: Lint
+        run: npm run lint:check
+
   check_schema:
     name: Check schema
     runs-on: ubuntu-latest
