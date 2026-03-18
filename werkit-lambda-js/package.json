@@ -14,6 +14,7 @@
     "prepublishOnly": "npm run check-package-version"
   },
   "files": [
+    "CHANGELOG.md",
     "dist"
   ],
   "author": "Metabolize",
