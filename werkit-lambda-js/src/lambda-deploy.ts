@@ -1,8 +1,12 @@
-import AWS from 'aws-sdk'
-
-import { tempFileOnS3 } from './s3'
-
-export const DEFAULT_RUNTIME = 'nodejs14.x'
+import {
+  CreateFunctionCommand,
+  DeleteFunctionCommand,
+  LambdaClient,
+  Runtime,
+  UpdateFunctionCodeCommand,
+  waitUntilFunctionUpdated,
+} from '@aws-sdk/client-lambda'
+import { tempFileOnS3 } from 's3-temp'
 
 export async function createFunction({
   region,
@@ -11,9 +15,9 @@ export async function createFunction({
   role,
   localPathToZipfile,
   s3CodeBucket,
+  runtime,
   timeoutSeconds,
   memorySizeMb,
-  runtime = DEFAULT_RUNTIME,
   envVars = {},
   verbose = false,
 }: {
@@ -23,9 +27,9 @@ export async function createFunction({
   role: string
   localPathToZipfile: string
   s3CodeBucket: string
+  runtime: Runtime
   timeoutSeconds?: number
   memorySizeMb?: number
-  runtime?: string
   envVars?: { [k: string]: string }
   verbose?: boolean
 }): Promise<void> {
@@ -36,9 +40,9 @@ export async function createFunction({
   })
 
   try {
-    const lambdaClient = new AWS.Lambda({ region })
-    await lambdaClient
-      .createFunction({
+    const lambdaClient = new LambdaClient({ region })
+    await lambdaClient.send(
+      new CreateFunctionCommand({
         FunctionName: functionName,
         Runtime: runtime,
         Role: role,
@@ -47,15 +51,13 @@ export async function createFunction({
         Code: { S3Bucket: s3CodeBucket, S3Key: key },
         ...(timeoutSeconds ? { Timeout: timeoutSeconds } : undefined),
         ...(memorySizeMb ? { MemorySize: memorySizeMb } : undefined),
-      })
-      .promise()
+      }),
+    )
 
-    await lambdaClient
-      .waitFor('functionUpdated', {
-        FunctionName: functionName,
-        $waiter: { delay: 1, maxAttempts: 60 },
-      })
-      .promise()
+    await waitUntilFunctionUpdated(
+      { client: lambdaClient, maxWaitTime: 60 },
+      { FunctionName: functionName },
+    )
     if (verbose) {
       console.error(`Lambda function ${functionName} created`)
     }
@@ -71,9 +73,9 @@ export async function deleteFunction({
   region: string
   functionName: string
 }): Promise<void> {
-  await new AWS.Lambda({ region })
-    .deleteFunction({ FunctionName: functionName })
-    .promise()
+  await new LambdaClient({ region }).send(
+    new DeleteFunctionCommand({ FunctionName: functionName }),
+  )
 }
 
 export async function updateFunctionCode({
@@ -96,20 +98,18 @@ export async function updateFunctionCode({
   })
 
   try {
-    const lambdaClient = new AWS.Lambda({ region })
-    await lambdaClient
-      .updateFunctionCode({
+    const lambdaClient = new LambdaClient({ region })
+    await lambdaClient.send(
+      new UpdateFunctionCodeCommand({
         S3Bucket: s3CodeBucket,
         S3Key: key,
         FunctionName: functionName,
-      })
-      .promise()
-    await lambdaClient
-      .waitFor('functionUpdated', {
-        FunctionName: functionName,
-        $waiter: { delay: 1, maxAttempts: 60 },
-      })
-      .promise()
+      }),
+    )
+    await waitUntilFunctionUpdated(
+      { client: lambdaClient, maxWaitTime: 60 },
+      { FunctionName: functionName },
+    )
     if (verbose) {
       console.error(`Lambda function ${functionName} updated`)
     }

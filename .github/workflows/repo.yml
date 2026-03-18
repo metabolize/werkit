@@ -1,0 +1,37 @@
+name: Repo
+
+on:
+  push:
+    branches:
+      - '**'
+  schedule:
+    - cron: '0 17 * * *'
+
+jobs:
+  check_format:
+    name: Check format
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || (github.event_name == 'schedule' && github.ref == 'refs/heads/main')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: ./.github/workflows/node-common
+
+      - name: Check TypeScript, YAML, and JSON format
+        run: npm run format:check
+
+  check_schema:
+    name: Check schema
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || (github.event_name == 'schedule' && github.ref == 'refs/heads/main')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: ./.github/workflows/node-common
+
+      - name: Check that generated schema are up to date
+        run: npm run schema:check

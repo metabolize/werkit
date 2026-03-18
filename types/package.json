@@ -12,11 +12,12 @@
     "postbuild": "shebang-trim dist/cli.js",
     "prepare": "npm run build",
     "test": "mocha \"src/*.test.ts\" \"src/**/*.test.ts\"",
-    "check-types": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "check-package-version": "if [ $(cd .. && poetry version --short) = $(node -e \"console.log(require('./package.json').version)\") ]; then exit 0; else echo 'Package versions are not in sync'; exit 1; fi;",
     "prepublishOnly": "npm run check-package-version"
   },
   "files": [
+    "CHANGELOG.md",
     "dist"
   ],
   "author": "Metabolize",
@@ -28,12 +29,7 @@
     "compute"
   ],
   "dependencies": {
-    "@metabolize/uuid-to-hex": "^2.0.0",
-    "argparse": "^2.0.1",
-    "uuid": "^13.0.0"
-  },
-  "optionalDependencies": {
-    "aws-sdk": "2.x"
+    "argparse": "^2.0.1"
   },
   "devDependencies": {
     "@types/argparse": "2.0.17",
@@ -42,22 +38,19 @@
     "@types/chai": "5.2.3",
     "@types/chai-string": "1.4.5",
     "@types/mocha": "10.0.10",
-    "aws-sdk": "2.1415.0",
     "chai": "6.2.2",
     "chai-as-promised": "8.0.2",
-    "chai-string": "1.6.0",
+    "chai-string": "2.0.0",
     "del-cli": "7.0.0",
     "dotenv": "17.3.1",
     "mocha": "11.7.5",
-    "shebang-trim": "1.2.0",
-    "tmp-promise": "3.0.3",
-    "ts-node": "10.9.2"
+    "shebang-trim": "1.3.0",
+    "tsx": "4.21.0"
   },
   "mocha": {
     "extension": [
       "ts"
     ],
-    "loader": "ts-node/esm",
-    "experimental-specifier-resolution": "node"
+    "import": "tsx"
   }
 }

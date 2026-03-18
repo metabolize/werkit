@@ -1,0 +1,36 @@
+{
+  "name": "werkit-lambda",
+  "version": "0.1.0",
+  "description": "Lambda deployment utilities, designed for use with werkit",
+  "main": "dist",
+  "types": "dist",
+  "type": "module",
+  "scripts": {
+    "prebuild": "del dist",
+    "build": "tsc",
+    "prepare": "npm run build",
+    "typecheck": "tsc --noEmit"
+  },
+  "files": [
+    "CHANGELOG.md",
+    "dist"
+  ],
+  "author": "Metabolize",
+  "license": "MIT",
+  "repository": "metabolize/werkit",
+  "keywords": [
+    "devops",
+    "computation",
+    "compute",
+    "lambda"
+  ],
+  "dependencies": {
+    "@aws-sdk/client-lambda": "3.x",
+    "s3-temp": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.15",
+    "del-cli": "7.0.0",
+    "typescript": "5.9.3"
+  }
+}
