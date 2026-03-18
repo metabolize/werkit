@@ -23,7 +23,7 @@ jobs:
         run: npm run format:check
 
   lint:
-    name: Lint
+    name: Check lint
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || (github.event_name == 'schedule' && github.ref == 'refs/heads/main')
 
