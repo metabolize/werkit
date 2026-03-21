@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "1schema": "1.0.0",
+    "del-cli": "7.0.0",
     "eslint": "9.39.4",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-simple-import-sort": "12.1.1",
