@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import {
   DependencyGraph,
   DependencyGraphWithBuiltInTypes,
-} from './dependency-graph.schema'
+} from 'werkit'
 import { generateComputeNodeInterfaces } from './generate-compute-node-interfaces'
 
 const DEPENDENCY_GRAPH_WITH_BUILT_IN_TYPES: DependencyGraphWithBuiltInTypes = {
