@@ -3,18 +3,14 @@
   "version": "0.38.0",
   "description": "TypeScript types for Werkit, a toolkit for encapsulating Python-based computation into deployable and distributable tasks",
   "main": "dist",
-  "bin": "dist/cli.js",
   "types": "dist",
   "type": "module",
   "scripts": {
     "prebuild": "del dist",
     "build": "tsc",
-    "postbuild": "shebang-trim dist/cli.js",
-    "prepare": "npm run build",
-    "test": "mocha \"src/*.test.ts\" \"src/**/*.test.ts\"",
     "typecheck": "tsc --noEmit",
     "check-package-version": "if [ $(cd .. && poetry version --short) = $(node -e \"console.log(require('./package.json').version)\") ]; then exit 0; else echo 'Package versions are not in sync'; exit 1; fi;",
-    "prepublishOnly": "npm run check-package-version"
+    "prepublishOnly": "npm run build && npm run check-package-version"
   },
   "files": [
     "CHANGELOG.md",
@@ -28,29 +24,6 @@
     "computation",
     "compute"
   ],
-  "dependencies": {
-    "argparse": "^2.0.1"
-  },
-  "devDependencies": {
-    "@types/argparse": "2.0.17",
-    "@types/node": "22.19.15",
-    "@types/chai-as-promised": "8.0.2",
-    "@types/chai": "5.2.3",
-    "@types/chai-string": "1.4.5",
-    "@types/mocha": "10.0.10",
-    "chai": "6.2.2",
-    "chai-as-promised": "8.0.2",
-    "chai-string": "2.0.0",
-    "del-cli": "7.0.0",
-    "dotenv": "17.3.1",
-    "mocha": "11.7.5",
-    "shebang-trim": "1.3.0",
-    "tsx": "4.21.0"
-  },
-  "mocha": {
-    "extension": [
-      "ts"
-    ],
-    "import": "tsx"
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }

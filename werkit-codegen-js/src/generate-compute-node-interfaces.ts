@@ -1,4 +1,4 @@
-import { DependencyGraph } from './dependency-graph.schema'
+import { DependencyGraph } from 'werkit'
 
 const INPUT_NODES_NAME = 'InputNodes'
 const INTERMEDIATE_NODES_NAME = 'IntermediateNodes'

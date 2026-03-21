@@ -8,7 +8,7 @@
   "scripts": {
     "prebuild": "del dist",
     "build": "tsc",
-    "prepare": "npm run build",
+    "prepublishOnly": "npm run build",
     "typecheck": "tsc --noEmit"
   },
   "files": [
@@ -30,8 +30,6 @@
   },
   "devDependencies": {
     "@aws-sdk/client-lambda": "3.1011.0",
-    "@types/node": "22.19.15",
-    "del-cli": "7.0.0",
-    "typescript": "5.9.3"
+    "@types/node": "22.19.15"
   }
 }

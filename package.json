@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "description": "Werkit TypeScript dev depenencies",
   "scripts": {
+    "build": "npm run build -w types && npm run build -w werkit-lambda-js && npm run build -w werkit-codegen-js",
     "format:check": "prettier --check \"**/*.@(ts|yml)\"",
     "format:fix": "prettier --write \"**/*.@(ts|yml)\"",
     "lint:check": "eslint .",
@@ -12,15 +13,22 @@
     "schema:update": "1schema update",
     "postschema:update": "cp types/src/generated/dependency-graph.schema.json werkit/compute/graph/dependency-graph.schema.json"
   },
+  "workspaces": [
+    "types",
+    "werkit-lambda-js",
+    "werkit-codegen-js"
+  ],
   "author": "Metabolize",
   "license": "MIT",
   "repository": "metabolize/werkit",
   "dependencies": {
     "werkit": "file:./types",
+    "werkit-codegen": "file:./werkit-codegen-js",
     "werkit-lambda": "file:./werkit-lambda-js"
   },
   "devDependencies": {
     "1schema": "1.0.0",
+    "del-cli": "7.0.0",
     "eslint": "9.39.4",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-simple-import-sort": "12.1.1",

@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": ["esnext"],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "outDir": "dist/",
+    "sourceMap": true,
+    "strict": true,
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "declaration": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "**/*.test.ts", "**/*-test-helpers.ts"]
+}
