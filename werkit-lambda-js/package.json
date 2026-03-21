@@ -30,7 +30,6 @@
   },
   "devDependencies": {
     "@aws-sdk/client-lambda": "3.1011.0",
-    "@types/node": "22.19.15",
-    "typescript": "5.9.3"
+    "@types/node": "22.19.15"
   }
 }
